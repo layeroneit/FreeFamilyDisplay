@@ -561,7 +561,11 @@ memory checked at the end.
 
 ### 8.1 Auth
 
-**Passwordless.** There are no passwords in this system. No hashing, no reset flow, no "forgot password" screen, no composition rules to explain to your aunt.
+**Passwordless — for members.** No family member has a password: no hashing,
+no reset flow, no "forgot password" screen, no composition rules to explain to
+your aunt. *Amended by ADR 0003 (2026-08-29): OPERATOR accounts additionally
+carry a local bcrypt password login, so the operator can reach the admin UI
+with zero cloud dependencies. The requirements and boundaries live in the ADR.*
 
 - Invite: 32 random bytes, stored hashed, single-use, 7-day expiry, emailed via SES.
 - Login: user enters their email, receives a magic link. Token is 32 random bytes, stored hashed, single-use, **15-minute expiry**, bound to the requesting IP's /24 as a soft check (log mismatches, don't hard-block — mobile carriers roam).

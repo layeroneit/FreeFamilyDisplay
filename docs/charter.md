@@ -145,3 +145,5 @@ dependencies require justification, and why "boring and well-maintained" beats
 | 2026-08-29 | Keep Redis + BullMQ despite Tag not having a queue | plan §4.1 |
 | 2026-08-29 | npm workspaces rather than pnpm | plan §4.3 |
 | 2026-08-29 | Raspberry Pi is the renderer's baseline target | plan §7.8 |
+| 2026-08-29 | Deployed to the existing LXC, superseding the VM decision | `adr/0002-lxc-by-operator-decision.md` |
+| 2026-08-29 | Operator accounts get a local password; family stays passwordless | `adr/0003-operator-password-login.md` |

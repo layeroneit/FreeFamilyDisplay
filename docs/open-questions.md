@@ -63,6 +63,15 @@ following the operator's other project's session mechanism but none of its crede
 URL with a different scheme label. Rewrite to `https` before fetching — never
 `http` — then apply the §8.3 resolved-IP check normally.
 
+## Parked proposals
+
+**Grafana "NOC page" (operator request, 2026-08-29).** Self-hosted Grafana is
+charter-compatible — nothing leaves the house. But it is a new dependency
+needing §"Dependencies" justification, and plan §9 already specifies the health
+surfaces (`/healthz`, `/readyz`, the connector health page). Decide alongside
+Phase 2, when there is actually connector telemetry worth graphing; until then
+it would chart an empty database.
+
 ## Noted, not blocking
 
 **Nothing applies migrations yet.** The compose stack starts `web`/`worker` once
