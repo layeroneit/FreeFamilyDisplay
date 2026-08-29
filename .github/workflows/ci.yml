@@ -2,7 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    # This repo's default branch is master, not main. Both are listed so a
+    # future default-branch rename doesn't silently disable CI again.
+    branches: [main, master]
   pull_request:
 
 # No secrets are used by this workflow and none should be added. Everything here
