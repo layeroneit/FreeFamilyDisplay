@@ -1,0 +1,4 @@
+{
+  "_comment": "Hand-picked login-page photography (docs/design/login-brief.md). Each entry is downloaded, resized, EXIF-stripped, and self-hosted by scripts/fetch-login-photos.mjs — the app NEVER hotlinks. Pick warm, bright family/home scenes where faces are not the focal point. Fill url with a direct image URL you are licensed to use (Pexels/Openverse/Wikimedia); keep license + attribution honest — the credit renders on the page.",
+  "photos": []
+}

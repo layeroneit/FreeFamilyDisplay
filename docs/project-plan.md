@@ -495,6 +495,43 @@ Per-board, authored in a code editor in the admin UI or uploaded as a `.css` fil
 
 New accounts get a pre-built board matching the reference layout: quote, clock, greeting, date, 5-day weather strip, two-week calendar, news list, photo panel. Nobody should face an empty canvas on day one.
 
+### 7.7.5 Weather-reactive ambiance (operator request, 2026-08-29)
+
+Boards can opt into a **weather mood layer**: the board's look shifts with
+current conditions at the board's location. Sunny brightens the palette with a
+warm hue; overcast mutes it; rain darkens the board with raindrops; storms go
+darker still with occasional lightning flashes; snow, fog, and heat get their
+own treatments. Data comes from the §6.4 Open-Meteo cache — the kiosk never
+fetches weather itself; it reads what `worker` already wrote.
+
+**Opt-in, per board.** §7.5's principle stands: people pick a theme because
+they like it. Weather mood is a mode the user chooses, layered *over* their
+chosen theme — never an override that repaints the board without consent. A
+"mood strength" slider (subtle → full) ships with it.
+
+**Tiered by display capability, because of §7.8:**
+
+- **Tier 1 — hue and tone (all displays, including the Pi).** A static CSS
+  overlay: gradient tint, brightness/saturation shift, recolored accents.
+  Recomputed only when cached conditions change (every ~15 min), zero
+  animation cost. This tier alone delivers most of the feel.
+- **Tier 2 — ambient particles (capable displays, opt-in).** Raindrops,
+  falling snow, drifting fog — CSS-transform animations, capped particle
+  counts, `prefers-reduced-motion` respected. **Disabled on low-power
+  displays** the same way backdrop-blur is (§7.8): the editor shows the
+  control, the Pi renders Tier 1 instead. A wall display that meets the
+  §7.8 idle budget is worth more than raindrops.
+- **Lightning** is a Tier-2 effect implemented as a rare, brief flash overlay
+  (a few frames, at most every few tens of seconds) — never a continuous
+  loop. Real NWS *warnings* remain a separate, non-decorative full-bleed
+  takeover per §6.4; ambiance must never be mistakable for an alert.
+
+**Build point:** the mood layer is part of the theme system (Phase 3 tokens
+carry it: a theme declares how it tints under each condition class), and it
+activates when the weather connector lands (Phase 5). Condition classes:
+`clear`, `partly`, `overcast`, `rain`, `storm`, `snow`, `fog`, `extreme-heat`,
+`extreme-cold`.
+
 ### 7.8 Renderer performance budget — the Raspberry Pi is the target
 
 At least one display is a **Raspberry Pi running Chromium in kiosk mode**. The

@@ -12,6 +12,7 @@
   "dependencies": {
     "@ffd/db": "*",
     "@ffd/log": "*",
+    "bcryptjs": "^3.0.3",
     "ioredis": "^5.9.0"
   },
   "devDependencies": {

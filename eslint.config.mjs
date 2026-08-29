@@ -14,6 +14,20 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    // Plain-JS Node scripts (no TS program to supply globals).
+    files: ["**/*.mjs"],
+    languageOptions: {
+      globals: {
+        process: "readonly",
+        Buffer: "readonly",
+        fetch: "readonly",
+        AbortSignal: "readonly",
+        console: "readonly",
+        URL: "readonly",
+      },
+    },
+  },
+  {
     rules: {
       // CLAUDE.md: no `any`, and no silent `@ts-ignore`.
       "@typescript-eslint/no-explicit-any": "error",

@@ -22,11 +22,16 @@ export default function Home() {
         }}
       >
         <p className="text-sm" style={{ color: "var(--hearth-text-muted)" }}>
-          Phase 0 — foundation. Auth arrives in Phase 1, so there is nothing to sign
-          in to yet. Health probes are live at{" "}
-          <code style={{ color: "var(--hearth-accent-2)" }}>/healthz</code> and{" "}
-          <code style={{ color: "var(--hearth-accent-2)" }}>/readyz</code>.
+          A private dashboard for one family&apos;s wall displays. Accounts are
+          invite-only.
         </p>
+        <a
+          href="/login"
+          className="mt-4 inline-block rounded-lg px-4 py-2 text-sm font-semibold"
+          style={{ background: "var(--hearth-accent-1)", color: "#1a1a1a" }}
+        >
+          Sign in
+        </a>
       </div>
     </main>
   );

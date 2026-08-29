@@ -80,6 +80,27 @@ services:
       timeout: 5s
       retries: 10
 
+  # One-shot: applies pending Prisma migrations, exits 0, and gates web/worker
+  # startup. Forward-only — this service never generates or edits migrations.
+  migrate:
+    build:
+      context: ..
+      dockerfile: infra/worker.Dockerfile
+      target: migrate
+    restart: "no"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    user: "1001:1001"
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?set DATABASE_URL in .env}
+    networks:
+      - ffd_net
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   web:
     <<: *hardening
     build:
@@ -94,6 +115,8 @@ services:
       MASTER_KEY: ${MASTER_KEY:?set MASTER_KEY in .env}
       LOG_LEVEL: ${LOG_LEVEL:-info}
       PORT: "3010"
+      # Internal service address for the /status page's worker probe.
+      WORKER_URL: "http://worker:3002"
     volumes:
       - media:/app/media
     read_only: true
@@ -104,6 +127,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     healthcheck:
       test:
         [
@@ -142,6 +167,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     healthcheck:
       test:
         [

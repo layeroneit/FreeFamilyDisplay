@@ -10,9 +10,11 @@ dist/
 !.env.example
 
 # Runtime data — image cache, uploads, stockpile binaries (plan §6.6.1 keeps the
-# manifest in git and the images out of it).
+# manifest in git and the images out of it). Login photos are fetched/processed
+# by scripts/fetch-login-photos.mjs on the deploy host, same policy.
 media/
 packages/stockpile/images/
+apps/web/public/login-photos/
 
 *.log
 .DS_Store

@@ -39,9 +39,19 @@ model User {
   displayName String    @db.VarChar(80)
   role        UserRole  @default(MEMBER)
 
+  /// ADR 0003: bcrypt hash, OPERATOR accounts only. Null for every MEMBER —
+  /// enforced at the repository layer (members have no password path at all),
+  /// and the login route treats a null hash identically to a wrong password.
+  passwordHash String? @db.VarChar(100)
+
   /// Set instead of deleting. Disabled users cannot log in and their displays
   /// stop rendering, but their data survives for restoration.
   disabledAt DateTime?
+
+  /// Selected UI theme id (one of the 10 built-ins, e.g. "midnight").
+  /// Null = default. Applied to authenticated pages; boards get their own
+  /// theme fields in Phase 3 per plan §5.
+  uiTheme String? @db.VarChar(32)
 
   /// Per-category opt-in for the digest alerts in plan §6.7. Absent means
   /// everything off — notifications are opt-in, never opt-out.
@@ -116,4 +126,30 @@ model Invite {
 
   @@index([email])
   @@index([expiresAt])
+}
+
+/// Append-only record of security-relevant actions (plan §5). Rows are never
+/// updated or deleted by application code.
+model AuditLog {
+  id String @id @default(cuid())
+
+  /// Null when the actor is unknown — e.g. a failed login against an address
+  /// that matches no account. The attempted email is deliberately NOT stored
+  /// in that case; unknown addresses are noise with privacy weight.
+  actorId String?
+
+  /// Dotted verb, e.g. "auth.login.password.ok", "auth.login.password.failed",
+  /// "auth.logout", "session.revoked".
+  action String @db.VarChar(80)
+
+  targetType String? @db.VarChar(40)
+  targetId   String?
+
+  /// Coarse client address for correlation. Not trusted for authorization.
+  ip String? @db.VarChar(45)
+
+  createdAt DateTime @default(now())
+
+  @@index([actorId, createdAt])
+  @@index([action, createdAt])
 }
