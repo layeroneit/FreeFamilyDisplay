@@ -73,6 +73,9 @@ Two surfaces, and the split is the whole design:
 5. No secrets in the repository. Not in code, tests, fixtures, seeds, or commit messages.
 6. Nightly backup with a **proven** restore path, delivered in Phase 1, not Phase 6.
 7. Containers run as non-root, no Docker socket mounts, no `--privileged`.
+8. **The kiosk renderer targets a Raspberry Pi**, not a desktop. §7.8 sets the
+   budget. Any feature that cannot meet it on the weakest display is degraded on
+   that display rather than allowed to degrade the display.
 
 ---
 
@@ -133,9 +136,14 @@ redis          queue + cache
 /packages/connectors   One module per source, uniform interface
 /packages/widgets      Widget schema, defaults, renderer
 /packages/crypto       Envelope encryption
+/packages/stockpile    Freeware image manifest (§6.6.1) — metadata only, no binaries
 /infra                 Compose, Caddyfile, tunnel config, backup scripts
 /docs                  ADRs, runbook, restore procedure
 ```
+
+**npm workspaces, not pnpm.** the operator's other project uses npm, and npm is what is installed on
+the operator's machine. A second package manager for a side project is friction
+without payoff.
 
 ### 4.4 Connector interface
 
@@ -232,11 +240,50 @@ Not in v1.0. Google's secret-address ICS export covers the family case with zero
 ### 6.3 Photos — URL sources
 
 - iCloud shared album links
+- **Google Drive public folder links** — see below
 - Immich, Synology Photos, or Nextcloud public share links
 - A directory index URL, or a plain list of image URLs
 - Direct upload through the admin UI, per-user quota
 
 Fetch, cache locally, serve from the local cache. The board must keep showing photos when the source is unreachable.
+
+Every fetched image is **re-encoded and pre-scaled at ingest** to the sizes the
+renderer actually paints (§7.8). Originals are not served to displays. A phone
+camera photo is several thousand pixels wide; painting it in a 400 px panel on a
+Raspberry Pi wastes decode time and holds the full bitmap in memory for as long
+as it is on screen.
+
+#### Google as a photo source
+
+Two Google paths matter here and they are not the same thing:
+
+**Google Calendar** is already covered. Its "secret address in iCal format" is an
+ICS URL and goes through §6.1 unchanged. That is why OAuth is deferred (§6.2) —
+nothing extra is needed for calendars.
+
+**Google Photos does not offer a paste-a-URL path, and this is worth stating
+plainly so it does not get attempted twice.** A shared album link resolves to an
+HTML page, not a feed. There is no unauthenticated API behind it. The Library API
+no longer grants broad read access to a user's library for new applications, and
+the sanctioned replacement is a picker flow requiring OAuth plus periodic user
+interaction — which is the opposite of "paste it once and walk away." Scraping the
+share page is technically possible, brittle against markup changes, and
+questionable against Google's terms. It is not the foundation for something meant
+to run untouched for thirty days.
+
+**Google Drive public folder links are the recommended Google path.** A user
+shares a Drive folder as "anyone with the link," pastes that link, and `worker`
+lists the folder and fetches the images. This fits the model exactly: one URL,
+one text box, no OAuth, no expiring session, and the folder is something the user
+can add photos to from their phone afterward. It needs one instance-wide Google
+API key in `.env`, never exposed to users, in the same shape as the Pexels key in
+§6.6.
+
+Treat the Drive link as a credential like every other pasted URL (§8.2) — anyone
+holding it can read the folder.
+
+*Google Photos support, if it is ever wanted, belongs in v1.1 next to Google
+Calendar OAuth, since both need the same consent plumbing.*
 
 ### 6.4 Weather
 
@@ -261,6 +308,61 @@ Instance-wide key, never exposed to users. The app works without it — Openvers
 Search by keyword, curated category chips ("landscape," "mountains," "seasonal"). Cache selected images to local disk; never hotlink on every render.
 
 **Attribution is mandatory.** A small credit line renders on any board using a stock image. Position, size, and opacity are styleable. It is not removable. Store photographer, source, and license in `cached_images.attribution_json` at fetch time.
+
+The credit line stays even for CC0 and public-domain images, where no license
+obliges it. Rendering it always keeps the rule a simple invariant — "stock image
+implies credit line" — rather than a per-license conditional that eventually gets
+a bug. Public-domain images credit the source rather than a photographer.
+
+#### 6.6.1 The bundled stockpile
+
+Live search covers the case where someone wants a specific image. It does not
+cover the case that actually matters more: **a new board, on a fresh install,
+looking good immediately and continuing to look good with no internet.**
+
+So the instance keeps a **local stockpile of freely licensed images**, seeded
+once at install and served from disk forever after. This is what backgrounds a
+board on day one, what the default board (§7.7) uses, and what a display falls
+back to when every remote source is unreachable.
+
+**Sources, all free and keyless unless noted:**
+
+| Source | Key | License | Good for |
+|---|---|---|---|
+| Openverse | none | CC, mixed | General breadth; the default search backend |
+| Wikimedia Commons | none | CC / PD, mixed | Landscape, places, seasonal |
+| NASA Image Library | none | Public domain | Space, earth-from-orbit — strong wall-display material |
+| Smithsonian Open Access | none | CC0 | Art, nature, historical |
+| Met Museum Open Access | none | CC0 | Art, texture, still life |
+| Pexels | one instance key | Pexels license | Highest quality tier; optional |
+
+Every one of these works without a credit card, which §3 requires. Pexels is the
+only one needing a key, and the feature is fully functional without it.
+
+**Shape of the thing:**
+
+- **Target ~250 images across ~8 categories** — landscape, mountains, water,
+  sky/space, seasonal (four sets), abstract/texture, art. Enough that a board
+  rotating daily does not repeat within a year; small enough to curate honestly.
+- **Pre-scaled at seed time** to the sizes §7.8 wants — 1920×1080 and a 960×540
+  variant for low-power displays — in a modern format. Roughly 60–80 MB total,
+  which is nothing against the 40 GB disk and everything against a Pi's decode
+  budget.
+- **The manifest is in git; the binaries are not.** `packages/stockpile/manifest.json`
+  holds source URL, license, attribution, category, and a content hash for each
+  entry. `scripts/seed-stockpile.ts` fetches, verifies the hash, re-encodes, and
+  writes `cached_images` rows. This keeps the repository small, makes the seed
+  reproducible, and — most importantly — makes the licensing **reviewable in a
+  diff**. An image whose license cannot be established does not go in the
+  manifest.
+- **Seeding runs through the §8.3 SSRF guard** like every other outbound fetch.
+  The manifest is trusted input, but there is no reason to build a second fetch
+  path that isn't.
+- **It is refreshable, not frozen.** Re-running the seed script adds new manifest
+  entries without disturbing existing ones or anyone's board.
+
+Attribution rules above apply to stockpile images identically. The manifest is
+the record; `cached_images.attribution_json` is populated from it at seed time.
 
 ### 6.7 Email — AWS SES (reused account)
 
@@ -393,6 +495,66 @@ Per-board, authored in a code editor in the admin UI or uploaded as a `.css` fil
 
 New accounts get a pre-built board matching the reference layout: quote, clock, greeting, date, 5-day weather strip, two-week calendar, news list, photo panel. Nobody should face an empty canvas on day one.
 
+### 7.8 Renderer performance budget — the Raspberry Pi is the target
+
+At least one display is a **Raspberry Pi running Chromium in kiosk mode**. The
+renderer targets the weakest screen in the house, not the best one. A board that
+is smooth on a desktop and janky on the Pi is a board that has failed, because
+the Pi is the one bolted to a wall.
+
+**Baseline assumption: Raspberry Pi 4, 2 GB, Pi OS 64-bit, Chromium, 1080p
+output.** If the actual unit is a Pi 3 or a Zero 2 W, several items below become
+hard limits rather than guidance — see `open-questions.md`.
+
+**Budget.** A board must hold **≤ 250 MB** of Chromium resident memory, idle
+below **5% CPU** between refreshes, and repaint a data update in **under 100 ms**.
+Idle cost matters far more than load cost: this page runs for thirty days without
+a reload, so a small per-frame cost becomes the whole thermal budget.
+
+**Rules that follow from that.**
+
+- **No continuous animation loops.** No `requestAnimationFrame` ticking in the
+  steady state. The clock widget updates via a `setTimeout` aligned to the next
+  second boundary, then re-aligns — it does not poll at 60 Hz to render a value
+  that changes once a second.
+- **`backdrop-filter: blur()` is disabled on kiosk renders.** §7.3 offers it as a
+  per-widget format option, and it is the single most expensive thing a user can
+  put on a board — each blurred element forces a readback and re-composite every
+  frame it is dirty. The editor keeps the control, warns when the target display
+  is a low-power device, and the kiosk renderer degrades it to a flat
+  semi-transparent surface. A user should not be able to make their wall display
+  unusable through a formatting checkbox.
+- **Shadows are capped**, not banned. Large-radius `box-shadow` across many
+  widgets costs real paint time. Cap the radius and never place a shadow on
+  anything that moves.
+- **Images arrive pre-scaled.** The server resizes to the widget's canvas
+  dimensions and serves modern formats. Decoding a 4000 px photo to paint it in a
+  400 px panel wastes decode time and holds the full bitmap in memory. Handle
+  this at fetch time in `worker`, alongside the §6.3 local cache.
+- **Refresh swaps subtrees, not the document.** A widget receiving new data
+  re-renders that widget. No full-page reload, no route transition — a reload
+  means a fresh Chromium paint of the entire board, visible from across the room.
+- **Fonts are local, subset, `woff2`.** Already required by §7.5 for offline
+  reasons; on the Pi it is also a startup-cost decision.
+- **Decorative theme layers are static.** The Deep space starfield and Chalkboard
+  texture (§7.5) render as inline SVG once. They do not animate. A twinkling
+  starfield is a permanent GPU load for a screen nobody is watching closely.
+- **Compositing layers are budgeted.** Every `will-change` and every transformed
+  element costs GPU memory the Pi does not have. The whole-canvas `transform`
+  scale from §7.1 is the one that matters and it is cheap; additional promoted
+  layers need justification.
+
+**Operational.** Disable screen blanking and the screensaver. Launch Chromium
+with `--kiosk --noerrdialogs --disable-infobars --disable-features=Translate`.
+Long-running Chromium leaks regardless of what the page does, so the kiosk unit
+restarts the browser nightly at a fixed hour — cheap insurance, invisible to
+anyone asleep. The Pi setup is scripted and documented in `/docs/kiosk-pi.md`,
+because it will be done more than once.
+
+**This budget is testable and should be tested.** Phase 4 does not pass on a
+developer laptop. It passes on the actual Pi, left running for two hours, with
+memory checked at the end.
+
 ---
 
 ## 8. Security
@@ -488,10 +650,10 @@ Each phase ends deployable. Do not start a phase before the prior one's criteria
 *Done when:* the reference layout can be rebuilt in the editor, all 10 themes render legibly against it, a custom stylesheet applies to the kiosk surface without weakening CSP, `@import` and off-origin `url()` are rejected on ingest, and "reset to theme" recovers a board whose CSS hides everything.
 
 **Phase 4 — Displays.** Pairing codes, device tokens, kiosk route, browser-side offline cache, auto-reconnect, screen wake, revocation UI.
-*Done when:* a paired tablet renders the board, survives a two-hour outage showing stale-but-labeled data, and goes blank within one cycle of revocation.
+*Done when:* a paired tablet renders the board, survives a two-hour outage showing stale-but-labeled data, and goes blank within one cycle of revocation — **and the same board meets the §7.8 budget on the actual Raspberry Pi**, verified after two hours of uptime, not on a developer laptop.
 
-**Phase 5 — Remaining sources.** Open-Meteo, NWS alerts, RSS, photo URLs, stock backgrounds with attribution.
-*Done when:* every source in Section 6 passes health check and renders.
+**Phase 5 — Remaining sources.** Open-Meteo, NWS alerts, RSS, photo URLs including Google Drive folders, stock backgrounds with attribution, and the §6.6.1 stockpile with its manifest and seed script.
+*Done when:* every source in Section 6 passes health check and renders, and a board with the network unplugged still shows stockpile backgrounds.
 
 **Phase 6 — Hardening and handoff.** CSP tightening, security checklist pass, rate limit tuning, container hardening, tunnel configured, runbook written.
 *Done when:* the checklist is green and a non-technical user completes onboarding unassisted.

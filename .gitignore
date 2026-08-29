@@ -1,6 +1,18 @@
 node_modules/
 .next/
-.env
-.env.local
-*.log
 dist/
+*.tsbuildinfo
+
+# Secrets never land in this repository (CLAUDE.md). `.env.example` is the only
+# environment file that is ever committed, and every value in it is empty.
+.env
+.env.*
+!.env.example
+
+# Runtime data — image cache, uploads, stockpile binaries (plan §6.6.1 keeps the
+# manifest in git and the images out of it).
+media/
+packages/stockpile/images/
+
+*.log
+.DS_Store

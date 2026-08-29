@@ -1,0 +1,35 @@
+{
+  "name": "freefamilydisplay",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Self-hosted family dashboard. Admin UI + kiosk renderer for wall displays.",
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run build:packages && npm run dev --workspace=@ffd/web",
+    "dev:worker": "npm run build:packages && npm run dev --workspace=@ffd/worker",
+    "build:packages": "npm run db:generate && tsc --build",
+    "build": "npm run build:packages && npm run build --workspace=@ffd/web",
+    "typecheck": "tsc --build --force && npm run typecheck --workspace=@ffd/web",
+    "lint": "eslint .",
+    "test": "tsx --test packages/log/src/logger.test.ts",
+    "check": "npm run typecheck && npm run lint && npm run test",
+    "db:generate": "npm run generate --workspace=@ffd/db",
+    "db:migrate": "npm run migrate --workspace=@ffd/db",
+    "db:deploy": "npm run deploy --workspace=@ffd/db",
+    "db:studio": "npm run studio --workspace=@ffd/db"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.0",
+    "@types/node": "^22.20.0",
+    "eslint": "^9.39.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.0"
+  }
+}

@@ -35,6 +35,24 @@ in front of the admin URL, and the bypass policy scoped to the kiosk path only
 **Synology mount path** for nightly encrypted backups, and confirmation the VM
 can reach it.
 
+## Blocks Phase 4 — needed before the kiosk renderer is tuned
+
+**Which Raspberry Pi model, and how much RAM?** §7.8 assumes a **Pi 4 / 2 GB /
+Pi OS 64-bit at 1080p** and sets the performance budget against that. The
+assumption changes real decisions:
+
+- **Pi 5** — comfortable. The §7.8 budget has headroom and `backdrop-filter`
+  could plausibly be allowed rather than degraded.
+- **Pi 4, 1 GB** — the 250 MB Chromium ceiling gets tight with a photo-heavy
+  board. Serve the 960×540 image variant by default on this unit.
+- **Pi 3 / Zero 2 W** — the budget becomes a hard limit. Expect to drop shadows
+  entirely, cap the photo widget to one image on screen, and consider rendering
+  at 720p and letting the display scale.
+
+Also worth knowing: **is the Pi on Ethernet or Wi-Fi**, and **is it driving a TV
+over HDMI or a monitor?** TV overscan is a real source of "the edges are cut off"
+reports, and it is a display setting, not a renderer bug.
+
 ## Host state
 
 **Does the Ubuntu VM exist on the operator's own host yet, and what storage backs it?** Per

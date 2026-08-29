@@ -1,0 +1,43 @@
+# FreeFamilyDisplay — internal proxy (plan §4.2, §8.4)
+#
+# TLS terminates at Cloudflare; Caddy here is the internal proxy and the place
+# security headers are set. It listens on plain HTTP because the only things
+# that reach it are cloudflared (same Docker network) and LAN displays.
+
+{
+	admin off
+	auto_https off
+	servers {
+		# Trust forwarded headers only from the tunnel/proxy in front of us.
+		trusted_proxies static private_ranges
+	}
+}
+
+:8080 {
+	encode zstd gzip
+
+	header {
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "accelerometer=(), camera=(), geolocation=(), gyroscope=(), microphone=(), payment=(), usb=()"
+		X-Frame-Options "DENY"
+		# HSTS is deliberately absent until the hostname is stable (plan §8.4).
+		# Turning it on early against a hostname that later changes is a long,
+		# self-inflicted outage. Phase 6 adds it.
+		-Server
+	}
+
+	# Health probes stay unlogged — they run every 15 seconds forever and would
+	# otherwise be the entire access log.
+	@health path /healthz /readyz
+	log_skip @health
+
+	reverse_proxy web:3010 {
+		header_up X-Real-IP {remote_host}
+	}
+
+	log {
+		output stdout
+		format json
+	}
+}

@@ -1,0 +1,119 @@
+// FreeFamilyDisplay — schema
+//
+// Phase 0 scope: users, sessions, invites. Nothing else.
+// Later phases add login_tokens + email_suppressions (Phase 1), connections +
+// cached_payloads (Phase 2), boards + board_widgets (Phase 3), displays +
+// pairing_codes (Phase 4), cached_images (Phase 5). See plan §5 and §10.
+//
+// Two invariants hold across every table added here:
+//   1. There is no password column, anywhere. Auth is passwordless by design
+//      (plan §8.1) — not "passwords are optional", but "the concept does not
+//      exist in this system".
+//   2. A credential is stored as a hash, never as itself. Invite tokens and
+//      session tokens are SHA-256 hex; the plaintext exists only in transit and
+//      in the recipient's email or cookie.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  /// Ordinary account. Owns boards, connections, and displays. Sees only its own.
+  MEMBER
+
+  /// Manages accounts — invites, disables, deletes. Deliberately CANNOT read
+  /// another user's data (plan §2, permanent non-goal). Requires TOTP (Phase 1),
+  /// because email is the only factor for everyone else.
+  OPERATOR
+}
+
+model User {
+  id String @id @default(cuid())
+
+  /// Normalized to lowercase before write. The only identifier a user types.
+  email       String    @unique @db.VarChar(320)
+  displayName String    @db.VarChar(80)
+  role        UserRole  @default(MEMBER)
+
+  /// Set instead of deleting. Disabled users cannot log in and their displays
+  /// stop rendering, but their data survives for restoration.
+  disabledAt DateTime?
+
+  /// Per-category opt-in for the digest alerts in plan §6.7. Absent means
+  /// everything off — notifications are opt-in, never opt-out.
+  notifyPrefs Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sessions      Session[]
+  invitesSent   Invite[]  @relation("InviteCreatedBy")
+  inviteUsed    Invite?   @relation("InviteConsumedBy")
+
+  @@index([disabledAt])
+}
+
+/// Server-side session records backing the signed cookie. Stateless cookies
+/// alone would be simpler, but a table is what makes "I lost my phone"
+/// answerable — a session can be revoked without rotating everyone's secret.
+model Session {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  /// SHA-256 of the session token. The token itself lives only in the cookie.
+  tokenHash String @unique @db.VarChar(64)
+
+  /// 90-day rolling (plan §8.1). Slides forward on use.
+  expiresAt DateTime
+
+  /// Set when explicitly signed out or revoked. Kept rather than deleted so a
+  /// revocation is visible in an audit trail.
+  revokedAt DateTime?
+
+  /// Coarse client hint for the "your sessions" list — helps a user recognize
+  /// which entry is the kitchen tablet. Not used for any security decision.
+  userAgent String? @db.VarChar(255)
+
+  createdAt  DateTime @default(now())
+  lastSeenAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+/// Single-use signup token. There is no public registration (plan §3) — an
+/// invite is the only way an account comes into existence.
+model Invite {
+  id String @id @default(cuid())
+
+  /// SHA-256 of a 32-byte random token (plan §8.1). Never the token itself.
+  tokenHash String @unique @db.VarChar(64)
+
+  /// Who the invite was addressed to, normalized lowercase. Checked against
+  /// email_suppressions before sending (Phase 1).
+  email String @db.VarChar(320)
+
+  createdById String
+  createdBy   User   @relation("InviteCreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
+
+  /// 7-day expiry.
+  expiresAt DateTime
+
+  /// Set on redemption. A non-null value means this invite is spent — enforced
+  /// in the same transaction that creates the account, so a concurrent double
+  /// redemption cannot create two users.
+  consumedAt   DateTime?
+  consumedById String?   @unique
+  consumedBy   User?     @relation("InviteConsumedBy", fields: [consumedById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([expiresAt])
+}

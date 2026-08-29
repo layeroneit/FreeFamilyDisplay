@@ -1,0 +1,8 @@
+{
+  // Phase 0 scaffolds only what Phase 0 needs. `packages/{crypto,connectors,widgets,stockpile}`
+  // are defined in plan §4.3 but belong to Phases 2, 2, 3, and 5 respectively —
+  // CLAUDE.md forbids scaffolding a later phase while an earlier one is open.
+  // Add references here as those phases begin.
+  "files": [],
+  "references": [{ "path": "./packages/db" }, { "path": "./apps/worker" }]
+}

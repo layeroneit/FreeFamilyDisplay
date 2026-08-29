@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+/*
+ * Theme tokens (plan §7.5).
+ *
+ * Every widget renders against these variables and nothing else. That is what
+ * makes the theme system tractable and what makes custom CSS possible without
+ * exposing Tailwind's generated class names, which are unstable across builds
+ * and must never be a documented styling target.
+ *
+ * These are the Midnight defaults. Phase 3 adds the other nine themes and
+ * documents the full hook list in docs/theming.md.
+ */
+:root {
+  --hearth-bg: #101b33;
+  --hearth-surface: #1b2745;
+  --hearth-border: #2b3a60;
+  --hearth-text: #f0ebe0;
+  --hearth-text-muted: #8fa0c4;
+  --hearth-accent-1: #ffd23f;
+  --hearth-accent-2: #2ee6f6;
+  --hearth-accent-3: #86e57f;
+  --hearth-accent-4: #ff8a5b;
+  --hearth-font-display: ui-sans-serif, system-ui, sans-serif;
+  --hearth-font-body: ui-sans-serif, system-ui, sans-serif;
+  --hearth-radius: 14px;
+  --hearth-shadow: 0 2px 12px rgb(0 0 0 / 0.25);
+}
+
+body {
+  background: var(--hearth-bg);
+  color: var(--hearth-text);
+  font-family: var(--hearth-font-body);
+}
+
+/*
+ * Plan §7.8: the kiosk renderer targets a Raspberry Pi. Respect the OS-level
+ * reduced-motion setting, and note that the kiosk surface disables animation
+ * outright rather than relying on this.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,194 @@
+# FreeFamilyDisplay — Compose stack (plan §4.2, §8.7)
+#
+# Run from the repository root:
+#   docker compose -f infra/compose.yaml --env-file .env up -d
+#
+# Hardening applied to every service, per §8.7 and CLAUDE.md:
+#   - non-root user
+#   - read_only rootfs with explicit tmpfs for the paths that must be writable
+#   - cap_drop: ALL
+#   - no-new-privileges
+#   - postgres and redis reachable only on the internal network, never published
+#     to the host interface
+
+name: ffd
+
+x-hardening: &hardening
+  restart: unless-stopped
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+  logging:
+    driver: json-file
+    options:
+      max-size: "10m"
+      max-file: "3"
+
+networks:
+  ffd_net:
+    driver: bridge
+
+volumes:
+  pgdata:
+  redisdata:
+  media:
+
+services:
+  postgres:
+    <<: *hardening
+    image: postgres:16-alpine
+    user: "70:70" # postgres in alpine images
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB in .env}
+      # Deterministic initdb; avoids locale surprises between host and container.
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /run/postgresql
+    networks:
+      - ffd_net
+    # No `ports:` — deliberately. Postgres is reachable only from this network.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  redis:
+    <<: *hardening
+    image: redis:7-alpine
+    user: "999:1000"
+    command: ["redis-server", "--appendonly", "yes", "--save", "60", "1"]
+    volumes:
+      - redisdata:/data
+    read_only: true
+    tmpfs:
+      - /tmp
+    networks:
+      - ffd_net
+    # No `ports:` — same reason as postgres.
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  web:
+    <<: *hardening
+    build:
+      context: ..
+      dockerfile: infra/web.Dockerfile
+    user: "1001:1001"
+    environment:
+      NODE_ENV: production
+      APP_URL: ${APP_URL:?set APP_URL in .env}
+      DATABASE_URL: ${DATABASE_URL:?set DATABASE_URL in .env}
+      SESSION_SECRET: ${SESSION_SECRET:?set SESSION_SECRET in .env}
+      MASTER_KEY: ${MASTER_KEY:?set MASTER_KEY in .env}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      PORT: "3010"
+    volumes:
+      - media:/app/media
+    read_only: true
+    tmpfs:
+      - /tmp
+    networks:
+      - ffd_net
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3010/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  worker:
+    <<: *hardening
+    build:
+      context: ..
+      dockerfile: infra/worker.Dockerfile
+    user: "1001:1001"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL:?set DATABASE_URL in .env}
+      REDIS_URL: ${REDIS_URL:?set REDIS_URL in .env}
+      MASTER_KEY: ${MASTER_KEY:?set MASTER_KEY in .env}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      WORKER_HEALTH_PORT: "3002"
+    volumes:
+      - media:/app/media
+    read_only: true
+    tmpfs:
+      - /tmp
+    networks:
+      - ffd_net
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3002/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  caddy:
+    <<: *hardening
+    image: caddy:2-alpine
+    # Published on the VM's interface so LAN displays can reach it directly and
+    # skip the tunnel entirely (plan §8.6).
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../infra/Caddyfile:/etc/caddy/Caddyfile:ro
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /config
+      - /data
+    networks:
+      - ffd_net
+    depends_on:
+      - web
+
+  # Opt-in: `docker compose --profile tunnel up -d` once CLOUDFLARE_TUNNEL_TOKEN
+  # is set. Leaving it out of the default set keeps LAN testing simple rather
+  # than failing on an empty token.
+  cloudflared:
+    <<: *hardening
+    profiles:
+      - tunnel
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN:-}
+    read_only: true
+    tmpfs:
+      - /tmp
+    networks:
+      - ffd_net
+    depends_on:
+      - caddy

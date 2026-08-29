@@ -1,0 +1,20 @@
+{
+  "name": "@ffd/worker",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc --build",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@ffd/db": "*",
+    "@ffd/log": "*",
+    "ioredis": "^5.9.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0"
+  }
+}
