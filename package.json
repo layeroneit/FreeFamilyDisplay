@@ -4,7 +4,7 @@
   "private": true,
   "description": "Self-hosted family dashboard. Admin UI + kiosk renderer for wall displays.",
   "engines": {
-    "node": ">=20.9.0"
+    "node": ">=22.0.0"
   },
   "workspaces": [
     "apps/*",
@@ -15,7 +15,7 @@
     "dev:worker": "npm run build:packages && npm run dev --workspace=@ffd/worker",
     "build:packages": "npm run db:generate && tsc --build",
     "build": "npm run build:packages && npm run build --workspace=@ffd/web",
-    "typecheck": "tsc --build --force && npm run typecheck --workspace=@ffd/web",
+    "typecheck": "tsc --build --force && tsc -p packages/log/tsconfig.test.json && tsc -p packages/db/tsconfig.tools.json && npm run typecheck --workspace=@ffd/web",
     "lint": "eslint .",
     "test": "tsx --test packages/log/src/logger.test.ts",
     "check": "npm run typecheck && npm run lint && npm run test",

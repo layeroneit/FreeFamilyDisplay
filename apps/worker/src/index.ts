@@ -15,10 +15,25 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { isDatabaseReachable } from "@ffd/db";
 import { createLogger } from "@ffd/log";
-import Redis from "ioredis";
+// Named import, not default: ioredis is CJS, and under NodeNext the default
+// import resolves to the module namespace, which is not constructable.
+import { Redis } from "ioredis";
 
 const log = createLogger("worker");
-const HEALTH_PORT = Number(process.env.WORKER_HEALTH_PORT ?? 3002);
+
+function healthPort(): number {
+  const raw = process.env.WORKER_HEALTH_PORT;
+  if (raw === undefined || raw === "") return 3002;
+  const n = Number(raw);
+  if (!Number.isInteger(n) || n < 1 || n > 65535) {
+    // `Number("")` is 0 and would silently bind an ephemeral port, leaving the
+    // container healthcheck probing 3002 forever. Fail loudly instead.
+    throw new Error(`WORKER_HEALTH_PORT must be a port number, got "${raw}"`);
+  }
+  return n;
+}
+
+const HEALTH_PORT = healthPort();
 
 let redis: Redis | null = null;
 
@@ -35,20 +50,35 @@ function getRedis(): Redis {
     });
     // Without a listener, a connection error becomes an unhandled 'error' event
     // and takes the process down. Redis being briefly unreachable is a
-    // readiness problem, not a crash.
+    // readiness problem, not a crash. ioredis retries every ~2s forever, so
+    // log at most once a minute rather than flooding stdout for the whole
+    // duration of an outage.
+    let lastErrorLogAt = 0;
     redis.on("error", (err: Error) => {
-      log.warn("redis connection error", { error: err.message });
+      const now = Date.now();
+      if (now - lastErrorLogAt >= 60_000) {
+        lastErrorLogAt = now;
+        log.warn("redis connection error", { error: err.message });
+      }
     });
   }
   return redis;
 }
 
+// Memoized in-flight connect: two probes arriving together must not both call
+// connect() — the second rejects with "already connecting" and would report a
+// healthy Redis as down.
+let connecting: Promise<void> | null = null;
+
 async function isRedisReachable(): Promise<boolean> {
   try {
     const client = getRedis();
     if (client.status === "wait" || client.status === "end") {
-      await client.connect();
+      connecting ??= client.connect().finally(() => {
+        connecting = null;
+      });
     }
+    if (connecting) await connecting;
     return (await client.ping()) === "PONG";
   } catch {
     return false;
@@ -107,8 +137,21 @@ async function shutdown(signal: string): Promise<void> {
   shuttingDown = true;
   log.info("shutting down", { signal });
 
-  server.close();
-  if (redis) await redis.quit().catch(() => undefined);
+  // Let an in-flight probe finish (a /readyz against a slow Postgres can take
+  // seconds), but never hang the container past Docker's stop grace period.
+  const deadline = setTimeout(() => process.exit(1), 5_000);
+  deadline.unref();
+
+  await new Promise<void>((resolve) => server.close(() => resolve()));
+  if (redis) {
+    try {
+      await redis.quit();
+    } catch {
+      // quit() rejects when the connection never came up — and does not stop
+      // the reconnect loop. disconnect() does.
+      redis.disconnect();
+    }
+  }
   process.exit(0);
 }
 

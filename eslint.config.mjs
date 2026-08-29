@@ -26,8 +26,9 @@ export default tseslint.config(
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
       // A user-supplied URL is a credential (CLAUDE.md). Console logging is the
-      // easiest way to leak one, so it needs deliberate opt-in.
-      "no-console": ["error", { allow: ["error"] }],
+      // easiest way to leak one, so it is banned outright — no carve-out for
+      // console.error, which leaks exactly as well as console.log. Use @ffd/log.
+      "no-console": "error",
       eqeqeq: ["error", "always"],
     },
   },

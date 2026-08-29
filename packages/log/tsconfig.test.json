@@ -1,0 +1,14 @@
+{
+  // Typechecks the test files the build tsconfig excludes. `noEmit` +
+  // `allowImportingTsExtensions` matches how tsx actually runs them.
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": false,
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false,
+    "noEmit": true,
+    "allowImportingTsExtensions": true
+  },
+  "include": ["src/**/*.ts"]
+}

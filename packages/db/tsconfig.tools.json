@@ -1,0 +1,14 @@
+{
+  // prisma.config.ts sits outside src/ and would otherwise be linted but never
+  // typechecked — a hole in the gate for the file that decides which database
+  // migrations target.
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": false,
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false,
+    "noEmit": true
+  },
+  "include": ["prisma.config.ts"]
+}

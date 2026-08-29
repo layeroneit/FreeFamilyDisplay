@@ -25,6 +25,10 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3010
+# Docker sets HOSTNAME to the container ID, and Next's standalone server binds
+# to it — which breaks the 127.0.0.1 healthcheck and leaves the container
+# permanently "unhealthy". Pin the bind address explicitly.
+ENV HOSTNAME=0.0.0.0
 
 # Dedicated non-root account. Not the image's stock `node` user (uid 1000) —
 # an explicit uid keeps volume ownership predictable across rebuilds.

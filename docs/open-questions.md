@@ -65,5 +65,12 @@ URL with a different scheme label. Rewrite to `https` before fetching — never
 
 ## Noted, not blocking
 
+**Nothing applies migrations yet.** The compose stack starts `web`/`worker` once
+Postgres is *healthy*, not *migrated*, and `/readyz` runs `SELECT 1`, which
+passes against an empty database. Harmless in Phase 0 (no queries exist), but
+Phase 1's first migration must also decide the deploy mechanism — likely a
+one-shot migrate container in the compose stack — and tighten `/readyz` to prove
+schema presence, not just connectivity.
+
 Plan §7 skips from 7.3 to 7.5. There is no §7.4 and nothing appears to be
 missing; the numbering is simply not contiguous.

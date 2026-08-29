@@ -1,7 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
-export type { User, Session, Invite, UserRole } from "@prisma/client";
+export type { User, Session, Invite } from "@prisma/client";
+// Value export, not type-only: UserRole is a runtime enum object, and Phase 1's
+// operator checks (`role === UserRole.OPERATOR`) need it to exist at runtime.
+export { UserRole } from "@prisma/client";
 
 const globalForPrisma = globalThis as unknown as {
   ffdPrisma: PrismaClient | undefined;

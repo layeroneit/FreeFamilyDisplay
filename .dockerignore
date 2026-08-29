@@ -1,0 +1,19 @@
+# Without this file, `COPY . .` in the build stages merges the HOST's
+# node_modules (Windows/mac binaries), stale dist/ and tsbuildinfo (silently
+# shipping old output), and any local .env (baking secrets into an image layer)
+# on top of the clean Linux install from the deps stage.
+node_modules
+**/node_modules
+.next
+**/.next
+dist
+**/dist
+*.tsbuildinfo
+**/*.tsbuildinfo
+.git
+.env
+.env.*
+!.env.example
+media
+packages/stockpile/images
+*.log

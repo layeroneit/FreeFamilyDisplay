@@ -4,5 +4,10 @@
     "outDir": "./dist",
     "rootDir": "./src"
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts"],
+  // Tests run under tsx and import "./index.ts" by extension, which the
+  // composite emit build rejects (and would otherwise ship an unresolvable
+  // dist/logger.test.js into the worker image). They are typechecked by
+  // tsconfig.test.json instead — see the root `typecheck` script.
+  "exclude": ["src/**/*.test.ts"]
 }

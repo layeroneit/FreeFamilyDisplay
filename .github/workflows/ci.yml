@@ -52,3 +52,19 @@ jobs:
           POSTGRES_DB: ci
           SESSION_SECRET: ci
           MASTER_KEY: ci
+
+      - name: Build images
+        # `config --quiet` validates YAML only; a Dockerfile that cannot build
+        # sails through it. Actually building both images is what catches a bad
+        # COPY path, a broken standalone layout, or a compile error at the
+        # image boundary — the exact class of defect the first audit found.
+        run: docker compose -f infra/compose.yaml build web worker
+        env:
+          APP_URL: http://localhost:8080
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+          REDIS_URL: redis://localhost:6379
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: ci
+          SESSION_SECRET: ci
+          MASTER_KEY: ci
