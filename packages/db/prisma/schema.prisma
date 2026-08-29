@@ -6,9 +6,10 @@
 // pairing_codes (Phase 4), cached_images (Phase 5). See plan §5 and §10.
 //
 // Two invariants hold across every table added here:
-//   1. There is no password column, anywhere. Auth is passwordless by design
-//      (plan §8.1) — not "passwords are optional", but "the concept does not
-//      exist in this system".
+//   1. Passwords exist for OPERATOR accounts only (ADR 0003). Members are
+//      passwordless by design (plan §8.1) — passwordHash is null for every
+//      MEMBER, enforced at the repository layer, and no member-facing flow
+//      may reference a password.
 //   2. A credential is stored as a hash, never as itself. Invite tokens and
 //      session tokens are SHA-256 hex; the plaintext exists only in transit and
 //      in the recipient's email or cookie.

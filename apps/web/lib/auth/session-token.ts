@@ -7,7 +7,7 @@
  * contain usable credentials). Rolling expiry slides the window forward on use.
  */
 
-import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 
 export const SESSION_COOKIE = "ffd_session";
 
@@ -27,14 +27,6 @@ export function generateSessionToken(): string {
 
 export function hashToken(token: string): string {
   return createHash("sha256").update(token).digest("hex");
-}
-
-/** Constant-time comparison of two hex digests. */
-export function hashesEqual(a: string, b: string): boolean {
-  const bufA = Buffer.from(a, "hex");
-  const bufB = Buffer.from(b, "hex");
-  if (bufA.length !== bufB.length || bufA.length === 0) return false;
-  return timingSafeEqual(bufA, bufB);
 }
 
 export type SessionFreshness =

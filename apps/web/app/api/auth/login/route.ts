@@ -3,7 +3,7 @@ import { z } from "zod";
 import { prisma } from "@ffd/db";
 import { verifyPassword } from "@/lib/auth/password";
 import { loginAccountLimiter, loginIpLimiter } from "@/lib/auth/rate-limit";
-import { clientIp, createSession, setSessionCookie } from "@/lib/auth/sessions";
+import { clientIp, createSession, revokeCurrentSession, setSessionCookie } from "@/lib/auth/sessions";
 import { audit } from "@/lib/audit";
 
 export const dynamic = "force-dynamic";
@@ -63,11 +63,22 @@ export async function POST(req: NextRequest) {
 
   if (!ok) {
     // Audit only when the account exists; unknown addresses are not recorded.
+    // Fire-and-forget: an awaited INSERT on only this branch would be the one
+    // remaining timing difference between account-exists and account-unknown.
+    // The action verb distinguishes a disabled account presenting the CORRECT
+    // password — the "did they have it?" question — while the response stays
+    // identical; non-disclosure lives in the response, not the audit trail.
     if (user) {
-      await audit({ actorId: user.id, action: "auth.login.password.failed", ip });
+      const action =
+        user.disabledAt && passwordOk ? "auth.login.disabled" : "auth.login.password.failed";
+      void audit({ actorId: user.id, action, ip });
     }
     return NextResponse.json(FAILED, { status: 401 });
   }
+
+  // A login from a browser that still carries an old session cookie replaces
+  // that session — revoke it so rows don't accumulate live for 90 days each.
+  await revokeCurrentSession();
 
   const token = await createSession(user.id, req.headers.get("user-agent"));
   await setSessionCookie(token);

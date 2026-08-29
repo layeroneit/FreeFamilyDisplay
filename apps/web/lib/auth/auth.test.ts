@@ -4,7 +4,6 @@ import {
   evaluateSession,
   generateSessionToken,
   hashToken,
-  hashesEqual,
   SESSION_SLIDE_MIN_INTERVAL_MS,
   SESSION_TTL_MS,
 } from "./session-token";
@@ -29,14 +28,6 @@ test("hashToken is deterministic and one-way-shaped", () => {
   assert.equal(hashToken(t), hashToken(t));
   assert.match(hashToken(t), /^[0-9a-f]{64}$/);
   assert.notEqual(hashToken(t), hashToken(t + "x"));
-});
-
-test("hashesEqual: equal, unequal, and malformed inputs", () => {
-  const h = hashToken("abc");
-  assert.equal(hashesEqual(h, h), true);
-  assert.equal(hashesEqual(h, hashToken("abd")), false);
-  assert.equal(hashesEqual("", ""), false); // zero-length never matches
-  assert.equal(hashesEqual(h, h.slice(2)), false); // length mismatch
 });
 
 // ---------------------------------------------------------------- sessions
@@ -86,14 +77,30 @@ test("limiter allows up to the cap, then limits with a sane retry hint", () => {
   assert.ok(fourth.retryAfterMs > 0 && fourth.retryAfterMs <= 1000);
 });
 
-test("limiter window slides — old attempts age out", () => {
-  const limiter = createRateLimiter(2, 1000);
+test("rejected attempts do not extend the window — no permanent lockout", () => {
+  // The audit's lockout scenario: trip the limiter, then poke once a minute.
+  // With denials not recorded, the window expires on wall clock and the
+  // legitimate user gets back in.
+  const limiter = createRateLimiter(2, 60_000);
   const t0 = 5_000_000;
+  limiter.hit("acct", t0);
+  limiter.hit("acct", t0 + 10);
+  for (let i = 1; i <= 100; i++) {
+    limiter.hit("acct", t0 + i * 500); // attacker keeps poking inside the window
+  }
+  // One window after the FIRST attempt, the key is clean again.
+  assert.equal(limiter.hit("acct", t0 + 60_001).limited, false);
+});
+
+test("honoring retry-after actually clears the limit", () => {
+  const limiter = createRateLimiter(1, 1000);
+  const t0 = 7_000_000;
   limiter.hit("k", t0);
-  limiter.hit("k", t0 + 100);
-  assert.equal(limiter.hit("k", t0 + 200).limited, true);
-  // After the window passes, attempts are allowed again.
-  assert.equal(limiter.hit("k", t0 + 1201).limited, false);
+  const denied = limiter.hit("k", t0 + 100);
+  assert.equal(denied.limited, true);
+  // Waiting exactly the advertised time must succeed — a client that obeys
+  // Retry-After and still gets 429 will retry-storm forever.
+  assert.equal(limiter.hit("k", t0 + 100 + denied.retryAfterMs).limited, false);
 });
 
 test("limiter keys are independent", () => {
@@ -103,6 +110,19 @@ test("limiter keys are independent", () => {
   assert.equal(limiter.hit("b", t0).limited, false);
   assert.equal(limiter.hit("a", t0 + 1).limited, true);
   assert.equal(limiter.hit("b", t0 + 1).limited, true);
+});
+
+test("limiter map is hard-capped — attacker-chosen keys cannot exhaust memory", () => {
+  const limiter = createRateLimiter(5, 60_000);
+  const t0 = 11_000_000;
+  // Well past the cap; if unbounded this would hold 30k live windows.
+  for (let i = 0; i < 30_000; i++) {
+    limiter.hit(`acct:attacker-${i}@x.com`, t0 + i);
+  }
+  // Functional check: a fresh key still works and an early key was evicted
+  // (its window is gone, so it starts clean rather than limited).
+  assert.equal(limiter.hit("acct:fresh@x.com", t0 + 30_001).limited, false);
+  assert.equal(limiter.hit("acct:attacker-0@x.com", t0 + 30_002).limited, false);
 });
 
 // ---------------------------------------------------------------- passwords

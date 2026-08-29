@@ -43,11 +43,22 @@ export async function createSession(userId: string, userAgent: string | null): P
   return token;
 }
 
+/**
+ * `Secure` must follow the DEPLOYMENT's scheme, not NODE_ENV: the default
+ * stack serves plain HTTP on the LAN (TLS arrives with the tunnel in Phase 6),
+ * and Next's standalone server hard-forces NODE_ENV=production. A Secure
+ * cookie over http:// is silently discarded by the browser — login "succeeds"
+ * and then loops forever with no error shown.
+ */
+function cookieSecure(): boolean {
+  return (process.env.APP_URL ?? "").startsWith("https://");
+}
+
 export async function setSessionCookie(token: string): Promise<void> {
   const store = await cookies();
   store.set(SESSION_COOKIE, token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: cookieSecure(),
     sameSite: "lax",
     path: "/",
     maxAge: SESSION_TTL_MS / 1000,

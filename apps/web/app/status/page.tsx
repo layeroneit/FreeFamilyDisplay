@@ -36,6 +36,8 @@ async function checkWorker(): Promise<{ worker: boolean; queue: boolean }> {
 export default async function StatusPage() {
   const user = await getSessionUser();
   if (!user) redirect("/login");
+  // Operator NOC page — members don't need internal topology.
+  if (user.role !== "OPERATOR") redirect("/dashboard");
 
   const startedAt = Date.now();
   const [database, workerState] = await Promise.all([isDatabaseReachable(), checkWorker()]);

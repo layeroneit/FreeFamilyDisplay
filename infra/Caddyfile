@@ -33,7 +33,12 @@
 	log_skip @health
 
 	reverse_proxy web:3010 {
-		header_up X-Real-IP {remote_host}
+		# {client_ip} honors trusted_proxies above and resolves the ORIGIN
+		# client. {remote_host} would be the immediate peer — behind the
+		# tunnel that is cloudflared's container IP for every visitor, which
+		# collapses all rate limiting onto one shared key and makes every
+		# audit-log IP identical.
+		header_up X-Real-IP {client_ip}
 	}
 
 	log {
