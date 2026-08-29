@@ -5,24 +5,22 @@ mid-phase. Resolve, then strike through with the answer and the date.
 
 ## Blocks Phase 1 — resolve before auth work starts
 
-**SES sandbox status.** Plan §6.7 requires confirming this rather than assuming
-it. If the AWS account is still in the SES sandbox it can only send to
-pre-verified addresses, which makes invite emails useless for anyone new and
-blocks the entire auth flow. the operator's other project being live *suggests* production access was
-granted, but that is inference, not confirmation.
+**~~SES sandbox status.~~** *(Resolved 2026-08-29)* Operator confirmed the
+account has production access. The invite/magic-link flow is unblocked.
 
-**Hearth sending identity.** A distinct domain or subdomain with its own DKIM
-keys and SPF alignment. Not yet chosen. Family should not receive dashboard mail
-from a the operator's other project address, and a reputation problem on one project must not follow
-the other.
+**SES credential separation — decision pending.** The operator's first
+instinct was to reuse the operator's other project's existing SES credentials. Plan §6.7 and
+CLAUDE.md forbid exactly that ("Never the operator's other project's credentials or identity") for
+blast-radius and reputation-attribution reasons; the recommendation on the
+table is ~15 minutes of console work in the *same* AWS account: a verified
+subdomain identity with its own DKIM, one IAM user scoped to
+`ses:SendEmail`/`ses:SendRawEmail` condition-locked to that `From`, and one
+configuration set with an SNS topic feeding `email_suppressions`. Awaiting the
+operator's final call — if they reaffirm credential reuse, amend §6.7 to match
+rather than leaving plan and reality disagreeing.
 
-**Dedicated IAM principal.** Scoped to `ses:SendEmail` and `ses:SendRawEmail`
-only, with a condition restricting `From` to the identity above. Must not reuse
-the operator's other project's credentials.
-
-**SES configuration set + SNS topic** for bounces, complaints, and deliveries.
-This is what attributes a reputation problem to the right project, and it is what
-feeds `email_suppressions`.
+**Hearth sending identity.** A distinct subdomain with its own DKIM keys and
+SPF alignment. Not yet chosen. (Part of the decision above.)
 
 ## Blocks Phase 6 — needed before exposure
 
@@ -37,21 +35,15 @@ can reach it.
 
 ## Blocks Phase 4 — needed before the kiosk renderer is tuned
 
-**Which Raspberry Pi model, and how much RAM?** §7.8 assumes a **Pi 4 / 2 GB /
-Pi OS 64-bit at 1080p** and sets the performance budget against that. The
-assumption changes real decisions:
+**~~Which Raspberry Pi model?~~** *(Resolved 2026-08-29)* Operator confirmed a
+**Raspberry Pi 4** — exactly the baseline §7.8 was written against, so the
+renderer budget stands unchanged.
 
-- **Pi 5** — comfortable. The §7.8 budget has headroom and `backdrop-filter`
-  could plausibly be allowed rather than degraded.
-- **Pi 4, 1 GB** — the 250 MB Chromium ceiling gets tight with a photo-heavy
-  board. Serve the 960×540 image variant by default on this unit.
-- **Pi 3 / Zero 2 W** — the budget becomes a hard limit. Expect to drop shadows
-  entirely, cap the photo widget to one image on screen, and consider rendering
-  at 720p and letting the display scale.
-
-Also worth knowing: **is the Pi on Ethernet or Wi-Fi**, and **is it driving a TV
-over HDMI or a monitor?** TV overscan is a real source of "the edges are cut off"
-reports, and it is a display setting, not a renderer bug.
+**Still open: how much RAM on that Pi 4** (shipped in 1/2/4/8 GB). §7.8 assumes
+2 GB. If 1 GB, the kiosk defaults to the 960×540 image variant; 4/8 GB means
+comfortable headroom. Also worth knowing eventually: **Ethernet or Wi-Fi**, and
+**TV over HDMI or a monitor** — TV overscan is a classic source of "the edges
+are cut off" reports, and it is a display setting, not a renderer bug.
 
 ## Host state
 
