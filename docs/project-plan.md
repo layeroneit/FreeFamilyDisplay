@@ -641,6 +641,26 @@ Unprivileged LXC, Debian 13, nesting enabled. Non-root UID in every container. `
 
 Each phase ends deployable. Do not start a phase before the prior one's criteria pass.
 
+> **v4 re-sequencing (2026-08-29, operator decision).** After Phase 0 shipped,
+> the operator chose a design-first ordering: prove the editor/theme/renderer
+> surface — where the design risk lives — before wiring email and connectors.
+> The phase *contents* and done-criteria below are unchanged; the *order* is:
+>
+> - **Phase 1a — auth slice.** Operator password login (ADR 0003), sessions,
+>   and the audit log. Just enough for boards to have a real owner behind a
+>   real login. Magic-link, invites, TOTP, break-glass, and backup move to 1b.
+> - **Phase 3 (pulled forward) — editor, themes, renderer.** Built against
+>   boards owned by the operator's real account — no fixture data, tenancy
+>   stays honest. The kiosk/admin CSS boundary applies from the first line.
+> - **Phase 1b + Phase 2 — the rest of auth, then connectors.** Email,
+>   invites, magic-link, TOTP, break-glass CLI, the backup with proven
+>   restore, then the connector framework and ICS. **Hard gate: no family
+>   member is invited until 1b's done-criteria pass — including the
+>   cross-tenant isolation test and the restore drill.**
+> - Phases 4–6 as written.
+>
+> The SES identity/credential decision moves with 1b and is no longer urgent.
+
 **Phase 0 — Foundation.** Monorepo, strict TS, lint, Prisma schema for users/sessions/invites, Compose stack, CI typecheck and test.
 *Done when:* `docker compose up` gives a working skeleton with a green healthcheck.
 
