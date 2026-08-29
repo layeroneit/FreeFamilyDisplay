@@ -69,7 +69,7 @@ tonight; nothing after it runs until the code audit gives a green light.
 18. Give the VM a stable address. Prefer a **DHCP reservation on the router**
     for this VM's MAC (visible under **Hardware → Network Device**) over static
     netplan config — same result, zero files to maintain in the guest, and the
-    displays will be pointed at `http://<vm-ip>:8080`, so that IP must never
+    displays will be pointed at `http://<vm-ip>:8443`, so that IP must never
     change.
 19. Log in on the console or `ssh <user>@<vm-ip>` and patch:
     `sudo apt update && sudo apt upgrade -y`, then `sudo reboot` if a kernel
@@ -136,7 +136,7 @@ tonight; nothing after it runs until the code audit gives a green light.
 
     | Variable | Value |
     |---|---|
-    | `APP_URL` | `http://<vm-ip>:8080` — Caddy's published port |
+    | `APP_URL` | `http://<vm-ip>:8443` — Caddy's published port. Plain HTTP: type the `http://` scheme explicitly, since `:8443` alone makes some browsers guess HTTPS. |
     | `NODE_ENV` | `production` |
     | `DATABASE_URL` | `postgresql://ffd:<db-password>@postgres:5432/ffd` — the host **must** be `postgres`, the compose service name. `localhost` will not resolve inside the containers. |
     | `POSTGRES_USER` | `ffd` |
@@ -164,16 +164,16 @@ tonight; nothing after it runs until the code audit gives a green light.
 37. `docker compose -f infra/compose.yaml --env-file .env ps` — wait until
     `postgres`, `redis`, `web`, and `worker` all show **healthy** (there is no
     `cloudflared`; that's the tunnel profile, intentionally not running).
-38. On the VM: `curl -i http://localhost:8080/healthz` and
-    `curl -i http://localhost:8080/readyz` — both should return 200.
-39. From a phone or laptop on the LAN, browse `http://<vm-ip>:8080`.
+38. On the VM: `curl -i http://localhost:8443/healthz` and
+    `curl -i http://localhost:8443/readyz` — both should return 200.
+39. From a phone or laptop on the LAN, browse `http://<vm-ip>:8443`.
 
 **Troubleshooting**
 
 | Symptom | Likely cause / fix |
 |---|---|
-| `bind: address already in use` on 8080 | Something else owns the port. `sudo ss -ltnp 'sport = :8080'` to see what; move it or pick a different published port in `infra/compose.yaml` (and update `APP_URL`). |
+| `bind: address already in use` on 8443 | Something else owns the port. `sudo ss -ltnp 'sport = :8443'` to see what; move it or pick a different published port in `infra/compose.yaml` (and update `APP_URL`). |
 | `permission denied ... docker.sock` | Step 27's group change hasn't taken effect — log out and back in (or reboot). Don't reflex to `sudo docker`; fix the group. |
 | Containers stuck in `health: starting` | Normal for the first minute — healthchecks have 20–30 s `start_period` and web builds Next.js on first run. Judge after two minutes, then `docker compose -f infra/compose.yaml --env-file .env logs web`. |
-| Reachable on the VM but not from the LAN | If you enabled UFW: Docker's published ports bypass UFW, so 8080 usually still works — but SSH does not; make sure `sudo ufw allow 22/tcp` (or your LAN subnet) is in place before enabling it. Ubuntu ships with UFW inactive; leaving it off on this LAN-only box is fine. Otherwise check you're on the same subnet/VLAN as the VM. |
+| Reachable on the VM but not from the LAN | If you enabled UFW: Docker's published ports bypass UFW, so 8443 usually still works — but SSH does not; make sure `sudo ufw allow 22/tcp` (or your LAN subnet) is in place before enabling it. Ubuntu ships with UFW inactive; leaving it off on this LAN-only box is fine. Otherwise check you're on the same subnet/VLAN as the VM. |
 | `curl` 200 but browser page errors | Check `web` logs for a bad `.env` value — the compose file fails fast on missing variables but cannot catch a typo'd `DATABASE_URL` password. |
