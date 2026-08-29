@@ -1,6 +1,7 @@
 # ADR 0001 — Run in an Ubuntu VM, not an unprivileged LXC
 
-**Status:** Accepted — 2026-08-29
+**Status:** ~~Accepted~~ **Superseded by ADR 0002** (2026-08-29, same day —
+operator chose the existing LXC during deployment)
 **Supersedes:** the first sentence of plan §8.7
 
 ## Context
