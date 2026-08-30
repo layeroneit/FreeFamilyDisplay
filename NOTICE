@@ -1,0 +1,65 @@
+Free Family Display
+Copyright 2026 Layer One IT Consultants
+
+This product was developed by Layer One IT Consultants
+(https://layeroneconsultants.com/) and is given away free of charge.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License. You may obtain a copy of
+the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations under
+the License.
+
+--------------------------------------------------------------------------
+NO WARRANTY, AND NOBODY IS OPERATING THIS FOR YOU
+--------------------------------------------------------------------------
+
+Free Family Display is software you download and run on your own machine.
+Layer One IT Consultants does not host it, does not operate it, has no access
+to your instance or to anything in it, and provides no support, monitoring, or
+uptime commitment of any kind.
+
+It is provided "AS IS" and "AS AVAILABLE", without warranty of any kind,
+express or implied, including any warranty of merchantability, fitness for a
+particular purpose, accuracy, or non-infringement. To the fullest extent
+permitted by law, Layer One IT Consultants is not liable for any loss, damage,
+or expense arising from use of, or inability to use, this software.
+
+Do not rely on it where a mistake or an outage would cause harm -- medical
+timing, travel, safety, or money. Keeping your own copy patched, backed up,
+and secured is yours to do.
+
+--------------------------------------------------------------------------
+TRADEMARKS
+--------------------------------------------------------------------------
+
+"Layer One", "Layer One IT Consultants", and the Layer One logo
+(apps/web/public/brand/) are marks of Layer One IT Consultants. Section 6 of
+the Apache License does not grant permission to use them. The licence covers
+the code, not the brand: you may run, modify, and redistribute this software,
+but a modified or redistributed version must not be presented as Layer One's,
+and the marks should be removed if you fork it under another name.
+
+--------------------------------------------------------------------------
+THIRD-PARTY IMAGES
+--------------------------------------------------------------------------
+
+This distribution includes 68 photographs that are NOT covered by the Apache
+License. Each remains under its own licence -- CC0, public domain, CC BY, or
+CC BY-SA -- and each is credited on screen where it is displayed.
+
+The full per-image list of photographer, source, and licence is in
+ATTRIBUTION.md, generated from the same manifests the application reads.
+
+Share-alike terms (CC BY-SA) attach to those images and to adaptations of
+them. They do not reach this source code.
+
+Photographs, albums, or artwork that a household adds to its own instance are
+never committed to this repository and are never redistributed by this
+project.
