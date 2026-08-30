@@ -135,6 +135,14 @@ Leave everything else blank. **You do not need an AWS account, an email provider
 
 ### 5. Start it
 
+> **Faster option:** from **v1.0.0** onward, pre-built images are published for
+> amd64 and arm64, so you can skip the build entirely. Create
+> `infra/compose.images.yaml` with the two `image:` lines from the
+> [release notes](https://github.com/layeroneit/FreeFamilyDisplay/releases) and
+> add `-f infra/compose.images.yaml` to the command below. Minutes of building
+> become one `docker pull`. Building from source, as written here, always works
+> too.
+
 ```bash
 docker compose -f infra/compose.yaml --env-file .env up -d --build
 ```
