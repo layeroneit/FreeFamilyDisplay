@@ -20,6 +20,25 @@ export function pokeWorkerWeather(): void {
   );
 }
 
+/**
+ * The drop directory is mounted into the worker, not into web, so the folder
+ * listing comes from the worker over the compose network. Returns an empty
+ * list if the worker is unreachable — the picker degrades to "none found"
+ * rather than erroring the page.
+ */
+export async function fetchDropFolders(): Promise<Array<{ name: string; images: number }>> {
+  const base = process.env.WORKER_URL ?? "http://worker:3002";
+  try {
+    const res = await fetch(`${base}/drop-folders`, { signal: AbortSignal.timeout(2500), cache: "no-store" });
+    if (!res.ok) return [];
+    const body = (await res.json()) as { folders?: Array<{ name: string; images: number }> };
+    return Array.isArray(body.folders) ? body.folders : [];
+  } catch (err) {
+    log.warn("drop folder listing failed", { error: err instanceof Error ? err.message : "unknown" });
+    return [];
+  }
+}
+
 /** Asks the worker to sync calendar/photo links now. Same rules as the weather poke. */
 export function pokeWorkerConnectors(): void {
   const base = process.env.WORKER_URL ?? "http://worker:3002";

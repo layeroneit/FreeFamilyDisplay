@@ -44,6 +44,10 @@ export default async function BoardPage({ params }: { params: Promise<{ id: stri
         weatherMood: board.weatherMood,
         weatherMoodStrength: board.weatherMoodStrength,
         pinned: board.style.wallpaperPinned === board.currentWallpaperId && board.currentWallpaperId !== null,
+        // Only whether a link exists — the token stays server-side, and is
+        // shown exactly once at the moment it is minted.
+        hasDisplayLink: board.displayTokenHash !== null,
+        displaySeenAt: board.displaySeenAt ? board.displaySeenAt.toISOString() : null,
       }}
       widgets={board.widgets.map((w) => ({ ...w, config: publicWidgetConfig(w.type, w.config) }))}
       slots={slots}

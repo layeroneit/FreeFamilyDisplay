@@ -175,8 +175,13 @@ services:
       GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
       # Floating/TZID-less ICS times are read as local — same zone as web.
       TZ: ${TZ:-America/Chicago}
+      WALLPAPER_DROP_DIR: /app/drop
     volumes:
       - media:/app/media
+      # Drop images into <repo>/wallpaper-drop/<collection name>/ on the host
+      # and the worker ingests them. Read-only: this is the operator's own
+      # directory and the worker has no business writing to it.
+      - ${WALLPAPER_DROP_DIR:-../wallpaper-drop}:/app/drop:ro
     read_only: true
     tmpfs:
       - /tmp

@@ -21,6 +21,7 @@ import { Redis } from "ioredis";
 import { runWeatherCycle, startWeatherLoop } from "./weather.js";
 import { advanceBoard, runWallpaperCycle, seedBuiltinWallpapers } from "./wallpapers.js";
 import { runConnectorCycle } from "./connectors/index.js";
+import { listDropFolders } from "./connectors/folder-collections.js";
 
 const log = createLogger("worker");
 
@@ -112,6 +113,13 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     const [database, queue] = await Promise.all([isDatabaseReachable(), isRedisReachable()]);
     const ready = database && queue;
     send(res, ready ? 200 : 503, { status: ready ? "ready" : "not-ready", database, queue });
+    return;
+  }
+
+  if (path === "/drop-folders" && req.method === "GET") {
+    // The drop directory is mounted into this container, not web's, so web
+    // asks for the listing over the internal network. Names only.
+    send(res, 200, { folders: await listDropFolders() });
     return;
   }
 

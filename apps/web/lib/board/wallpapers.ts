@@ -31,6 +31,10 @@ export type CollectionInfo = {
   cover: Pick<WallpaperInfo, "basePath" | "lqip"> | null;
   /** Custom collections only: masked source link + last sync outcome. */
   sourceMask: string | null;
+  /** Folder-fed collections: the drop sub-directory name. */
+  sourceFolder: string | null;
+  /** Owner-written note rendered with the image (e.g. a rights disclaimer). */
+  rightsNote: string | null;
   lastSyncedAt: Date | null;
   lastError: string | null;
 };
@@ -88,6 +92,8 @@ export async function listCollections(userId: string): Promise<CollectionInfo[]>
       name: true,
       description: true,
       isBuiltin: true,
+      sourceFolder: true,
+      rightsNote: true,
       sourceMask: true,
       lastSyncedAt: true,
       lastError: true,
@@ -101,6 +107,8 @@ export async function listCollections(userId: string): Promise<CollectionInfo[]>
     name: r.name,
     description: r.description,
     isBuiltin: r.isBuiltin,
+    sourceFolder: r.sourceFolder,
+    rightsNote: r.rightsNote,
     count: r._count.wallpapers,
     cover: r.wallpapers[0] ?? null,
     sourceMask: r.sourceMask,

@@ -10,10 +10,10 @@ import { collectionFontVars } from "@/lib/board/collection-fonts";
 import type { BoardData, CalendarFeed } from "./widget-view";
 
 /** The collection's slug, which selects its lettering. Null for no collection. */
-async function collectionSlug(collectionId: string | null): Promise<string | null> {
-  if (!collectionId) return null;
-  const c = await prisma.wallpaperCollection.findUnique({ where: { id: collectionId }, select: { slug: true } });
-  return c?.slug ?? null;
+async function collectionMeta(collectionId: string | null): Promise<{ slug: string | null; rightsNote: string | null }> {
+  if (!collectionId) return { slug: null, rightsNote: null };
+  const c = await prisma.wallpaperCollection.findUnique({ where: { id: collectionId }, select: { slug: true, rightsNote: true } });
+  return { slug: c?.slug ?? null, rightsNote: c?.rightsNote ?? null };
 }
 
 export type BoardScene = {
@@ -23,6 +23,8 @@ export type BoardScene = {
   mood: Mood | null;
   /** Token overrides layered over the theme: wallpaper text color, palette linking. */
   varOverrides: Record<string, string>;
+  /** Owner-written note on the wallpaper collection, shown with the credit. */
+  rightsNote: string | null;
 };
 
 /** Everything the renderer needs, resolved from Postgres only (plan §4.2). */
@@ -85,6 +87,7 @@ export async function loadBoardScene(board: BoardFull, viewerName: string): Prom
   const scrimOpacity = wallpaper ? (board.scrimOpacityOverride ?? wallpaper.suggestedScrimOpacity) : 0;
 
   const varOverrides: Record<string, string> = {};
+  let rightsNote: string | null = null;
   if (wallpaper) {
     const dark = wallpaper.meanLuminance > 0.5 && scrimOpacity < 0.35;
     varOverrides["--hearth-text"] = dark ? "#171717" : "#F5F2EA";
@@ -94,8 +97,10 @@ export async function loadBoardScene(board: BoardFull, viewerName: string): Prom
     }
     // The collection carries its own lettering (operator, 2026-08-30: an anime
     // collection should look like one, not just swap the photo).
-    Object.assign(varOverrides, collectionFontVars(await collectionSlug(board.wallpaperCollectionId)));
+    const meta = await collectionMeta(board.wallpaperCollectionId);
+    rightsNote = meta.rightsNote;
+    Object.assign(varOverrides, collectionFontVars(meta.slug));
   }
 
-  return { data, wallpaper, scrimOpacity, mood, varOverrides };
+  return { data, wallpaper, scrimOpacity, mood, varOverrides, rightsNote };
 }

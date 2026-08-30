@@ -26,6 +26,9 @@ type EditorBoard = {
   weatherMood: boolean;
   weatherMoodStrength: number;
   pinned: boolean;
+  /** Whether a display link exists. The token itself never reaches the client. */
+  hasDisplayLink: boolean;
+  displaySeenAt: string | null;
 };
 
 /**
@@ -463,24 +466,164 @@ function DisplaySettings({
           Follows the town on this display&apos;s weather widget. Raindrops and lightning turn off automatically on low-power screens.
         </p>
       </section>
+
+      <section>
+        <DisplayLinkPanel board={board} />
+      </section>
     </div>
   );
 }
 
-/** "Add your own" (spec §7): name + Google Photos album / Drive folder link → private collection. */
+/**
+ * The wall-screen URL for this board (plan §8.2). A screen in a hallway must
+ * not hold a session, so it gets an opaque per-board link instead: read-only,
+ * no admin UI behind it, revocable on its own without touching the account.
+ *
+ * The URL is shown once, at the moment it is minted, because only its hash is
+ * stored. Anyone holding it can see this board, so it is treated like a
+ * password — hence copy-once rather than a value sitting in the page.
+ */
+function DisplayLinkPanel({ board }: { board: EditorBoard }) {
+  const router = useRouter();
+  const [url, setUrl] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  async function mint() {
+    setBusy(true);
+    setErr(null);
+    try {
+      const res = await fetch(`/api/boards/${board.id}/display-link`, { method: "POST" });
+      const body = (await res.json().catch(() => null)) as { url?: string; error?: string } | null;
+      if (!res.ok || !body?.url) {
+        setErr(body?.error ?? "Couldn't create the link.");
+        return;
+      }
+      setUrl(body.url);
+      setCopied(false);
+      router.refresh();
+    } catch {
+      setErr("Couldn't reach the server.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function revoke() {
+    setBusy(true);
+    setErr(null);
+    try {
+      const res = await fetch(`/api/boards/${board.id}/display-link`, { method: "DELETE" });
+      if (!res.ok) {
+        setErr("Couldn't turn it off.");
+        return;
+      }
+      setUrl(null);
+      router.refresh();
+    } catch {
+      setErr("Couldn't reach the server.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const seen = board.displaySeenAt ? new Date(board.displaySeenAt) : null;
+
+  return (
+    <>
+      <span className="block text-xs font-semibold" style={{ color: "var(--hearth-text-muted)" }}>Wall screen link</span>
+      <p className="mt-1 text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
+        A private URL that shows just this display — no sign-in, no menus. Paste it into the browser on a Raspberry Pi or a tablet and leave it there.
+      </p>
+
+      {url ? (
+        <div className="mt-2 rounded-lg border p-2" style={{ borderColor: "var(--hearth-accent-1)" }}>
+          <p className="text-[11px] font-semibold">Copy this now — it is not shown again.</p>
+          <code className="mt-1 block break-all rounded px-2 py-1 text-[11px]" style={{ background: "var(--hearth-bg)" }}>{url}</code>
+          <button
+            type="button"
+            onClick={() => {
+              void navigator.clipboard.writeText(url).then(
+                () => setCopied(true),
+                () => setErr("Couldn't copy — select the text above instead."),
+              );
+            }}
+            className="mt-2 rounded-lg px-3 py-1.5 text-xs font-semibold"
+            style={{ background: "var(--hearth-accent-1)", color: "#1a1a1a" }}
+          >
+            {copied ? "Copied" : "Copy link"}
+          </button>
+        </div>
+      ) : null}
+
+      <div className="mt-2 flex flex-wrap gap-2">
+        <button type="button" disabled={busy} onClick={() => void mint()} className="rounded-lg px-3 py-1.5 text-xs font-semibold disabled:opacity-50" style={{ background: "var(--hearth-accent-1)", color: "#1a1a1a" }}>
+          {busy ? "Working…" : board.hasDisplayLink ? "Replace link" : "Create link"}
+        </button>
+        {board.hasDisplayLink ? (
+          <button type="button" disabled={busy} onClick={() => void revoke()} className="rounded-lg border px-3 py-1.5 text-xs disabled:opacity-50" style={{ borderColor: "var(--hearth-border)" }}>
+            Turn off
+          </button>
+        ) : null}
+      </div>
+
+      {board.hasDisplayLink ? (
+        <p className="mt-1 text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
+          {seen ? `A screen last loaded this ${seen.toLocaleString()}.` : "No screen has opened it yet."} Replacing the link stops any screen still using the old one.
+        </p>
+      ) : null}
+      <p aria-live="polite" className="min-h-4 text-[11px]" style={{ color: "var(--hearth-accent-4)" }}>{err}</p>
+    </>
+  );
+}
+
+/**
+ * "Add your own" (spec §7). Two sources:
+ *   link   — a Google Photos album or Drive folder, synced over the network.
+ *   folder — a directory the operator filled on the server itself. This is
+ *            the path for art already on disk: nothing is fetched and nothing
+ *            leaves the machine.
+ * Either way the set is private to its owner. `rightsNote` rides along and is
+ * printed with the credit line on the board, which is where a collection of
+ * someone else's artwork can say whose it is.
+ */
 function AddOwnCollection({ onCreated }: { onCreated: (id: string) => void }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [mode, setMode] = useState<"link" | "folder">("link");
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
+  const [folder, setFolder] = useState("");
+  const [folders, setFolders] = useState<Array<{ name: string; images: number }> | null>(null);
+  const [rightsNote, setRightsNote] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const input = { background: "var(--hearth-bg)", borderColor: "var(--hearth-border)", color: "var(--hearth-text)" };
+
+  // Read the server's drop directory the first time the folder tab is opened.
+  useEffect(() => {
+    if (mode !== "folder" || folders !== null) return;
+    let live = true;
+    void fetch("/api/wallpapers/folders")
+      .then((r) => (r.ok ? r.json() : { folders: [] }))
+      .then((b: { folders?: Array<{ name: string; images: number }> }) => {
+        if (live) setFolders(b.folders ?? []);
+      })
+      .catch(() => {
+        if (live) setFolders([]);
+      });
+    return () => {
+      live = false;
+    };
+  }, [mode, folders]);
+
   async function create() {
     setBusy(true);
     setErr(null);
     try {
-      const res = await fetch("/api/wallpapers", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ name, link }) });
+      const payload = mode === "folder" ? { name, folder, rightsNote } : { name, link, rightsNote };
+      const res = await fetch("/api/wallpapers", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) });
       const body = (await res.json().catch(() => null)) as { id?: string; error?: string } | null;
       if (!res.ok || !body?.id) {
         setErr(body?.error ?? "Couldn't add that.");
@@ -489,6 +632,8 @@ function AddOwnCollection({ onCreated }: { onCreated: (id: string) => void }) {
       setOpen(false);
       setName("");
       setLink("");
+      setFolder("");
+      setRightsNote("");
       onCreated(body.id);
       router.refresh();
     } catch {
@@ -497,24 +642,84 @@ function AddOwnCollection({ onCreated }: { onCreated: (id: string) => void }) {
       setBusy(false);
     }
   }
+
   if (!open) {
     return (
       <button type="button" onClick={() => setOpen(true)} className="mt-2 w-full rounded-lg border border-dashed px-3 py-2 text-left text-xs" style={{ borderColor: "var(--hearth-accent-1)", color: "var(--hearth-text)" }}>
         <span className="block font-semibold">+ Add your own collection</span>
-        <span style={{ color: "var(--hearth-text-muted)" }}>Anime, your vacation, the kids’ season — paste a Google Photos album or Drive folder link. It syncs every 15 minutes.</span>
+        <span style={{ color: "var(--hearth-text-muted)" }}>Anime, your vacation, the kids’ season — from a folder on the server, or a Google Photos album link.</span>
       </button>
     );
   }
+
+  const tab = (id: "link" | "folder", label: string) => (
+    <button
+      type="button"
+      onClick={() => setMode(id)}
+      className="rounded-lg px-3 py-1 text-xs font-semibold"
+      style={mode === id ? { background: "var(--hearth-accent-1)", color: "#1a1a1a" } : { border: "1px solid var(--hearth-border)", color: "var(--hearth-text-muted)" }}
+    >
+      {label}
+    </button>
+  );
+
+  const ready = name.trim() !== "" && (mode === "folder" ? folder !== "" : link.trim() !== "");
+
   return (
     <div className="mt-2 space-y-2 rounded-lg border p-2" style={{ borderColor: "var(--hearth-accent-1)" }}>
-      <input placeholder="Collection name (e.g. Anime)" value={name} onChange={(e) => setName(e.target.value)} maxLength={80} className="w-full rounded-lg border px-3 py-1.5 text-sm" style={input} />
-      <input type="url" placeholder="https://photos.app.goo.gl/… or a Drive folder link" value={link} onChange={(e) => setLink(e.target.value)} maxLength={2048} className="w-full rounded-lg border px-3 py-1.5 text-sm" style={input} autoComplete="off" spellCheck={false} />
+      <div className="flex gap-2">
+        {tab("folder", "Folder on the server")}
+        {tab("link", "Google link")}
+      </div>
+
+      <input placeholder="Collection name (e.g. Demon Slayer)" value={name} onChange={(e) => setName(e.target.value)} maxLength={80} className="w-full rounded-lg border px-3 py-1.5 text-sm" style={input} />
+
+      {mode === "folder" ? (
+        <>
+          {folders === null ? (
+            <p className="text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>Reading the drop folder…</p>
+          ) : folders.length === 0 ? (
+            <p className="text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
+              No folders yet. On the server, make one under <code>wallpaper-drop/</code> — for example <code>wallpaper-drop/demon-slayer/</code> — drop your images in, then reopen this.
+            </p>
+          ) : (
+            <select className="w-full rounded-lg border px-3 py-1.5 text-sm" style={input} value={folder} onChange={(e) => setFolder(e.target.value)}>
+              <option value="">Choose a folder…</option>
+              {folders.map((f) => (
+                <option key={f.name} value={f.name}>
+                  {f.name} ({f.images} image{f.images === 1 ? "" : "s"})
+                </option>
+              ))}
+            </select>
+          )}
+          <p className="text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
+            Images need 1920px+ on the long edge. Nothing is uploaded anywhere — the files stay on your server and only you can see this collection.
+          </p>
+        </>
+      ) : (
+        <>
+          <input type="url" placeholder="https://photos.app.goo.gl/… or a Drive folder link" value={link} onChange={(e) => setLink(e.target.value)} maxLength={2048} className="w-full rounded-lg border px-3 py-1.5 text-sm" style={input} autoComplete="off" spellCheck={false} />
+          <p className="text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
+            Images need 1920px+ on the long edge. Only you can see this collection. The link is stored encrypted and never shown again.
+          </p>
+        </>
+      )}
+
+      <input
+        placeholder="Credit / rights note shown on screen (optional)"
+        value={rightsNote}
+        onChange={(e) => setRightsNote(e.target.value)}
+        maxLength={300}
+        className="w-full rounded-lg border px-3 py-1.5 text-sm"
+        style={input}
+      />
       <p className="text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
-        Images need 1920px+ on the long edge. Only you can see this collection. The link is stored encrypted and never shown again.
+        Printed in small type with the image. For artwork someone else owns, say so here — e.g. “Fan art · © the respective rights holders · personal display only”. A note isn’t a licence, so keep collections like that to your own screens.
       </p>
+
       <p aria-live="polite" className="min-h-4 text-[11px]" style={{ color: "var(--hearth-accent-4)" }}>{err}</p>
       <div className="flex gap-2">
-        <button type="button" disabled={busy || !name.trim() || !link.trim()} onClick={() => void create()} className="rounded-lg px-3 py-1.5 text-xs font-semibold disabled:opacity-50" style={{ background: "var(--hearth-accent-1)", color: "#1a1a1a" }}>
+        <button type="button" disabled={busy || !ready} onClick={() => void create()} className="rounded-lg px-3 py-1.5 text-xs font-semibold disabled:opacity-50" style={{ background: "var(--hearth-accent-1)", color: "#1a1a1a" }}>
           {busy ? "Adding…" : "Add collection"}
         </button>
         <button type="button" onClick={() => setOpen(false)} className="rounded-lg border px-3 py-1.5 text-xs" style={{ borderColor: "var(--hearth-border)" }}>Cancel</button>

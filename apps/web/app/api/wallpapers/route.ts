@@ -12,10 +12,20 @@ export const dynamic = "force-dynamic";
 
 const MAX_CUSTOM_COLLECTIONS = 10;
 
-const CreateInput = z.object({
-  name: z.string().trim().min(1, "Give the collection a name.").max(80),
-  link: z.string().trim().min(1, "Paste a link.").max(2048),
-});
+const CreateInput = z
+  .object({
+    name: z.string().trim().min(1, "Give the collection a name.").max(80),
+    link: z.string().trim().max(2048).optional(),
+    /** A directory name under the server's drop folder — never a path. */
+    folder: z
+      .string()
+      .trim()
+      .max(64)
+      .regex(/^[A-Za-z0-9 ._-]+$/, "Use a plain folder name — no slashes.")
+      .optional(),
+    rightsNote: z.string().trim().max(300).optional(),
+  })
+  .refine((v) => Boolean(v.link) !== Boolean(v.folder), "Give either a link or a folder, not both.");
 
 function checkGoogleLink(raw: string): string {
   let u: URL;
@@ -55,16 +65,31 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: `You've reached the limit of ${MAX_CUSTOM_COLLECTIONS} collections. Delete one to add another.` }, { status: 400 });
   }
 
+  const slug = `c_${user.id.slice(-6)}_${Date.now().toString(36)}`;
+  const rightsNote = parsed.data.rightsNote || null;
+
+  if (parsed.data.folder) {
+    // A folder on the server the operator already filled — nothing to fetch,
+    // nothing secret, so it is stored and shown in the clear.
+    const created = await prisma.wallpaperCollection.create({
+      data: { slug, ownerId: user.id, name: parsed.data.name, isBuiltin: false, sourceFolder: parsed.data.folder, rightsNote },
+      select: { id: true },
+    });
+    await audit({ actorId: user.id, action: "wallpapers.collection.created", targetType: "WallpaperCollection", targetId: created.id });
+    pokeWorkerConnectors();
+    return NextResponse.json({ id: created.id }, { status: 201 });
+  }
+
   let link: string;
   try {
-    link = checkGoogleLink(parsed.data.link);
+    link = checkGoogleLink(parsed.data.link!);
   } catch (err) {
     return NextResponse.json({ error: err instanceof Error ? err.message : "Invalid link." }, { status: 400 });
   }
 
   // Two-step so the ciphertext is bound to the row id.
   const created = await prisma.wallpaperCollection.create({
-    data: { slug: `c_${user.id.slice(-6)}_${Date.now().toString(36)}`, ownerId: user.id, name: parsed.data.name, isBuiltin: false, sourceMask: maskUrl(link) },
+    data: { slug, ownerId: user.id, name: parsed.data.name, isBuiltin: false, sourceMask: maskUrl(link), rightsNote },
     select: { id: true },
   });
   await prisma.wallpaperCollection.update({ where: { id: created.id }, data: { sourceSecret: encryptSecret(link, `collection:${created.id}`) } });

@@ -14,12 +14,15 @@ export function BoardBackdrop({
   mood,
   canvasW,
   effects,
+  rightsNote = null,
 }: {
   wallpaper: WallpaperInfo | null;
   scrimOpacity: number;
   mood: Mood | null;
   canvasW: number;
   effects: boolean;
+  /** Owner-written note for a collection they assembled (e.g. a rights line). */
+  rightsNote?: string | null;
 }) {
   return (
     <>
@@ -55,7 +58,10 @@ export function BoardBackdrop({
               margin: 0,
             }}
           >
-            {wallpaper.attribution.photographer} · {wallpaper.attribution.source} · {wallpaper.attribution.license}
+            {[wallpaper.attribution.photographer, wallpaper.attribution.source, wallpaper.attribution.license, rightsNote]
+              .map((p) => (p ?? "").trim())
+              .filter(Boolean)
+              .join(" · ")}
           </p>
         </>
       ) : null}

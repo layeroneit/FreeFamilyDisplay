@@ -204,6 +204,18 @@ model Board {
   /// 0–100
   weatherMoodStrength Int     @default(60)
 
+  // --- display link (plan §8.2) ---
+  /// SHA-256 of the display token, never the token itself — same rule as
+  /// Session. A wall screen opens /d/<token> and gets this board read-only,
+  /// with no session and no way to reach the admin UI. Null until the owner
+  /// creates a link; rotating it instantly orphans every screen using the old
+  /// one, which is the revocation story.
+  displayTokenHash String?   @unique @db.VarChar(64)
+  displayTokenAt   DateTime?
+  /// Touched by the display route so the owner can see whether a screen is
+  /// still alive. Coarse (at most one write a minute) to keep it cheap.
+  displaySeenAt    DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -285,6 +297,18 @@ model WallpaperCollection {
   lastSyncedAt DateTime?
   /// Actionable, secret-free ("album returned 404"). Shown in the editor.
   lastError    String?   @db.VarChar(255)
+
+  /// Alternative source: a sub-directory of the drop folder mounted at
+  /// WALLPAPER_DROP_DIR. A bare directory NAME, never a path — the worker
+  /// joins it under the drop root so it cannot escape. Not a credential, so
+  /// unlike sourceSecret it is stored and displayed in the clear.
+  sourceFolder String? @db.VarChar(64)
+
+  /// Free text the owner attaches to a collection they assembled themselves,
+  /// rendered with the image on the board. Exists so a set of art someone
+  /// else holds the rights to can say so on screen. A note is not a licence
+  /// and does not make redistribution lawful — this is for private displays.
+  rightsNote String? @db.VarChar(300)
 
   createdAt DateTime @default(now())
 

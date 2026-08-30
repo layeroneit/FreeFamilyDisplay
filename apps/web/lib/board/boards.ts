@@ -59,6 +59,9 @@ export type BoardFull = {
   matchPaletteToWallpaper: boolean;
   weatherMood: boolean;
   weatherMoodStrength: number;
+  /// Presence of a wall-screen link. The token itself is never selected.
+  displayTokenHash: string | null;
+  displaySeenAt: Date | null;
   style: BoardStyle;
 };
 
@@ -75,6 +78,8 @@ const boardSelect = {
   matchPaletteToWallpaper: true,
   weatherMood: true,
   weatherMoodStrength: true,
+  displayTokenHash: true,
+  displaySeenAt: true,
   style: true,
   widgets: {
     orderBy: [{ z: "asc" as const }, { createdAt: "asc" as const }],
