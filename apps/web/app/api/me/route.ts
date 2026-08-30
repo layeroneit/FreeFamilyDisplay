@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { prisma } from "@ffd/db";
 import { getSessionUser } from "@/lib/auth/sessions";
+import { termsCurrent } from "@/lib/terms";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +14,7 @@ const PatchInput = z.object({
 export async function PATCH(req: NextRequest) {
   const user = await getSessionUser();
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
+  if (!termsCurrent(user)) return NextResponse.json({ error: "Accept the agreement first." }, { status: 403 });
 
   const parsed = PatchInput.safeParse(await req.json().catch(() => null));
   if (!parsed.success) {

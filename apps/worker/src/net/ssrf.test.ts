@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { isPublicAddress, normalizeUserUrl, UnsafeUrlError } from "./ssrf.ts";
+import { isPublicAddress, normalizeUserUrl, safeFetch, UnsafeUrlError } from "./ssrf.ts";
 
 // The payload list from CLAUDE.md, plus the usual suspects.
 const BLOCKED = [
@@ -74,4 +74,10 @@ test("decimal and hex IP literals are normalized by the URL parser into dotted f
 
 test("embedded credentials are rejected", () => {
   assert.throws(() => normalizeUserUrl("https://user:pw@example.com/"), UnsafeUrlError);
+});
+
+test("safeFetch refuses hostnames that resolve to internal addresses", async () => {
+  await assert.rejects(safeFetch("https://localhost/x.ics"), UnsafeUrlError);
+  await assert.rejects(safeFetch("https://127.0.0.1/x.ics"), UnsafeUrlError);
+  await assert.rejects(safeFetch("http://example.com/x.ics"), UnsafeUrlError);
 });

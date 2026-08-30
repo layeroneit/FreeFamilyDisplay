@@ -161,6 +161,8 @@ export type SafeFetchResult = { url: string; status: number; contentType: string
 export async function safeFetch(rawUrl: string, opts: { accept?: string; maxBytes?: number } = {}): Promise<SafeFetchResult> {
   const maxBytes = opts.maxBytes ?? MAX_BYTES;
   let url = normalizeUserUrl(rawUrl);
+  // One deadline for the whole redirect chain, not per hop.
+  const deadline = AbortSignal.timeout(TIMEOUT_MS);
 
   for (let hop = 0; hop <= MAX_REDIRECTS; hop++) {
     const res = await request(url, {
@@ -170,7 +172,7 @@ export async function safeFetch(rawUrl: string, opts: { accept?: string; maxByte
         "user-agent": "FreeFamilyDisplay/0.1 (self-hosted family dashboard)",
         accept: opts.accept ?? "*/*",
       },
-      signal: AbortSignal.timeout(TIMEOUT_MS),
+      signal: deadline,
     });
 
     if (res.statusCode >= 300 && res.statusCode < 400) {

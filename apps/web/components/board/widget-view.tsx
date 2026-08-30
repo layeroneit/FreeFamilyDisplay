@@ -120,11 +120,11 @@ export function WidgetView({ widget, data }: { widget: BoardWidgetRow; data: Boa
         d.setDate(d.getDate() + i);
         return d;
       });
-      const shown = days.slice(0, 7);
+      const shown = days;
       const events = feed?.events ?? [];
       return (
         <div data-part="calendar" style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-          <div style={{ display: "grid", gridTemplateColumns: `repeat(${shown.length}, 1fr)`, gap: 12, flex: 1, minHeight: 0 }}>
+          <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(shown.length, 7)}, 1fr)`, gap: 12, flex: 1, minHeight: 0 }}>
             {shown.map((d, i) => {
               const dayEvents = events
                 .filter((e) => {

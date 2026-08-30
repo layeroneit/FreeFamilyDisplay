@@ -9,6 +9,7 @@ COPY apps/web/package.json apps/web/
 COPY apps/worker/package.json apps/worker/
 COPY packages/db/package.json packages/db/
 COPY packages/log/package.json packages/log/
+COPY packages/crypto/package.json packages/crypto/
 RUN npm ci
 
 FROM node:22-alpine AS build
@@ -53,11 +54,13 @@ COPY --from=build --chown=1001:1001 /app/package-lock.json ./package-lock.json
 COPY --from=build --chown=1001:1001 /app/apps/worker/package.json ./apps/worker/package.json
 COPY --from=build --chown=1001:1001 /app/packages/db/package.json ./packages/db/package.json
 COPY --from=build --chown=1001:1001 /app/packages/log/package.json ./packages/log/package.json
+COPY --from=build --chown=1001:1001 /app/packages/crypto/package.json ./packages/crypto/package.json
 RUN npm ci --omit=dev --workspace=@ffd/worker --include-workspace-root
 
 COPY --from=build --chown=1001:1001 /app/apps/worker/dist ./apps/worker/dist
 COPY --from=build --chown=1001:1001 /app/packages/db/dist ./packages/db/dist
 COPY --from=build --chown=1001:1001 /app/packages/log/dist ./packages/log/dist
+COPY --from=build --chown=1001:1001 /app/packages/crypto/dist ./packages/crypto/dist
 # Generated Prisma client.
 COPY --from=build --chown=1001:1001 /app/node_modules/.prisma ./node_modules/.prisma
 # Built-in wallpaper manifest (metadata only; the images ship in the web image).

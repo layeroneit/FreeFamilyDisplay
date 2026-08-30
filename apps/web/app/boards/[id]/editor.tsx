@@ -22,6 +22,9 @@ import {
 } from "@/lib/board/widgets";
 import type { ThemeDef } from "@/lib/themes";
 
+const field = { background: "var(--hearth-surface)", borderColor: "var(--hearth-border)", color: "var(--hearth-text)" };
+const primary = { background: "var(--hearth-accent-1)", color: "#1a1a1a" };
+
 type EditorBoard = {
   id: string;
   name: string;
@@ -203,8 +206,6 @@ export function BoardEditor({
   }
 
   const sel = widgets.find((w) => w.id === selected) ?? null;
-  const field = { background: "var(--hearth-surface)", borderColor: "var(--hearth-border)", color: "var(--hearth-text)" };
-  const primary = { background: "var(--hearth-accent-1)", color: "#1a1a1a" };
 
   return (
     <main className="min-h-dvh px-4 py-6 lg:px-6">
@@ -341,141 +342,141 @@ export function BoardEditor({
       </div>
     </main>
   );
+}
 
-  function DisplaySettings({
-    board,
-    themes,
-    collections,
-    suggestedScrim,
-    onSave,
-    onWallpaper,
-  }: {
-    board: EditorBoard;
-    themes: ThemeDef[];
-    collections: CollectionInfo[];
-    suggestedScrim: number | null;
-    onSave: (patch: Record<string, unknown>) => void;
-    onWallpaper: (a: "next" | "pin" | "skip") => void;
-  }) {
-    const [scrim, setScrim] = useState<number>(board.scrimOpacityOverride ?? suggestedScrim ?? 0.4);
-    const [strength, setStrength] = useState(board.weatherMoodStrength);
-    const label = "block text-xs font-semibold uppercase tracking-wide";
-    return (
-      <div className="space-y-4">
-        <section>
-          <span className={label} style={{ color: "var(--hearth-text-muted)" }}>Theme</span>
-          <select value={board.theme} onChange={(e) => onSave({ theme: e.target.value })} className="mt-1 w-full rounded-lg border px-2 py-1.5" style={field}>
-            {themes.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.name}
-              </option>
-            ))}
-          </select>
-        </section>
+function DisplaySettings({
+  board,
+  themes,
+  collections,
+  suggestedScrim,
+  onSave,
+  onWallpaper,
+}: {
+  board: EditorBoard;
+  themes: ThemeDef[];
+  collections: CollectionInfo[];
+  suggestedScrim: number | null;
+  onSave: (patch: Record<string, unknown>) => void;
+  onWallpaper: (a: "next" | "pin" | "skip") => void;
+}) {
+  const [scrim, setScrim] = useState<number>(board.scrimOpacityOverride ?? suggestedScrim ?? 0.4);
+  const [strength, setStrength] = useState(board.weatherMoodStrength);
+  const label = "block text-xs font-semibold uppercase tracking-wide";
+  return (
+    <div className="space-y-4">
+      <section>
+        <span className={label} style={{ color: "var(--hearth-text-muted)" }}>Theme</span>
+        <select value={board.theme} onChange={(e) => onSave({ theme: e.target.value })} className="mt-1 w-full rounded-lg border px-2 py-1.5" style={field}>
+          {themes.map((t) => (
+            <option key={t.id} value={t.id}>
+              {t.name}
+            </option>
+          ))}
+        </select>
+      </section>
 
-        <section>
-          <span className={label} style={{ color: "var(--hearth-text-muted)" }}>Screen shape</span>
-          <div className="mt-1 grid grid-cols-3 gap-1">
-            {CANVAS_PRESET_IDS.map((id) => (
-              <button key={id} type="button" onClick={() => onSave({ canvas: id })} className="rounded-lg border px-2 py-1.5 text-xs font-semibold" style={board.canvas === id ? primary : field} title={CANVAS_PRESETS[id].hint}>
-                {CANVAS_PRESETS[id].label}
-              </button>
-            ))}
-          </div>
-          <p className="mt-1 text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
-            Widgets keep their positions; re-drag anything that lands off the new canvas.
-          </p>
-        </section>
-
-        <section>
-          <span className={label} style={{ color: "var(--hearth-text-muted)" }}>Wallpaper</span>
-          <div className="mt-1 grid grid-cols-2 gap-2">
-            <button type="button" onClick={() => onSave({ wallpaperCollectionId: null })} className="rounded-lg border p-2 text-left text-xs" style={board.wallpaperCollectionId === null ? { ...field, borderColor: "var(--hearth-accent-1)" } : field}>
-              <span className="block font-semibold">None</span>
-              <span style={{ color: "var(--hearth-text-muted)" }}>Theme color only</span>
+      <section>
+        <span className={label} style={{ color: "var(--hearth-text-muted)" }}>Screen shape</span>
+        <div className="mt-1 grid grid-cols-3 gap-1">
+          {CANVAS_PRESET_IDS.map((id) => (
+            <button key={id} type="button" onClick={() => onSave({ canvas: id })} className="rounded-lg border px-2 py-1.5 text-xs font-semibold" style={board.canvas === id ? primary : field} title={CANVAS_PRESETS[id].hint}>
+              {CANVAS_PRESETS[id].label}
             </button>
-            {collections.map((c) => (
-              <button
-                key={c.id}
-                type="button"
-                onClick={() => onSave({ wallpaperCollectionId: c.id })}
-                className="overflow-hidden rounded-lg border text-left text-xs"
-                style={{ ...field, borderColor: board.wallpaperCollectionId === c.id ? "var(--hearth-accent-1)" : "var(--hearth-border)", borderWidth: board.wallpaperCollectionId === c.id ? 2 : 1 }}
-              >
-                {c.cover ? <img src={`${c.cover.basePath}-1920.webp`} alt="" className="h-16 w-full object-cover" style={{ background: `center / cover url(${c.cover.lqip})` }} loading="lazy" /> : <div className="h-16" />}
-                <span className="block px-2 py-1 font-semibold">{c.name}</span>
-                <span className="block px-2 pb-1" style={{ color: "var(--hearth-text-muted)" }}>
-                  {c.count} photos{c.isBuiltin ? "" : " · yours"}
-                  {!c.isBuiltin && c.count === 0 && !c.lastError ? " · syncing…" : ""}
-                </span>
-                {c.lastError ? (
-                  <span className="block px-2 pb-1 text-[11px]" style={{ color: "var(--hearth-accent-4)" }}>
-                    {c.lastError}
-                  </span>
-                ) : null}
-              </button>
-            ))}
-          </div>
-          <AddOwnCollection onCreated={(id) => onSave({ wallpaperCollectionId: id })} />
-          {board.wallpaperCollectionId ? (
-            <div className="mt-2 space-y-2">
-              <div className="flex gap-1">
-                <button type="button" onClick={() => onWallpaper("next")} className="flex-1 rounded-lg border px-2 py-1.5 text-xs font-semibold" style={field}>Next</button>
-                <button type="button" onClick={() => onWallpaper("pin")} className="flex-1 rounded-lg border px-2 py-1.5 text-xs font-semibold" style={board.pinned ? primary : field}>{board.pinned ? "Pinned" : "Pin this one"}</button>
-                <button type="button" onClick={() => onWallpaper("skip")} className="flex-1 rounded-lg border px-2 py-1.5 text-xs font-semibold" style={field}>Skip</button>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <label className="text-xs">
-                  Rotate
-                  <select value={board.wallpaperRotation} onChange={(e) => onSave({ wallpaperRotation: e.target.value })} className="mt-1 w-full rounded-lg border px-2 py-1" style={field}>
-                    <option value="DAILY">Daily</option>
-                    <option value="WEEKLY">Weekly (Mon 4am)</option>
-                    <option value="MONTHLY">Monthly</option>
-                    <option value="MANUAL">Manual</option>
-                  </select>
-                </label>
-                <label className="text-xs">
-                  Order
-                  <select value={board.wallpaperOrder} onChange={(e) => onSave({ wallpaperOrder: e.target.value })} className="mt-1 w-full rounded-lg border px-2 py-1" style={field}>
-                    <option value="SEQUENTIAL">In order</option>
-                    <option value="SHUFFLE">Shuffle</option>
-                  </select>
-                </label>
-              </div>
-              <label className="block text-xs">
-                Darken photo behind widgets · {Math.round(scrim * 100)}%{board.scrimOpacityOverride === null ? " (auto)" : ""}
-                <input type="range" min={0} max={0.85} step={0.01} value={scrim} onChange={(e) => setScrim(Number(e.target.value))} onMouseUp={() => onSave({ scrimOpacityOverride: scrim })} onTouchEnd={() => onSave({ scrimOpacityOverride: scrim })} className="mt-1 w-full" />
-              </label>
-              <div className="flex gap-1">
-                <button type="button" onClick={() => onSave({ scrimOpacityOverride: null })} className="rounded-lg border px-2 py-1 text-[11px]" style={field}>Auto from photo</button>
-                <label className="flex items-center gap-2 text-xs">
-                  <input type="checkbox" checked={board.matchPaletteToWallpaper} onChange={(e) => onSave({ matchPaletteToWallpaper: e.target.checked })} />
-                  Match colors to wallpaper
-                </label>
-              </div>
-            </div>
-          ) : null}
-        </section>
+          ))}
+        </div>
+        <p className="mt-1 text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
+          Widgets keep their positions; re-drag anything that lands off the new canvas.
+        </p>
+      </section>
 
-        <section>
-          <span className={label} style={{ color: "var(--hearth-text-muted)" }}>Weather mood</span>
-          <label className="mt-1 flex items-center gap-2">
-            <input type="checkbox" checked={board.weatherMood} onChange={(e) => onSave({ weatherMood: e.target.checked })} />
-            Let the weather set the mood (sun warms it, rain darkens it, storms flash)
-          </label>
-          {board.weatherMood ? (
-            <label className="mt-2 block text-xs">
-              Strength · {strength}%
-              <input type="range" min={0} max={100} step={5} value={strength} onChange={(e) => setStrength(Number(e.target.value))} onMouseUp={() => onSave({ weatherMoodStrength: strength })} onTouchEnd={() => onSave({ weatherMoodStrength: strength })} className="mt-1 w-full" />
+      <section>
+        <span className={label} style={{ color: "var(--hearth-text-muted)" }}>Wallpaper</span>
+        <div className="mt-1 grid grid-cols-2 gap-2">
+          <button type="button" onClick={() => onSave({ wallpaperCollectionId: null })} className="rounded-lg border p-2 text-left text-xs" style={board.wallpaperCollectionId === null ? { ...field, borderColor: "var(--hearth-accent-1)" } : field}>
+            <span className="block font-semibold">None</span>
+            <span style={{ color: "var(--hearth-text-muted)" }}>Theme color only</span>
+          </button>
+          {collections.map((c) => (
+            <button
+              key={c.id}
+              type="button"
+              onClick={() => onSave({ wallpaperCollectionId: c.id })}
+              className="overflow-hidden rounded-lg border text-left text-xs"
+              style={{ ...field, borderColor: board.wallpaperCollectionId === c.id ? "var(--hearth-accent-1)" : "var(--hearth-border)", borderWidth: board.wallpaperCollectionId === c.id ? 2 : 1 }}
+            >
+              {c.cover ? <img src={`${c.cover.basePath}-1920.webp`} alt="" className="h-16 w-full object-cover" style={{ background: `center / cover url(${c.cover.lqip})` }} loading="lazy" /> : <div className="h-16" />}
+              <span className="block px-2 py-1 font-semibold">{c.name}</span>
+              <span className="block px-2 pb-1" style={{ color: "var(--hearth-text-muted)" }}>
+                {c.count} photos{c.isBuiltin ? "" : " · yours"}
+                {!c.isBuiltin && c.count === 0 && !c.lastError ? " · syncing…" : ""}
+              </span>
+              {c.lastError ? (
+                <span className="block px-2 pb-1 text-[11px]" style={{ color: "var(--hearth-accent-4)" }}>
+                  {c.lastError}
+                </span>
+              ) : null}
+            </button>
+          ))}
+        </div>
+        <AddOwnCollection onCreated={(id) => onSave({ wallpaperCollectionId: id })} />
+        {board.wallpaperCollectionId ? (
+          <div className="mt-2 space-y-2">
+            <div className="flex gap-1">
+              <button type="button" onClick={() => onWallpaper("next")} className="flex-1 rounded-lg border px-2 py-1.5 text-xs font-semibold" style={field}>Next</button>
+              <button type="button" onClick={() => onWallpaper("pin")} className="flex-1 rounded-lg border px-2 py-1.5 text-xs font-semibold" style={board.pinned ? primary : field}>{board.pinned ? "Pinned" : "Pin this one"}</button>
+              <button type="button" onClick={() => onWallpaper("skip")} className="flex-1 rounded-lg border px-2 py-1.5 text-xs font-semibold" style={field}>Skip</button>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <label className="text-xs">
+                Rotate
+                <select value={board.wallpaperRotation} onChange={(e) => onSave({ wallpaperRotation: e.target.value })} className="mt-1 w-full rounded-lg border px-2 py-1" style={field}>
+                  <option value="DAILY">Daily</option>
+                  <option value="WEEKLY">Weekly (Mon 4am)</option>
+                  <option value="MONTHLY">Monthly</option>
+                  <option value="MANUAL">Manual</option>
+                </select>
+              </label>
+              <label className="text-xs">
+                Order
+                <select value={board.wallpaperOrder} onChange={(e) => onSave({ wallpaperOrder: e.target.value })} className="mt-1 w-full rounded-lg border px-2 py-1" style={field}>
+                  <option value="SEQUENTIAL">In order</option>
+                  <option value="SHUFFLE">Shuffle</option>
+                </select>
+              </label>
+            </div>
+            <label className="block text-xs">
+              Darken photo behind widgets · {Math.round(scrim * 100)}%{board.scrimOpacityOverride === null ? " (auto)" : ""}
+              <input type="range" min={0} max={0.85} step={0.01} value={scrim} onChange={(e) => setScrim(Number(e.target.value))} onPointerUp={() => onSave({ scrimOpacityOverride: scrim })} onKeyUp={() => onSave({ scrimOpacityOverride: scrim })} className="mt-1 w-full" />
             </label>
-          ) : null}
-          <p className="mt-1 text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
-            Follows the town on this display&apos;s weather widget. Raindrops and lightning turn off automatically on low-power screens.
-          </p>
-        </section>
-      </div>
-    );
-  }
+            <div className="flex gap-1">
+              <button type="button" onClick={() => onSave({ scrimOpacityOverride: null })} className="rounded-lg border px-2 py-1 text-[11px]" style={field}>Auto from photo</button>
+              <label className="flex items-center gap-2 text-xs">
+                <input type="checkbox" checked={board.matchPaletteToWallpaper} onChange={(e) => onSave({ matchPaletteToWallpaper: e.target.checked })} />
+                Match colors to wallpaper
+              </label>
+            </div>
+          </div>
+        ) : null}
+      </section>
+
+      <section>
+        <span className={label} style={{ color: "var(--hearth-text-muted)" }}>Weather mood</span>
+        <label className="mt-1 flex items-center gap-2">
+          <input type="checkbox" checked={board.weatherMood} onChange={(e) => onSave({ weatherMood: e.target.checked })} />
+          Let the weather set the mood (sun warms it, rain darkens it, storms flash)
+        </label>
+        {board.weatherMood ? (
+          <label className="mt-2 block text-xs">
+            Strength · {strength}%
+            <input type="range" min={0} max={100} step={5} value={strength} onChange={(e) => setStrength(Number(e.target.value))} onPointerUp={() => onSave({ weatherMoodStrength: strength })} onKeyUp={() => onSave({ weatherMoodStrength: strength })} className="mt-1 w-full" />
+          </label>
+        ) : null}
+        <p className="mt-1 text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
+          Follows the town on this display&apos;s weather widget. Raindrops and lightning turn off automatically on low-power screens.
+        </p>
+      </section>
+    </div>
+  );
 }
 
 /** "Add your own" (spec §7): name + Google Photos album / Drive folder link → private collection. */

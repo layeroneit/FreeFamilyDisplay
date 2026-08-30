@@ -40,6 +40,8 @@ function checkLink(raw: string): string {
  */
 export function sealLinkFields(widgetId: string, type: string, incoming: Record<string, unknown>): Record<string, unknown> {
   const out: Record<string, unknown> = { ...incoming };
+  // Server-managed fields: a client may never write ciphertext or the mask text.
+  for (const k of ["icsSecret", "icsMask", "linkSecret", "linkMask"]) delete out[k];
 
   const handle = (plainKey: string, secretKey: string, maskKey: string, context: string) => {
     if (!(plainKey in out)) return;

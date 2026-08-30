@@ -9,6 +9,7 @@ COPY apps/web/package.json apps/web/
 COPY apps/worker/package.json apps/worker/
 COPY packages/db/package.json packages/db/
 COPY packages/log/package.json packages/log/
+COPY packages/crypto/package.json packages/crypto/
 RUN npm ci
 
 FROM node:22-alpine AS build

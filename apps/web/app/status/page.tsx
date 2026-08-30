@@ -259,7 +259,7 @@ export default async function StatusPage() {
                   <li key={`${r.kind}:${r.key}`} className="flex items-center justify-between gap-3 py-2 text-sm">
                     <span className="min-w-0">
                       <span className="mr-2 rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase" style={{ background: "var(--hearth-bg)" }}>{r.kind}</span>
-                      <span className="font-medium">{r.kind === "weather" || r.kind === "geocode" ? r.key : `widget ${r.key.slice(-6)}`}</span>
+                      <span className="font-medium">{r.kind === "weather" ? "weather lookup" : r.kind === "geocode" ? "town lookup" : r.kind}</span>
                       {r.lastError ? (
                         <span className="block truncate text-xs" style={{ color: failing ? "var(--hearth-accent-4)" : "var(--hearth-text-muted)" }}>
                           {failing ? "" : "last error (recovered): "}

@@ -17,6 +17,8 @@ export type IcsEvent = {
   allDay: boolean;
 };
 
+const MAX_VEVENTS = 2000;
+const MAX_EXPANSION_STEPS = 50_000;
 const MAX_EVENTS = 200;
 const MAX_TEXT = 200;
 
@@ -99,6 +101,14 @@ export function parseIcs(text: string, from: Date, to: Date): IcsEvent[] {
   const lines = unfold(text);
   const events: IcsEvent[] = [];
   let cur: Record<string, Prop> | null = null;
+  // Hostile-feed budget: the parser is synchronous, so bound total work across
+  // the whole document, not per event (a feed of 20k daily-recurring events
+  // would otherwise pin the loop for a minute).
+  let vevents = 0;
+  let expansionBudget = MAX_EXPANSION_STEPS;
+  // Depth of nested components inside a VEVENT (VALARM etc.) whose
+  // properties must not overwrite the event's own.
+  let nested = 0;
 
   const emit = (uid: string, title: string, location: string | null, start: Date, end: Date, allDay: boolean) => {
     if (end <= from || start >= to) return;
@@ -108,7 +118,17 @@ export function parseIcs(text: string, from: Date, to: Date): IcsEvent[] {
 
   for (const raw of lines) {
     if (raw === "BEGIN:VEVENT") {
+      if (++vevents > MAX_VEVENTS || events.length >= MAX_EVENTS) break;
       cur = {};
+      nested = 0;
+      continue;
+    }
+    if (cur && raw.startsWith("BEGIN:")) {
+      nested++;
+      continue;
+    }
+    if (cur && nested > 0) {
+      if (raw.startsWith("END:")) nested--;
       continue;
     }
     if (raw === "END:VEVENT" && cur) {
@@ -146,6 +166,7 @@ export function parseIcs(text: string, from: Date, to: Date): IcsEvent[] {
       // Expand: walk occurrences from DTSTART until past the window / UNTIL / COUNT.
       let produced = 0;
       for (let n = 0; n < 1000; n++) {
+        if (--expansionBudget < 0 || events.length >= MAX_EVENTS) break;
         const base = addFreq(ds.date, rule, n);
         if (rule.until && base > rule.until) break;
         if (base > to) break;

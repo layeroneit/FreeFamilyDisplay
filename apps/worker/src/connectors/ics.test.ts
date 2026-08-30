@@ -87,3 +87,37 @@ test("parseIcsDate handles both forms", () => {
   assert.equal(parseIcsDate("20260101T120000Z", {})?.date.toISOString(), "2026-01-01T12:00:00.000Z");
   assert.equal(parseIcsDate("nope", {}), null);
 });
+
+test("VALARM properties never overwrite the event's own", () => {
+  const ics = [
+    "BEGIN:VCALENDAR",
+    "BEGIN:VEVENT",
+    "UID:a",
+    "SUMMARY:Dentist",
+    "DTSTART:20260901T100000Z",
+    "DTEND:20260901T110000Z",
+    "BEGIN:VALARM",
+    "ACTION:DISPLAY",
+    "SUMMARY:Reminder ping",
+    "TRIGGER:-PT15M",
+    "END:VALARM",
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n");
+  const out = parseIcs(ics, new Date("2026-08-31T00:00:00Z"), new Date("2026-09-30T00:00:00Z"));
+  assert.equal(out.length, 1);
+  assert.equal(out[0]!.title, "Dentist");
+});
+
+test("a feed of thousands of endless recurrences is bounded in time", () => {
+  const parts = ["BEGIN:VCALENDAR"];
+  for (let i = 0; i < 20000; i++) {
+    parts.push("BEGIN:VEVENT", `UID:u${i}`, "SUMMARY:x", "DTSTART:19900101T100000Z", "RRULE:FREQ=DAILY", "END:VEVENT");
+  }
+  parts.push("END:VCALENDAR");
+  const t0 = performance.now();
+  const out = parseIcs(parts.join("\r\n"), new Date("2026-08-31T00:00:00Z"), new Date("2026-09-07T00:00:00Z"));
+  const ms = performance.now() - t0;
+  assert.ok(out.length <= 200);
+  assert.ok(ms < 2000, `parse took ${Math.round(ms)}ms`);
+});
