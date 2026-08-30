@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth/sessions";
+import { termsCurrent } from "@/lib/terms";
 import { THEMES, themeById } from "@/lib/themes";
 import { ThemePicker } from "./theme-picker";
 import { LogoutButton } from "./logout-button";
@@ -7,12 +8,13 @@ import { ProfileEditor } from "./profile-editor";
 import Link from "next/link";
 import { listBoards } from "@/lib/board/boards";
 
-export const metadata = { title: "Dashboard — FreeFamilyDisplay" };
+export const metadata = { title: "Dashboard — Free Family Display" };
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
   const user = await getSessionUser();
   if (!user) redirect("/login");
+  if (!termsCurrent(user)) redirect("/terms");
 
   // Theme tokens come from the root layout now — this page just renders.
   const theme = themeById(user.uiTheme);

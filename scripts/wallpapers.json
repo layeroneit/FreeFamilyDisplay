@@ -1,0 +1,122 @@
+{
+  "_comment": "Built-in wallpaper collections (docs/specs/wallpaper-collections.md §5). Every image was visually reviewed before inclusion: wide, calm regions for widgets, no watermarks, no text, no identifiable people as the subject, no visible brand logos. `file` is a local pre-downloaded source (kept out of git); `url` is the canonical source for attribution and re-fetch. Ingest with `node scripts/ingest-wallpapers.mjs`.",
+  "collections": [
+    {
+      "slug": "deep-space",
+      "name": "Deep space",
+      "description": "Nebulae, deep fields, Mars, and Earth from orbit. NASA and ESA imagery — public domain.",
+      "images": [
+        {
+          "file": ".photo-review/ws-GSFC_20171208_Archive_e001955.jpg",
+          "url": "https://images.nasa.gov/details/GSFC_20171208_Archive_e001955",
+          "name": "lagoon-nebula",
+          "photographer": "NASA, ESA, Hubble",
+          "source": "NASA Image Library",
+          "license": "Public domain"
+        },
+        {
+          "file": ".photo-review/ws-PIA03606.jpg",
+          "url": "https://images.nasa.gov/details/PIA03606",
+          "name": "crab-nebula",
+          "photographer": "NASA, ESA, J. Hester and A. Loll (ASU)",
+          "source": "NASA Image Library",
+          "license": "Public domain"
+        },
+        {
+          "file": ".photo-review/ws-webb_first_deep_field.jpg",
+          "url": "https://images.nasa.gov/details/webb_first_deep_field",
+          "name": "webb-deep-field",
+          "photographer": "NASA, ESA, CSA, STScI",
+          "source": "NASA Image Library",
+          "license": "Public domain"
+        },
+        {
+          "file": ".photo-review/ws-PIA26702.jpg",
+          "url": "https://images.nasa.gov/details/PIA26702",
+          "name": "webb-dark-matter",
+          "photographer": "NASA/JPL-Caltech",
+          "source": "NASA Image Library",
+          "license": "Public domain"
+        },
+        {
+          "file": ".photo-review/ws-iss040e117958.jpg",
+          "url": "https://images.nasa.gov/details/iss040e117958",
+          "name": "aurora-from-iss",
+          "photographer": "NASA / ISS Expedition 40",
+          "source": "NASA Image Library",
+          "license": "Public domain"
+        },
+        {
+          "file": ".photo-review/ws-PIA24264.jpg",
+          "url": "https://images.nasa.gov/details/PIA24264",
+          "name": "mars-jezero-panorama",
+          "photographer": "NASA/JPL-Caltech/ASU/MSSS",
+          "source": "NASA Image Library",
+          "license": "Public domain"
+        }
+      ]
+    },
+    {
+      "slug": "mountains",
+      "name": "Mountains",
+      "description": "Ridgelines, glacial valleys, and high lakes.",
+      "images": [
+        {
+          "file": ".photo-review/mt-sayan1.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Mountain_landscape,_Weathering_and_erosion_in_glacial_valley,_Ergaki,_Sayan_Mountains,_Siberia.jpg",
+          "name": "sayan-glacial-valley",
+          "photographer": "Vyacheslav Argenberg",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 4.0"
+        },
+        {
+          "file": ".photo-review/mt-sayan3.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Mountain_landscape,_Rock_formations_in_otherworldly_glacial_valley,_Ergaki,_Sayan_Mountains,_Siberia.jpg",
+          "name": "sayan-balancing-rock",
+          "photographer": "Vyacheslav Argenberg",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 4.0"
+        },
+        {
+          "file": ".photo-review/mt-navajo.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Navajo_Lake_(219856203).jpeg",
+          "name": "navajo-lake",
+          "photographer": "Kay Röllig",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 2.0"
+        }
+      ]
+    },
+    {
+      "slug": "muscle-and-machines",
+      "name": "Muscle and machines",
+      "description": "Classic iron, chrome, and hot rods.",
+      "images": [
+        {
+          "file": ".photo-review/car-amc1.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:1970_AMC_Rebel_%22The_Machine%22_muscle_car_in_RWB_at_2021_Potomac_Ramblers_meet_01of14.jpg",
+          "name": "amc-rebel-machine",
+          "photographer": "CZmarlin — Christopher Ziemnowicz",
+          "source": "Wikimedia Commons",
+          "license": "CC0"
+        },
+        {
+          "file": ".photo-review/car-coupe36.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:1936_Ford_3_window_Coupe_Hot_Rod.jpg",
+          "name": "1936-coupe-hot-rod",
+          "photographer": "Cars Down Under",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 2.0"
+        },
+        {
+          "file": ".photo-review/car-coupe33.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:1933_Ford_Model_18_5_window_Coupe_(32043397296).jpg",
+          "name": "1933-five-window-coupe",
+          "photographer": "Sicnag",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 2.0"
+        }
+      ]
+    }
+  ]
+}

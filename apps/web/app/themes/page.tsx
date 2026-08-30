@@ -48,7 +48,7 @@ function ThemeCard({ theme }: { theme: ThemeDef }) {
   );
 }
 
-export const metadata = { title: "Theme preview — FreeFamilyDisplay" };
+export const metadata = { title: "Theme preview — Free Family Display" };
 
 export default function ThemesPreviewPage() {
   return (

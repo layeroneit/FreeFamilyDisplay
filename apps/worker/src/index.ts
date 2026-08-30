@@ -19,6 +19,8 @@ import { createLogger } from "@ffd/log";
 // import resolves to the module namespace, which is not constructable.
 import { Redis } from "ioredis";
 import { runWeatherCycle, startWeatherLoop } from "./weather.js";
+import { advanceBoard, runWallpaperCycle, seedBuiltinWallpapers } from "./wallpapers.js";
+import { runConnectorCycle } from "./connectors/index.js";
 
 const log = createLogger("worker");
 
@@ -113,6 +115,13 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     return;
   }
 
+  if (path === "/jobs/connectors" && req.method === "POST") {
+    // web pokes this when a calendar or photo link is saved.
+    void runConnectorCycle();
+    send(res, 202, { status: "started" });
+    return;
+  }
+
   if (path === "/jobs/weather" && req.method === "POST") {
     // Internal-network trigger: `web` pokes this when a weather widget is
     // created or its town changes, so the first forecast lands in seconds
@@ -120,6 +129,25 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     // than stacking a new one; not reachable from the LAN (no published port).
     void runWeatherCycle();
     send(res, 202, { status: "started" });
+    return;
+  }
+
+  if (path === "/jobs/wallpaper-advance" && req.method === "POST") {
+    // Internal-network trigger from web: "next" / "skip" on a board.
+    let body = "";
+    for await (const chunk of req) body += chunk;
+    let boardId: unknown;
+    try {
+      boardId = (JSON.parse(body) as { boardId?: unknown }).boardId;
+    } catch {
+      /* fall through to the 400 below */
+    }
+    if (typeof boardId !== "string") {
+      send(res, 400, { error: "boardId required" });
+      return;
+    }
+    const ok = await advanceBoard(boardId, { force: true }).catch(() => false);
+    send(res, ok ? 200 : 404, { ok });
     return;
   }
 
@@ -139,8 +167,18 @@ const server = createServer((req, res) => {
 
 const stopWeather = startWeatherLoop();
 
+// Built-in wallpapers seed on boot (idempotent); rotation rides the same
+// 15-minute cadence as weather. BullMQ arrives when a job needs durability.
+void seedBuiltinWallpapers().catch((err: unknown) =>
+  log.error("wallpaper seed failed", { error: err instanceof Error ? err.message : "unknown" }),
+);
+const wallpaperTimer = setInterval(() => void runWallpaperCycle().catch(() => undefined), 15 * 60 * 1000);
+const wallpaperFirst = setTimeout(() => void runWallpaperCycle().catch(() => undefined), 20_000);
+const connectorTimer = setInterval(() => void runConnectorCycle(), 15 * 60 * 1000);
+const connectorFirst = setTimeout(() => void runConnectorCycle(), 15_000);
+
 server.listen(HEALTH_PORT, () => {
-  log.info("worker started", { port: HEALTH_PORT, jobs: "weather" });
+  log.info("worker started", { port: HEALTH_PORT, jobs: "weather,wallpapers,connectors" });
 });
 
 let shuttingDown = false;
@@ -156,6 +194,10 @@ async function shutdown(signal: string): Promise<void> {
   deadline.unref();
 
   stopWeather();
+  clearInterval(wallpaperTimer);
+  clearTimeout(wallpaperFirst);
+  clearInterval(connectorTimer);
+  clearTimeout(connectorFirst);
   await new Promise<void>((resolve) => server.close(() => resolve()));
   if (redis) {
     try {

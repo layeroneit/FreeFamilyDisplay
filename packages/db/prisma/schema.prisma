@@ -49,6 +49,11 @@ model User {
   /// stop rendering, but their data survives for restoration.
   disabledAt DateTime?
 
+  /// End-user agreement (use at own risk, no warranty) — required before any
+  /// authenticated page renders. Version string records which text was accepted.
+  termsAcceptedAt      DateTime?
+  termsAcceptedVersion String?   @db.VarChar(16)
+
   /// Selected UI theme id (one of the 10 built-ins, e.g. "midnight").
   /// Null = default. Applied to authenticated pages; boards get their own
   /// theme fields in Phase 3 per plan §5.
@@ -175,9 +180,29 @@ model Board {
   /// User.uiTheme is only the admin UI's palette.
   theme String @default("midnight") @db.VarChar(32)
 
+  /// Which fixed canvas this board is laid out on (1920×1080, 1080×1920, 2560×1080).
+  canvas CanvasPreset @default(LANDSCAPE)
+
   /// Optional per-board look overrides — Phase 3 format panel (§7.3).
   /// Shape validated by zod at the API boundary, never trusted from the row.
   style Json?
+
+  // --- wallpaper (spec §8 "boards additions") ---
+  wallpaperCollectionId String?
+  wallpaperCollection   WallpaperCollection? @relation(fields: [wallpaperCollectionId], references: [id], onDelete: SetNull)
+  wallpaperRotation     WallpaperRotation    @default(WEEKLY)
+  wallpaperOrder        WallpaperOrder       @default(SEQUENTIAL)
+  currentWallpaperId    String?
+  currentWallpaper      Wallpaper?           @relation("BoardCurrentWallpaper", fields: [currentWallpaperId], references: [id], onDelete: SetNull)
+  lastRotatedAt         DateTime?
+  /// 0–1; null = use the image's suggested value.
+  scrimOpacityOverride  Float?
+  matchPaletteToWallpaper Boolean @default(false)
+
+  // --- weather-reactive ambiance (plan §7.7.5) ---
+  weatherMood         Boolean @default(false)
+  /// 0–100
+  weatherMoodStrength Int     @default(60)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -232,4 +257,88 @@ model CachedPayload {
 
   @@unique([kind, key])
   @@index([kind, fetchedAt])
+}
+
+// ---------------------------------------------------------------------------
+// Wallpaper collections (docs/specs/wallpaper-collections.md)
+// ---------------------------------------------------------------------------
+
+/// A curated set of full-bleed photographs. ownerId null = built-in (visible
+/// to everyone); otherwise private to the owner. Tenancy: queries scope by
+/// `ownerId = me OR isBuiltin = true`.
+model WallpaperCollection {
+  id String @id @default(cuid())
+
+  /// Stable slug for built-ins ("deep-space"); cuid-like for custom sets.
+  slug String @unique @db.VarChar(64)
+
+  ownerId     String?
+  name        String  @db.VarChar(80)
+  description String? @db.VarChar(200)
+  isBuiltin   Boolean @default(false)
+
+  /// Custom collections synced from a share URL (Phase 5 connector) — a
+  /// credential, encrypted at rest when that lands. Null for uploads/built-ins.
+  sourceUrl    String?   @db.VarChar(1024)
+  lastSyncedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  wallpapers Wallpaper[]
+  boards     Board[]
+
+  @@index([ownerId])
+}
+
+model Wallpaper {
+  id String @id @default(cuid())
+
+  collectionId String
+  collection   WallpaperCollection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  /// Path under /wallpapers (served from the web image), without size suffix.
+  /// Sizes available: <base>-1920.webp, <base>-2560.webp.
+  basePath String @db.VarChar(255)
+  width    Int
+  height   Int
+
+  /// Derived once at ingest (spec §2): drive scrim and text color per image.
+  meanLuminance        Float
+  luminanceVariance    Float
+  dominantColors       Json
+  suggestedScrimOpacity Float
+  /// 24px base64 placeholder so a board is never blank while the full asset loads.
+  lqip String @db.VarChar(2048)
+
+  /// photographer, source, license, sourceUrl — rendered as the credit line.
+  attribution Json
+
+  sortOrder Int     @default(0)
+  pinned    Boolean @default(false)
+  skipped   Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  currentOnBoards Board[] @relation("BoardCurrentWallpaper")
+
+  @@index([collectionId, sortOrder])
+}
+
+/// Fixed canvases (plan §7.1 amended 2026-08-30): one of three, never reflowed.
+enum CanvasPreset {
+  LANDSCAPE
+  PORTRAIT
+  ULTRAWIDE
+}
+
+enum WallpaperRotation {
+  DAILY
+  WEEKLY
+  MONTHLY
+  MANUAL
+}
+
+enum WallpaperOrder {
+  SEQUENTIAL
+  SHUFFLE
 }

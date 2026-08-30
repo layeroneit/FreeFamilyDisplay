@@ -11,35 +11,27 @@
  * depends on binaries that live outside git.
  */
 
-import { existsSync, readFileSync } from "node:fs";
-import path from "node:path";
 import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth/sessions";
 import { LoginForm } from "./login-form";
-import { PhotoSlideshow } from "./photo-slideshow";
+import { PhotoSlideshow, type SlidePhoto } from "./photo-slideshow";
+import { largestSrc, loginPhotoSet, srcSet } from "@/lib/board/photo-set";
 
-export const metadata = { title: "Sign in — FreeFamilyDisplay" };
+export const metadata = { title: "Sign in — Free Family Display" };
 export const dynamic = "force-dynamic";
-
-type Credit = { file: string; photographer: string; source: string };
-
-function loadPhotos(): Credit[] {
-  try {
-    const dir = path.join(process.cwd(), "public", "login-photos");
-    const creditsPath = path.join(dir, "credits.json");
-    if (!existsSync(creditsPath)) return [];
-    const credits = JSON.parse(readFileSync(creditsPath, "utf8")) as Credit[];
-    return credits.filter((c) => existsSync(path.join(dir, c.file)));
-  } catch {
-    return [];
-  }
-}
 
 export default async function LoginPage() {
   const user = await getSessionUser();
   if (user) redirect("/dashboard");
 
-  const photos = loadPhotos();
+  const photos: SlidePhoto[] = loginPhotoSet().map((p) => ({
+    src: largestSrc(p),
+    srcSet: srcSet(p),
+    photographer: p.photographer,
+    source: p.source,
+    lowRes: p.lowRes,
+    nativeW: Math.max(...p.sizes.map((s) => s.w)),
+  }));
   // Daily-rotating start index so the first frame varies; the client then
   // crossfades through the set (operator request: slideshow, not static).
   const dayIndex = Math.floor(Date.now() / 86_400_000);
@@ -70,9 +62,7 @@ export default async function LoginPage() {
           <p
             className="text-sm font-semibold uppercase tracking-widest"
             style={{ color: "var(--hearth-accent-2)" }}
-          >
-            FreeFamilyDisplay
-          </p>
+          >Free Family Display</p>
           {/* "Welcome back" over the brief's "Welcome home" — operator feedback
               2026-08-29: "home" read strangely on a sign-in screen. */}
           <h1

@@ -1,14 +1,16 @@
 import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth/sessions";
+import { termsCurrent } from "@/lib/terms";
 import { THEMES, isThemeId } from "@/lib/themes";
 import { SetupWizard } from "./wizard";
 
-export const metadata = { title: "Set up a display — FreeFamilyDisplay" };
+export const metadata = { title: "Set up a display — Free Family Display" };
 export const dynamic = "force-dynamic";
 
 export default async function SetupPage({ searchParams }: { searchParams: Promise<{ theme?: string }> }) {
   const user = await getSessionUser();
   if (!user) redirect("/login");
+  if (!termsCurrent(user)) redirect("/terms");
   const sp = await searchParams;
   const fromQuery = sp.theme && isThemeId(sp.theme) ? sp.theme : null;
   const initialTheme = fromQuery ?? user.uiTheme ?? "midnight";

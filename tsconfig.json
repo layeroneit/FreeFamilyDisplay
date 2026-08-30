@@ -4,5 +4,5 @@
   // CLAUDE.md forbids scaffolding a later phase while an earlier one is open.
   // Add references here as those phases begin.
   "files": [],
-  "references": [{ "path": "./packages/db" }, { "path": "./apps/worker" }]
+  "references": [{ "path": "./packages/db" }, { "path": "./packages/log" }, { "path": "./packages/crypto" }, { "path": "./apps/worker" }]
 }

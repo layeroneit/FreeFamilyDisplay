@@ -19,3 +19,13 @@ export function pokeWorkerWeather(): void {
     },
   );
 }
+
+/** Asks the worker to sync calendar/photo links now. Same rules as the weather poke. */
+export function pokeWorkerConnectors(): void {
+  const base = process.env.WORKER_URL ?? "http://worker:3002";
+  fetch(`${base}/jobs/connectors`, { method: "POST", signal: AbortSignal.timeout(2000), cache: "no-store" }).catch(
+    (err: unknown) => {
+      log.warn("connector poke failed (schedule will pick it up)", { error: err instanceof Error ? err.message : "unknown" });
+    },
+  );
+}

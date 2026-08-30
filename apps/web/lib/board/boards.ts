@@ -5,16 +5,19 @@
 
 import "server-only";
 import { prisma } from "@ffd/db";
+import type { CanvasPreset as DbCanvasPreset, WallpaperOrder, WallpaperRotation } from "@ffd/db";
 import {
   isWidgetType,
   normalizeGeometry,
   parseWidgetConfig,
-  STARTER_LAYOUT,
+  STARTER_LAYOUTS,
   WIDGET_META,
+  type CanvasPreset,
   type WidgetGeometry,
   type WidgetType,
 } from "./widgets";
-import { pokeWorkerWeather } from "./worker-poke";
+import { pokeWorkerConnectors, pokeWorkerWeather } from "./worker-poke";
+import { sealLinkFields } from "./secrets";
 
 /** Family scale; also the rail against one account fanning out weather fetches. */
 export const MAX_BOARDS_PER_USER = 20;
@@ -26,7 +29,7 @@ export class BoardLimitError extends Error {
   }
 }
 
-export type BoardSummary = { id: string; name: string; theme: string; updatedAt: Date; widgetCount: number };
+export type BoardSummary = { id: string; name: string; theme: string; canvas: CanvasPreset; updatedAt: Date; widgetCount: number };
 
 export type BoardWidgetRow = {
   id: string;
@@ -36,72 +39,116 @@ export type BoardWidgetRow = {
   w: number;
   h: number;
   z: number;
+  /** Full config INCLUDING secrets — server-side only. Use publicWidgetConfig before sending. */
   config: unknown;
 };
 
-export type BoardFull = { id: string; name: string; theme: string; widgets: BoardWidgetRow[] };
+export type BoardStyle = { wallpaperShown?: string[]; wallpaperSkipped?: string[]; wallpaperPinned?: string | null };
+
+export type BoardFull = {
+  id: string;
+  name: string;
+  theme: string;
+  canvas: CanvasPreset;
+  widgets: BoardWidgetRow[];
+  wallpaperCollectionId: string | null;
+  wallpaperRotation: WallpaperRotation;
+  wallpaperOrder: WallpaperOrder;
+  currentWallpaperId: string | null;
+  scrimOpacityOverride: number | null;
+  matchPaletteToWallpaper: boolean;
+  weatherMood: boolean;
+  weatherMoodStrength: number;
+  style: BoardStyle;
+};
+
+const boardSelect = {
+  id: true,
+  name: true,
+  theme: true,
+  canvas: true,
+  wallpaperCollectionId: true,
+  wallpaperRotation: true,
+  wallpaperOrder: true,
+  currentWallpaperId: true,
+  scrimOpacityOverride: true,
+  matchPaletteToWallpaper: true,
+  weatherMood: true,
+  weatherMoodStrength: true,
+  style: true,
+  widgets: {
+    orderBy: [{ z: "asc" as const }, { createdAt: "asc" as const }],
+    select: { id: true, type: true, x: true, y: true, w: true, h: true, z: true, config: true },
+  },
+};
+
+function readStyle(raw: unknown): BoardStyle {
+  if (!raw || typeof raw !== "object") return {};
+  const s = raw as Record<string, unknown>;
+  return {
+    wallpaperShown: Array.isArray(s["wallpaperShown"]) ? (s["wallpaperShown"] as string[]) : [],
+    wallpaperSkipped: Array.isArray(s["wallpaperSkipped"]) ? (s["wallpaperSkipped"] as string[]) : [],
+    wallpaperPinned: typeof s["wallpaperPinned"] === "string" ? (s["wallpaperPinned"] as string) : null,
+  };
+}
 
 export async function listBoards(userId: string): Promise<BoardSummary[]> {
   const rows = await prisma.board.findMany({
     where: { userId },
     orderBy: { updatedAt: "desc" },
-    select: { id: true, name: true, theme: true, updatedAt: true, _count: { select: { widgets: true } } },
+    select: { id: true, name: true, theme: true, canvas: true, updatedAt: true, _count: { select: { widgets: true } } },
   });
-  return rows.map((r) => ({
-    id: r.id,
-    name: r.name,
-    theme: r.theme,
-    updatedAt: r.updatedAt,
-    widgetCount: r._count.widgets,
-  }));
+  return rows.map((r) => ({ id: r.id, name: r.name, theme: r.theme, canvas: r.canvas, updatedAt: r.updatedAt, widgetCount: r._count.widgets }));
 }
 
 export async function getBoard(userId: string, boardId: string): Promise<BoardFull | null> {
-  const b = await prisma.board.findFirst({
-    where: { id: boardId, userId },
-    select: {
-      id: true,
-      name: true,
-      theme: true,
-      widgets: {
-        orderBy: [{ z: "asc" }, { createdAt: "asc" }],
-        select: { id: true, type: true, x: true, y: true, w: true, h: true, z: true, config: true },
-      },
-    },
-  });
+  const b = await prisma.board.findFirst({ where: { id: boardId, userId }, select: boardSelect });
   if (!b) return null;
   const widgets: BoardWidgetRow[] = [];
   for (const w of b.widgets) {
     // Unknown types (a future removal) are dropped rather than crashing render.
     if (isWidgetType(w.type)) widgets.push({ ...w, type: w.type });
   }
-  return { id: b.id, name: b.name, theme: b.theme, widgets };
+  return { ...b, widgets, style: readStyle(b.style) };
 }
 
 export async function createBoard(
   userId: string,
-  input: { name: string; theme: string; widgets: WidgetType[]; configs?: Partial<Record<WidgetType, unknown>> },
+  input: { name: string; theme: string; canvas?: CanvasPreset; widgets: WidgetType[]; configs?: Partial<Record<WidgetType, unknown>> },
 ): Promise<string> {
   const existing = await prisma.board.count({ where: { userId } });
   if (existing >= MAX_BOARDS_PER_USER) throw new BoardLimitError();
+  const canvas: CanvasPreset = input.canvas ?? "LANDSCAPE";
+  const layout = STARTER_LAYOUTS[canvas];
   const rows = input.widgets.map((type, i) => {
-    const g = STARTER_LAYOUT[type];
+    const g = layout[type];
     return { type, ...g, z: i, config: parseWidgetConfig(type, input.configs?.[type]) as object };
   });
   const board = await prisma.board.create({
-    data: { userId, name: input.name, theme: input.theme, widgets: { create: rows } },
+    data: { userId, name: input.name, theme: input.theme, canvas: canvas as DbCanvasPreset, widgets: { create: rows } },
     select: { id: true },
   });
   if (input.widgets.includes("weather")) pokeWorkerWeather();
   return board.id;
 }
 
-export async function updateBoard(
-  userId: string,
-  boardId: string,
-  patch: { name?: string; theme?: string },
-): Promise<boolean> {
-  const r = await prisma.board.updateMany({ where: { id: boardId, userId }, data: patch });
+export type BoardPatch = {
+  name?: string;
+  theme?: string;
+  canvas?: CanvasPreset;
+  wallpaperCollectionId?: string | null;
+  wallpaperRotation?: WallpaperRotation;
+  wallpaperOrder?: WallpaperOrder;
+  scrimOpacityOverride?: number | null;
+  matchPaletteToWallpaper?: boolean;
+  weatherMood?: boolean;
+  weatherMoodStrength?: number;
+};
+
+export async function updateBoard(userId: string, boardId: string, patch: BoardPatch): Promise<boolean> {
+  const data: Record<string, unknown> = { ...patch };
+  if (patch.canvas) data["canvas"] = patch.canvas as DbCanvasPreset;
+  const r = await prisma.board.updateMany({ where: { id: boardId, userId }, data });
   return r.count > 0;
 }
 
@@ -110,18 +157,13 @@ export async function deleteBoard(userId: string, boardId: string): Promise<bool
   return r.count > 0;
 }
 
-export async function addWidget(
-  userId: string,
-  boardId: string,
-  type: WidgetType,
-  rawConfig: unknown,
-): Promise<BoardWidgetRow | null> {
-  const owned = await prisma.board.findFirst({ where: { id: boardId, userId }, select: { id: true } });
+export async function addWidget(userId: string, boardId: string, type: WidgetType, rawConfig: unknown): Promise<BoardWidgetRow | null> {
+  const owned = await prisma.board.findFirst({ where: { id: boardId, userId }, select: { id: true, canvas: true } });
   if (!owned) return null;
   const size = WIDGET_META[type].defaultSize;
   const count = await prisma.boardWidget.count({ where: { boardId } });
   // Cascade new widgets down the canvas so they do not stack invisibly.
-  const g = normalizeGeometry(type, { x: 40 + (count % 5) * 40, y: 40 + (count % 5) * 40, ...size, z: count });
+  const g = normalizeGeometry(type, { x: 40 + (count % 5) * 40, y: 40 + (count % 5) * 40, ...size, z: count }, owned.canvas);
   const row = await prisma.boardWidget.create({
     data: { boardId, type, ...g, config: parseWidgetConfig(type, rawConfig) as object },
     select: { id: true, type: true, x: true, y: true, w: true, h: true, z: true, config: true },
@@ -131,6 +173,11 @@ export async function addWidget(
   return { ...row, type };
 }
 
+/**
+ * Updates geometry and/or config. `config` is merged over the stored config so
+ * a client that never sees the encrypted secret fields cannot accidentally
+ * erase them; a caller that wants to replace a secret passes it explicitly.
+ */
 export async function updateWidget(
   userId: string,
   boardId: string,
@@ -139,19 +186,37 @@ export async function updateWidget(
 ): Promise<boolean> {
   const w = await prisma.boardWidget.findFirst({
     where: { id: widgetId, boardId, board: { userId } },
-    select: { type: true },
+    select: { type: true, config: true, board: { select: { canvas: true } } },
   });
   if (!w || !isWidgetType(w.type)) return false;
   const data: { x?: number; y?: number; w?: number; h?: number; z?: number; config?: object } = {};
-  if (patch.geometry) Object.assign(data, normalizeGeometry(w.type, patch.geometry));
-  if (patch.config !== undefined) data.config = parseWidgetConfig(w.type, patch.config) as object;
+  if (patch.geometry) Object.assign(data, normalizeGeometry(w.type, patch.geometry, w.board.canvas));
+  if (patch.config !== undefined) {
+    const stored = (w.config && typeof w.config === "object" ? w.config : {}) as Record<string, unknown>;
+    const incoming = (patch.config && typeof patch.config === "object" ? patch.config : {}) as Record<string, unknown>;
+    // Plaintext links never reach the row: sealed (encrypted + masked) here.
+    const sealed = sealLinkFields(widgetId, w.type, incoming);
+    const merged: Record<string, unknown> = { ...stored, ...sealed };
+    for (const k of Object.keys(merged)) if (merged[k] === undefined) delete merged[k];
+    data.config = parseWidgetConfig(w.type, merged) as object;
+  }
   await prisma.boardWidget.update({ where: { id: widgetId }, data });
   await prisma.board.update({ where: { id: boardId }, data: { updatedAt: new Date() } });
   if (w.type === "weather" && patch.config !== undefined) pokeWorkerWeather();
+  if ((w.type === "calendar" || w.type === "photos") && patch.config !== undefined) pokeWorkerConnectors();
   return true;
 }
 
 export async function removeWidget(userId: string, boardId: string, widgetId: string): Promise<boolean> {
   const r = await prisma.boardWidget.deleteMany({ where: { id: widgetId, boardId, board: { userId } } });
   return r.count > 0;
+}
+
+/** Merges keys into the board's style JSON (owner only). */
+export async function patchBoardStyle(userId: string, boardId: string, patch: Partial<BoardStyle>): Promise<boolean> {
+  const b = await prisma.board.findFirst({ where: { id: boardId, userId }, select: { style: true } });
+  if (!b) return false;
+  const current = (b.style && typeof b.style === "object" ? b.style : {}) as Record<string, unknown>;
+  await prisma.board.update({ where: { id: boardId }, data: { style: { ...current, ...patch } } });
+  return true;
 }

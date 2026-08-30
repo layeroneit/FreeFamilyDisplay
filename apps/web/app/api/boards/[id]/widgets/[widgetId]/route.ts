@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getSessionUser } from "@/lib/auth/sessions";
 import { removeWidget, updateWidget } from "@/lib/board/boards";
 import { GeometrySchema } from "@/lib/board/widgets";
+import { BadLinkError } from "@/lib/board/secrets";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +29,9 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
     if (!ok) return NextResponse.json({ error: "No such widget." }, { status: 404 });
     return NextResponse.json({ ok: true });
   } catch (err) {
+    if (err instanceof BadLinkError) {
+      return NextResponse.json({ error: err.message }, { status: 400 });
+    }
     if (err instanceof z.ZodError) {
       return NextResponse.json({ error: err.issues[0]?.message ?? "Invalid widget settings." }, { status: 400 });
     }

@@ -5,9 +5,7 @@ export default function Home() {
         <h1
           className="text-4xl font-semibold tracking-tight"
           style={{ fontFamily: "var(--hearth-font-display)" }}
-        >
-          FreeFamilyDisplay
-        </h1>
+        >Free Family Display</h1>
         <p className="mt-2 text-lg" style={{ color: "var(--hearth-text-muted)" }}>
           Self-hosted family dashboard.
         </p>

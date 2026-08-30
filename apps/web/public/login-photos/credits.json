@@ -1,50 +1,255 @@
 [
   {
-    "file": "beach-sunset-kids.webp",
-    "photographer": "Kevin Krejci",
-    "source": "Flickr",
-    "license": "CC BY 2.0"
-  },
-  {
-    "file": "beach-run.webp",
+    "file": "beach-run",
+    "sizes": [
+      {
+        "w": 1920,
+        "file": "beach-run-1920.webp"
+      }
+    ],
     "photographer": "Lance Shields",
     "source": "Flickr",
-    "license": "CC BY 2.0"
+    "license": "CC BY 2.0",
+    "lowRes": false
   },
   {
-    "file": "soccer.webp",
+    "file": "soccer",
+    "sizes": [
+      {
+        "w": 1023,
+        "file": "soccer-1920.webp"
+      }
+    ],
     "photographer": "susieq3c",
     "source": "Flickr",
-    "license": "CC BY 2.0"
+    "license": "CC BY 2.0",
+    "lowRes": true
   },
   {
-    "file": "football.webp",
+    "file": "football",
+    "sizes": [
+      {
+        "w": 1024,
+        "file": "football-1920.webp"
+      }
+    ],
     "photographer": "Fort George G. Meade",
     "source": "Flickr",
-    "license": "CC BY 2.0"
+    "license": "CC BY 2.0",
+    "lowRes": true
   },
   {
-    "file": "game-night.webp",
+    "file": "game-night",
+    "sizes": [
+      {
+        "w": 1024,
+        "file": "game-night-1920.webp"
+      }
+    ],
     "photographer": "Andrew Turner",
     "source": "Flickr",
-    "license": "CC BY 2.0"
+    "license": "CC BY 2.0",
+    "lowRes": true
   },
   {
-    "file": "campfire.webp",
+    "file": "campfire",
+    "sizes": [
+      {
+        "w": 1024,
+        "file": "campfire-1920.webp"
+      }
+    ],
     "photographer": "John Brighenti",
     "source": "Flickr",
-    "license": "CC BY 2.0"
+    "license": "CC BY 2.0",
+    "lowRes": true
   },
   {
-    "file": "kite-park.webp",
-    "photographer": "Virginia State Parks",
-    "source": "Flickr",
-    "license": "CC BY 2.0"
+    "file": "chicago-skyline-sunset",
+    "sizes": [
+      {
+        "w": 1920,
+        "file": "chicago-skyline-sunset-1920.webp"
+      },
+      {
+        "w": 2560,
+        "file": "chicago-skyline-sunset-2560.webp"
+      }
+    ],
+    "photographer": "Tony Webster",
+    "source": "Wikimedia Commons",
+    "license": "CC BY 2.0",
+    "lowRes": false
   },
   {
-    "file": "family-walk.webp",
-    "photographer": "Summer Skyes 11",
-    "source": "Flickr",
-    "license": "CC BY 2.0"
+    "file": "chicago-river-night",
+    "sizes": [
+      {
+        "w": 1920,
+        "file": "chicago-river-night-1920.webp"
+      },
+      {
+        "w": 2304,
+        "file": "chicago-river-night-2560.webp"
+      }
+    ],
+    "photographer": "Tony Webster",
+    "source": "Wikimedia Commons",
+    "license": "CC BY 2.0",
+    "lowRes": false
+  },
+  {
+    "file": "chicago-l-sunset",
+    "sizes": [
+      {
+        "w": 1920,
+        "file": "chicago-l-sunset-1920.webp"
+      },
+      {
+        "w": 2560,
+        "file": "chicago-l-sunset-2560.webp"
+      }
+    ],
+    "photographer": "Jonathan Lee",
+    "source": "Wikimedia Commons",
+    "license": "CC BY 4.0",
+    "lowRes": false
+  },
+  {
+    "file": "chicago-l-train",
+    "sizes": [
+      {
+        "w": 1920,
+        "file": "chicago-l-train-1920.webp"
+      },
+      {
+        "w": 2560,
+        "file": "chicago-l-train-2560.webp"
+      }
+    ],
+    "photographer": "Rene Schwietzke",
+    "source": "Wikimedia Commons",
+    "license": "CC BY 2.0",
+    "lowRes": false
+  },
+  {
+    "file": "chicago-navy-pier-wheel",
+    "sizes": [
+      {
+        "w": 1920,
+        "file": "chicago-navy-pier-wheel-1920.webp"
+      },
+      {
+        "w": 2560,
+        "file": "chicago-navy-pier-wheel-2560.webp"
+      }
+    ],
+    "photographer": "Roman Boed",
+    "source": "Wikimedia Commons",
+    "license": "CC BY 2.0",
+    "lowRes": false
+  },
+  {
+    "file": "lake-michigan-sunset",
+    "sizes": [
+      {
+        "w": 1920,
+        "file": "lake-michigan-sunset-1920.webp"
+      },
+      {
+        "w": 2560,
+        "file": "lake-michigan-sunset-2560.webp"
+      }
+    ],
+    "photographer": "aparlette",
+    "source": "Wikimedia Commons",
+    "license": "CC BY 2.0",
+    "lowRes": false
+  },
+  {
+    "file": "sandhill-cranes",
+    "sizes": [
+      {
+        "w": 1920,
+        "file": "sandhill-cranes-1920.webp"
+      },
+      {
+        "w": 2560,
+        "file": "sandhill-cranes-2560.webp"
+      }
+    ],
+    "photographer": "USFWS Mountain-Prairie",
+    "source": "Wikimedia Commons",
+    "license": "CC BY 2.0",
+    "lowRes": false
+  },
+  {
+    "file": "geese-marsh",
+    "sizes": [
+      {
+        "w": 1920,
+        "file": "geese-marsh-1920.webp"
+      }
+    ],
+    "photographer": "Jocelyn Anderson",
+    "source": "Wikimedia Commons",
+    "license": "CC BY 2.0",
+    "lowRes": false
+  },
+  {
+    "file": "whitetail-buck-grazing",
+    "sizes": [
+      {
+        "w": 1920,
+        "file": "whitetail-buck-grazing-1920.webp"
+      },
+      {
+        "w": 2560,
+        "file": "whitetail-buck-grazing-2560.webp"
+      }
+    ],
+    "photographer": "USFWS Pacific",
+    "source": "Wikimedia Commons",
+    "license": "CC0",
+    "lowRes": false
+  },
+  {
+    "file": "whitetail-buck-velvet",
+    "sizes": [
+      {
+        "w": 1920,
+        "file": "whitetail-buck-velvet-1920.webp"
+      }
+    ],
+    "photographer": "James St. John",
+    "source": "Wikimedia Commons",
+    "license": "CC BY 2.0",
+    "lowRes": false
+  },
+  {
+    "file": "door-county-shore",
+    "sizes": [
+      {
+        "w": 1920,
+        "file": "door-county-shore-1920.webp"
+      }
+    ],
+    "photographer": "Aaron Volkening",
+    "source": "Wikimedia Commons",
+    "license": "CC BY 2.0",
+    "lowRes": false
+  },
+  {
+    "file": "great-lakes-lighthouse",
+    "sizes": [
+      {
+        "w": 1920,
+        "file": "great-lakes-lighthouse-1920.webp"
+      }
+    ],
+    "photographer": "Robin Férand",
+    "source": "Wikimedia Commons",
+    "license": "CC BY 2.0",
+    "lowRes": false
   }
 ]

@@ -60,6 +60,8 @@ COPY --from=build --chown=1001:1001 /app/packages/db/dist ./packages/db/dist
 COPY --from=build --chown=1001:1001 /app/packages/log/dist ./packages/log/dist
 # Generated Prisma client.
 COPY --from=build --chown=1001:1001 /app/node_modules/.prisma ./node_modules/.prisma
+# Built-in wallpaper manifest (metadata only; the images ship in the web image).
+COPY --from=build --chown=1001:1001 /app/apps/web/public/wallpapers/manifest.json ./wallpapers/manifest.json
 
 RUN mkdir -p /app/media && chown 1001:1001 /app/media
 

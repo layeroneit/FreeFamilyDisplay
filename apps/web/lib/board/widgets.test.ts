@@ -25,7 +25,7 @@ test("every widget type has meta and a starter position inside the canvas", () =
 });
 
 test("config parsing fills defaults and rejects garbage", () => {
-  assert.deepEqual(parseWidgetConfig("clock", {}), { format: "12h", showSeconds: false });
+  assert.deepEqual(parseWidgetConfig("clock", {}), { format: "12h", showSeconds: false, style: "digital" });
   assert.deepEqual(parseWidgetConfig("weather", { location: "  Oslo " }), { location: "Oslo", units: "f" });
   assert.throws(() => parseWidgetConfig("weather", { location: "" }));
   assert.throws(() => parseWidgetConfig("clock", { format: "13h" }));
@@ -33,7 +33,7 @@ test("config parsing fills defaults and rejects garbage", () => {
 });
 
 test("safeWidgetConfig never throws on a corrupt row", () => {
-  assert.deepEqual(safeWidgetConfig("clock", { format: "nope" }), { format: "12h", showSeconds: false });
+  assert.deepEqual(safeWidgetConfig("clock", { format: "nope" }), { format: "12h", showSeconds: false, style: "digital" });
   assert.deepEqual(safeWidgetConfig("quote", null), {});
 });
 

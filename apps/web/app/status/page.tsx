@@ -13,9 +13,10 @@
 import { redirect } from "next/navigation";
 import { prisma, isDatabaseReachable } from "@ffd/db";
 import { getSessionUser } from "@/lib/auth/sessions";
+import { termsCurrent } from "@/lib/terms";
 import { RefreshTimer } from "./refresh-timer";
 
-export const metadata = { title: "Status — FreeFamilyDisplay" };
+export const metadata = { title: "Status — Free Family Display" };
 export const dynamic = "force-dynamic";
 
 type Probe = { name: string; ok: boolean; detail: string; latencyMs: number | null };
@@ -67,6 +68,7 @@ const ACTION_LABELS: Record<string, string> = {
 export default async function StatusPage() {
   const user = await getSessionUser();
   if (!user) redirect("/login");
+  if (!termsCurrent(user)) redirect("/terms");
   if (user.role !== "OPERATOR") redirect("/dashboard");
 
   const [db, worker, counts, recentAudit] = await Promise.all([
@@ -148,7 +150,7 @@ export default async function StatusPage() {
                 {allOk ? "All systems go" : "Something needs attention"}
               </h1>
               <p className="text-sm" style={{ color: "var(--hearth-text-muted)" }}>
-                FreeFamilyDisplay · refreshes every 30 s
+                Free Family Display · refreshes every 30 s
               </p>
             </div>
           </div>

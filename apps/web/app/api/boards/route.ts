@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { getSessionUser } from "@/lib/auth/sessions";
 import { BoardLimitError, createBoard, listBoards } from "@/lib/board/boards";
-import { WIDGET_TYPES } from "@/lib/board/widgets";
+import { CANVAS_PRESET_IDS, WIDGET_TYPES } from "@/lib/board/widgets";
 import { isThemeId } from "@/lib/themes";
 import { audit } from "@/lib/audit";
 
@@ -11,6 +11,7 @@ export const dynamic = "force-dynamic";
 const CreateInput = z.object({
   name: z.string().trim().min(1, "Give the display a name.").max(80),
   theme: z.string().max(32).refine(isThemeId, "Unknown theme."),
+  canvas: z.enum(CANVAS_PRESET_IDS as [string, ...string[]]).optional(),
   widgets: z.array(z.enum(WIDGET_TYPES)).min(1, "Pick at least one widget."),
   configs: z.record(z.enum(WIDGET_TYPES), z.unknown()).optional(),
 });
@@ -33,6 +34,7 @@ export async function POST(req: NextRequest) {
     const id = await createBoard(user.id, {
       name: parsed.data.name,
       theme: parsed.data.theme,
+      ...(parsed.data.canvas ? { canvas: parsed.data.canvas as (typeof CANVAS_PRESET_IDS)[number] } : {}),
       widgets: [...new Set(parsed.data.widgets)],
       ...(parsed.data.configs ? { configs: parsed.data.configs } : {}),
     });

@@ -127,6 +127,7 @@ services:
       PORT: "3010"
       # Internal service address for the /status page's worker probe.
       WORKER_URL: "http://worker:3002"
+      MEDIA_DIR: /app/media
     volumes:
       - media:/app/media
     read_only: true
@@ -165,6 +166,9 @@ services:
       MASTER_KEY: ${MASTER_KEY:?set MASTER_KEY in .env}
       LOG_LEVEL: ${LOG_LEVEL:-info}
       WORKER_HEALTH_PORT: "3002"
+      WALLPAPER_MANIFEST: /app/wallpapers/manifest.json
+      MEDIA_DIR: /app/media
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
     volumes:
       - media:/app/media
     read_only: true

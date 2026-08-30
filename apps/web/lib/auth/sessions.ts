@@ -18,7 +18,7 @@ import {
 
 export type SessionUser = Pick<
   User,
-  "id" | "email" | "displayName" | "role" | "uiTheme" | "disabledAt"
+  "id" | "email" | "displayName" | "role" | "uiTheme" | "disabledAt" | "termsAcceptedAt" | "termsAcceptedVersion"
 >;
 
 const sessionUserSelect = {
@@ -28,6 +28,8 @@ const sessionUserSelect = {
   role: true,
   uiTheme: true,
   disabledAt: true,
+  termsAcceptedAt: true,
+  termsAcceptedVersion: true,
 } as const;
 
 export async function createSession(userId: string, userAgent: string | null): Promise<string> {

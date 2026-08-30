@@ -20,7 +20,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
-import { WIDGET_META, WIDGET_TYPES, type WidgetType } from "@/lib/board/widgets";
+import { CANVAS_PRESETS, CANVAS_PRESET_IDS, WIDGET_META, WIDGET_TYPES, type CanvasPreset, type WidgetType } from "@/lib/board/widgets";
 import { themeVars, type ThemeDef } from "@/lib/themes";
 
 /**
@@ -76,6 +76,7 @@ export function SetupWizard({
   const router = useRouter();
   const [step, setStep] = useState<number>(startStep);
   const [theme, setTheme] = useState(initialTheme);
+  const [canvas, setCanvas] = useState<CanvasPreset>("LANDSCAPE");
   const [picked, setPicked] = useState<Set<WidgetType>>(
     () => new Set(WIDGET_TYPES.filter((t) => WIDGET_META[t].starter)),
   );
@@ -126,7 +127,7 @@ export function SetupWizard({
       const res = await fetch("/api/boards", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), theme, widgets: [...picked], configs }),
+        body: JSON.stringify({ name: name.trim(), theme, canvas, widgets: [...picked], configs }),
       });
       const body = (await res.json().catch(() => null)) as { id?: string; error?: string } | null;
       if (!res.ok || !body?.id) {
@@ -259,9 +260,7 @@ export function SetupWizard({
       ) : (
         <div className={cn("w-full space-y-6", step === WIDGETS ? "max-w-md sm:max-w-2xl" : "max-w-md sm:max-w-lg")}>
           <div className="text-center">
-            <p className="text-sm font-semibold uppercase tracking-widest" style={{ color: accent }}>
-              FreeFamilyDisplay
-            </p>
+            <p className="text-sm font-semibold uppercase tracking-widest" style={{ color: accent }}>Free Family Display</p>
             <div className="mx-auto mt-3 h-1 w-full overflow-hidden rounded-full" style={{ background: "var(--hearth-border)" }}>
               <div className="h-full rounded-full transition-all duration-500" style={{ width: `${progress}%`, background: accent }} />
             </div>
@@ -318,6 +317,35 @@ export function SetupWizard({
                     </button>
                   );
                 })}
+              </div>
+              <div>
+                <p className="mb-2 text-sm font-semibold">Which way is the screen?</p>
+                <div role="radiogroup" aria-label="Screen shape" className="grid grid-cols-3 gap-3">
+                  {CANVAS_PRESET_IDS.map((id) => {
+                    const p = CANVAS_PRESETS[id];
+                    const selected = id === canvas;
+                    const ratio = p.w / p.h;
+                    return (
+                      <button
+                        key={id}
+                        type="button"
+                        role="radio"
+                        aria-checked={selected}
+                        onClick={() => setCanvas(id)}
+                        className="flex flex-col items-center gap-2 rounded-2xl border p-3 transition-all active:scale-[0.97]"
+                        style={{ borderColor: selected ? accent : "var(--hearth-border)", boxShadow: selected ? `0 0 0 2px ${accent}` : undefined, background: "var(--hearth-surface)" }}
+                      >
+                        <span
+                          className="rounded-md border-2"
+                          style={{ width: ratio >= 1 ? 64 : 64 / (1 / ratio) * 1, height: ratio >= 1 ? 64 / ratio : 64, borderColor: selected ? accent : "var(--hearth-text-muted)" }}
+                          aria-hidden
+                        />
+                        <span className="text-xs font-bold">{p.label}</span>
+                        <span className="text-[10px]" style={{ color: "var(--hearth-text-muted)" }}>{p.w}×{p.h}</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
               <div className="rounded-2xl border p-5" style={{ background: "var(--hearth-surface)", borderColor: "var(--hearth-border)" }}>
                 <div className="text-2xl font-semibold" style={{ fontFamily: "var(--hearth-font-display)" }}>

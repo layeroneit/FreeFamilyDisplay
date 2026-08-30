@@ -62,3 +62,32 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Weather mood particles (plan §7.7.5, Tier 2). Transform-only animations;
+ * disabled entirely under prefers-reduced-motion by the component. Never
+ * rendered on low-power kiosk displays — they get the Tier 1 tint. */
+@keyframes mood-fall {
+  from { transform: translateY(0); }
+  to { transform: translateY(1200px); }
+}
+@keyframes mood-drift {
+  0% { transform: translate(0, 0); }
+  50% { transform: translate(30px, 600px); }
+  100% { transform: translate(-20px, 1200px); }
+}
+@keyframes mood-fog-roll {
+  from { transform: translateX(0); }
+  to { transform: translateX(25%); }
+}
+@keyframes mood-flash {
+  0%, 94%, 100% { opacity: 0; }
+  95% { opacity: 0.55; }
+  96% { opacity: 0; }
+  97.5% { opacity: 0.35; }
+  98.5% { opacity: 0; }
+}
+.mood-drop { animation: mood-fall linear infinite; }
+.mood-flake { animation: mood-drift ease-in-out infinite; }
+.mood-fog-band { animation: mood-fog-roll ease-in-out infinite alternate; }
+/* One brief double-flash roughly every 40 seconds — rare, never a loop that reads as one. */
+.mood-lightning { animation: mood-flash 40s linear infinite; }

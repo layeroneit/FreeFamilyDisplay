@@ -4,7 +4,7 @@ import { themeById, themeVars } from "@/lib/themes";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "FreeFamilyDisplay",
+  title: "Free Family Display",
   description: "Self-hosted family dashboard.",
   // Invite-only, no public signup (plan §3). Nothing here should be indexed.
   robots: { index: false, follow: false },

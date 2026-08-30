@@ -1,0 +1,302 @@
+{
+  "generatedAt": "2026-08-30T01:23:08.980Z",
+  "collections": [
+    {
+      "slug": "deep-space",
+      "name": "Deep space",
+      "description": "Nebulae, deep fields, Mars, and Earth from orbit. NASA and ESA imagery — public domain.",
+      "wallpapers": [
+        {
+          "basePath": "/wallpapers/deep-space/lagoon-nebula",
+          "width": 1920,
+          "height": 981,
+          "meanLuminance": 0.541,
+          "luminanceVariance": 0.2092,
+          "dominantColors": [
+            "#cc9966",
+            "#996633",
+            "#333333",
+            "#cccc99",
+            "#663300"
+          ],
+          "suggestedScrimOpacity": 0.542,
+          "lqip": "data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAADwAwCdASoYAAwAPu1iqU2ppaQiMAgBMB2JbACdMoRwACBGLyp1Lx0AAOGL6d92P14vUSAAqo41QRjc/lfuhkr+q7OSarCCjFcRWpDbbhPVkky9ntRKpUg9K+KT1U6YRnAQM4et+LPq/X059fQqiCq2eMbQXHu6kP3WQBbrgAA=",
+          "attribution": {
+            "photographer": "NASA, ESA, Hubble",
+            "source": "NASA Image Library",
+            "license": "Public domain",
+            "sourceUrl": "https://images.nasa.gov/details/GSFC_20171208_Archive_e001955"
+          },
+          "sortOrder": 0
+        },
+        {
+          "basePath": "/wallpapers/deep-space/crab-nebula",
+          "width": 1920,
+          "height": 1920,
+          "meanLuminance": 0.2807,
+          "luminanceVariance": 0.2773,
+          "dominantColors": [
+            "#000000",
+            "#666633",
+            "#333300",
+            "#999966",
+            "#99cccc"
+          ],
+          "suggestedScrimOpacity": 0.468,
+          "lqip": "data:image/webp;base64,UklGRrIAAABXRUJQVlA4IKYAAABQBQCdASoYABgAPu1cqE2ppKOiN/VYATAdiWYAxvQQ8Car8OQd5apMrEhZcAa11rlW9gAA/vQk7Dy2M1iYFcLo3hbeiZ08ENG2zFoToziH72nIRVHnnM5mbWM8yOGnQnj5JmREb+T6sGfBR23tWa+Zb2NK22XPwp1gDYaN/FJNivoFWT97/C48Y67Sgo7ZlexoeQJ6duUiOhPf4C/JCWI4+E/qoAAA",
+          "attribution": {
+            "photographer": "NASA, ESA, J. Hester and A. Loll (ASU)",
+            "source": "NASA Image Library",
+            "license": "Public domain",
+            "sourceUrl": "https://images.nasa.gov/details/PIA03606"
+          },
+          "sortOrder": 1
+        },
+        {
+          "basePath": "/wallpapers/deep-space/webb-deep-field",
+          "width": 1881,
+          "height": 1920,
+          "meanLuminance": 0.125,
+          "luminanceVariance": 0.087,
+          "dominantColors": [
+            "#000000",
+            "#333333",
+            "#666666",
+            "#999999",
+            "#cccccc"
+          ],
+          "suggestedScrimOpacity": 0.365,
+          "lqip": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAADwBACdASoYABkAPu1eqE6ppKOiMBgMATAdiWkAA98UMz/wf//z8+DkCzSkMvK1h7gA/uwlU+n9hZW6zyFxSLLxf8RUekOUxj6HQnRD4u7SZkonI54B+kA+qrQPXvYyDW9ASbzcb9ifdWHiw+3WbhpuS4ztEg0pGYUOxRPXAQAAAA==",
+          "attribution": {
+            "photographer": "NASA, ESA, CSA, STScI",
+            "source": "NASA Image Library",
+            "license": "Public domain",
+            "sourceUrl": "https://images.nasa.gov/details/webb_first_deep_field"
+          },
+          "sortOrder": 2
+        },
+        {
+          "basePath": "/wallpapers/deep-space/webb-dark-matter",
+          "width": 1724,
+          "height": 1920,
+          "meanLuminance": 0.0993,
+          "luminanceVariance": 0.0492,
+          "dominantColors": [
+            "#000033",
+            "#003366",
+            "#006699",
+            "#333333",
+            "#0099cc"
+          ],
+          "suggestedScrimOpacity": 0.347,
+          "lqip": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAAAwBACdASoYABsAPu1orlCppaQjqAqpMB2JYwC7AA9o57ro/xdEZf1XpDAA/u6eSjFCG6DE7F9VDmsq1wmsT0ISvXlApxCmsWtkIOZaWiCi0rAJ7nQgAAAA",
+          "attribution": {
+            "photographer": "NASA/JPL-Caltech",
+            "source": "NASA Image Library",
+            "license": "Public domain",
+            "sourceUrl": "https://images.nasa.gov/details/PIA26702"
+          },
+          "sortOrder": 3
+        },
+        {
+          "basePath": "/wallpapers/deep-space/aurora-from-iss",
+          "width": 1920,
+          "height": 1277,
+          "meanLuminance": 0.1775,
+          "luminanceVariance": 0.1854,
+          "dominantColors": [
+            "#000000",
+            "#336633",
+            "#669966",
+            "#006600",
+            "#333300"
+          ],
+          "suggestedScrimOpacity": 0.408,
+          "lqip": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAAAwBACdASoYABAAPu1iqk4ppaQiMAgBMB2JagCw7CHf5vKfm3wX7/gmzQAA/vQihCNmxpGjncvCl3Q+QSG9WcSMx2azOGiSmEwB+Zm0mHHXKnUSLXKBEA8BJ855dw5sXCascQ2//9HAAAAA",
+          "attribution": {
+            "photographer": "NASA / ISS Expedition 40",
+            "source": "NASA Image Library",
+            "license": "Public domain",
+            "sourceUrl": "https://images.nasa.gov/details/iss040e117958"
+          },
+          "sortOrder": 4
+        },
+        {
+          "basePath": "/wallpapers/deep-space/mars-jezero-panorama",
+          "width": 1920,
+          "height": 509,
+          "meanLuminance": 0.2562,
+          "luminanceVariance": 0.2056,
+          "dominantColors": [
+            "#333333",
+            "#000000",
+            "#666633",
+            "#996666",
+            "#cccc99"
+          ],
+          "suggestedScrimOpacity": 0.441,
+          "lqip": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAADQAwCdASoYAAYAPu1oqk6ppiQiMAgBMB2JZQCdMoADSufUkR43OYAA/uPcQBSR6L3OnQhCsW01dlfH6ACR7KD59b5GdX3kn4I4yHLgos5dd3ujkf5qr7v8twNTd0XXkAA=",
+          "attribution": {
+            "photographer": "NASA/JPL-Caltech/ASU/MSSS",
+            "source": "NASA Image Library",
+            "license": "Public domain",
+            "sourceUrl": "https://images.nasa.gov/details/PIA24264"
+          },
+          "sortOrder": 5
+        }
+      ]
+    },
+    {
+      "slug": "mountains",
+      "name": "Mountains",
+      "description": "Ridgelines, glacial valleys, and high lakes.",
+      "wallpapers": [
+        {
+          "basePath": "/wallpapers/mountains/sayan-glacial-valley",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.4514,
+          "luminanceVariance": 0.2371,
+          "dominantColors": [
+            "#666633",
+            "#ffffff",
+            "#333333",
+            "#999966",
+            "#666699"
+          ],
+          "suggestedScrimOpacity": 0.517,
+          "lqip": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAACwAwCdASoYABAAPu1iqU2ppaOiMAgBMB2JZgC/OBqSHX+SvTAajAD+mF9WCPw4cFTVjJll2LZWQpTyuUOkFzahEQSXYthSI9sGVJEuri6PC+KVGUG1SKoyKtfaZ9m++0/VfU1LRosBMRSt5/5qLxXU/Yn8jK4gltktCCNrzeVvcI/PDS++JfAoxoQX6N2CYyc4AAAA",
+          "attribution": {
+            "photographer": "Vyacheslav Argenberg",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mountain_landscape,_Weathering_and_erosion_in_glacial_valley,_Ergaki,_Sayan_Mountains,_Siberia.jpg"
+          },
+          "sortOrder": 0
+        },
+        {
+          "basePath": "/wallpapers/mountains/sayan-balancing-rock",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.4484,
+          "luminanceVariance": 0.2967,
+          "dominantColors": [
+            "#333333",
+            "#ffffff",
+            "#666666",
+            "#000000",
+            "#999999"
+          ],
+          "suggestedScrimOpacity": 0.531,
+          "lqip": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAQBACdASoYABAAPu1iqU2ppaOiMAgBMB2JQBfnBEDTSXeNPOiVSNEfmAD+sjmo+RB2nIP75+gL+1ZjtcOdfSH1dm9HUmHxLyP1y5aw+rQ2YG/4YsvDr5oY9sJpACE/v+Z6UGfa1G6IXjdDLNTqx0Ex5OI5Gi5uNQtfbjgU5zbUZ0vVaW8laP9mrCjeCXxVVkAAAA==",
+          "attribution": {
+            "photographer": "Vyacheslav Argenberg",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mountain_landscape,_Rock_formations_in_otherworldly_glacial_valley,_Ergaki,_Sayan_Mountains,_Siberia.jpg"
+          },
+          "sortOrder": 1
+        },
+        {
+          "basePath": "/wallpapers/mountains/navajo-lake",
+          "width": 1920,
+          "height": 1224,
+          "meanLuminance": 0.3819,
+          "luminanceVariance": 0.2754,
+          "dominantColors": [
+            "#333333",
+            "#cccccc",
+            "#000000",
+            "#6699cc",
+            "#666666"
+          ],
+          "suggestedScrimOpacity": 0.503,
+          "lqip": "data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAADwAwCdASoYAA8APu1iqU2ppaOiMAgBMB2JQBYdg858pdF+gFQ9ry6AAP4ECQiU8s5WAZeYX6lgemx0bcMc5rDE0dXbYDJj+y1y3pKcQAmsxghkrbgVgBz3O2SckBoSyUD+ZDDwvRaaIsoTY/6JAua72CaK17D/W5/75hMmafREba4A",
+          "attribution": {
+            "photographer": "Kay Röllig",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 2.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Navajo_Lake_(219856203).jpeg"
+          },
+          "sortOrder": 2
+        }
+      ]
+    },
+    {
+      "slug": "muscle-and-machines",
+      "name": "Muscle and machines",
+      "description": "Classic iron, chrome, and hot rods.",
+      "wallpapers": [
+        {
+          "basePath": "/wallpapers/muscle-and-machines/amc-rebel-machine",
+          "width": 1920,
+          "height": 962,
+          "meanLuminance": 0.3899,
+          "luminanceVariance": 0.2587,
+          "dominantColors": [
+            "#333333",
+            "#669933",
+            "#cccccc",
+            "#000000",
+            "#999966"
+          ],
+          "suggestedScrimOpacity": 0.501,
+          "lqip": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAAAQBACdASoYAAwAPu1iqk2ppaQiMAgBMB2JZgAD45IQae20nI5KkggAAAD+7B8gx85sxttDsusjMI+VSesGnAYVMdkUp4MxlLwvlaobxa/AREy/ooSzOPZ/YaE9HBLDOBAYW76VUBDXyzz5HgwYMwZxnhGm7dxb7lZcxkXH8wBtGbJzrmnY5CAA",
+          "attribution": {
+            "photographer": "CZmarlin — Christopher Ziemnowicz",
+            "source": "Wikimedia Commons",
+            "license": "CC0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:1970_AMC_Rebel_%22The_Machine%22_muscle_car_in_RWB_at_2021_Potomac_Ramblers_meet_01of14.jpg"
+          },
+          "sortOrder": 0
+        },
+        {
+          "basePath": "/wallpapers/muscle-and-machines/1936-coupe-hot-rod",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.4328,
+          "luminanceVariance": 0.251,
+          "dominantColors": [
+            "#333333",
+            "#cccc99",
+            "#999999",
+            "#666666",
+            "#000000"
+          ],
+          "suggestedScrimOpacity": 0.514,
+          "lqip": "data:image/webp;base64,UklGRroAAABXRUJQVlA4IK4AAACQBACdASoYABAAPu1iqU2ppaOiMAgBMB2JYwC/OYwwxoyZw+QJeLuyKCg8bBAA/uQ6+TyNmnLLVaZFN/h0c9yrL9skzKOxLTYoK/2tUiQV8wcxDzQdvN+9Gcq0hINP3ZM/Y4GnO01USJuKA/bDliAABD8OxuYWhBB0f1KTs81AVko6N+z+lvDg/X4tT2DJ5bhUJv4x3xqF+IDqU5quxl8D6UrIsPFY6rBO0QgQAAA=",
+          "attribution": {
+            "photographer": "Cars Down Under",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 2.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:1936_Ford_3_window_Coupe_Hot_Rod.jpg"
+          },
+          "sortOrder": 1
+        },
+        {
+          "basePath": "/wallpapers/muscle-and-machines/1933-five-window-coupe",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.4509,
+          "luminanceVariance": 0.2241,
+          "dominantColors": [
+            "#999999",
+            "#333333",
+            "#666666",
+            "#cccccc",
+            "#993333"
+          ],
+          "suggestedScrimOpacity": 0.514,
+          "lqip": "data:image/webp;base64,UklGRrgAAABXRUJQVlA4IKwAAADwAwCdASoYABAAPu1iqU2ppaOiMAgBMB2JZgAAWmq5j7HSs7nc84wAAP7J/YV7pOEVi0ZN198WCXOpDA3V3gElJeWz5iE/8zQ/O+Mza4DMF4Y8rCyRsn/oKuG4GZv34nCfLMXmD8Upl1+0iDv9V6/HFPqm7dcF9kTxAHs1q0G5qxVGv3DfA5FxnSxjRXUs1wE7N24b5QfYiOGQtaVeBqLWbYkA4l5fA6PAAAAA",
+          "attribution": {
+            "photographer": "Sicnag",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 2.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:1933_Ford_Model_18_5_window_Coupe_(32043397296).jpg"
+          },
+          "sortOrder": 2
+        }
+      ]
+    }
+  ]
+}

@@ -17,7 +17,8 @@
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "server-only": "^0.0.1",
-    "zod": "^3.24.0"
+    "zod": "^3.24.0",
+    "@ffd/crypto": "*"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.2",

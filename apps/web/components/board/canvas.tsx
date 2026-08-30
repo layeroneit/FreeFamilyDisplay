@@ -4,19 +4,25 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { CANVAS_H, CANVAS_W } from "@/lib/board/widgets";
 
 /**
- * The fixed 1920×1080 canvas (plan §7.1). The editor and the kiosk both use
- * this — one renderer, scaled to fit whatever container it lands in with a
- * single CSS transform. No responsive reflow, ever.
+ * A fixed pixel canvas (plan §7.1) — one of three presets (landscape,
+ * portrait, ultrawide), never reflowed. The editor and the kiosk both use
+ * this; it scales to fit whatever container it lands in with a single CSS
+ * transform, and fits by height when the container is constrained that way
+ * (full-screen view) or by width otherwise (editor).
  */
 export function BoardCanvas({
   vars,
   children,
   className,
+  width = CANVAS_W,
+  height = CANVAS_H,
   onScaleChange,
 }: {
   vars: Record<string, string>;
   children: ReactNode;
   className?: string;
+  width?: number;
+  height?: number;
   /** Reports the current scale so an editor can convert pointer deltas. */
   onScaleChange?: (scale: number) => void;
 }) {
@@ -30,27 +36,32 @@ export function BoardCanvas({
     if (!el) return;
     const ro = new ResizeObserver(() => {
       const r = el.getBoundingClientRect();
-      const s = Math.min(r.width / CANVAS_W, r.height / CANVAS_H) || 0.5;
+      const byW = r.width / width;
+      const byH = r.height > 0 ? r.height / height : Infinity;
+      const s = Math.min(byW, byH) || 0.5;
       setScale(s);
       report.current?.(s);
     });
     ro.observe(el);
     return () => ro.disconnect();
-  }, []);
+  }, [width, height]);
 
   return (
     <div
       ref={outer}
       className={`relative w-full overflow-hidden ${className ?? ""}`}
-      style={{ aspectRatio: `${CANVAS_W} / ${CANVAS_H}` }}
+      style={{ aspectRatio: `${width} / ${height}`, maxHeight: "100%" }}
     >
       <div
         data-canvas
-        className="absolute left-0 top-0 origin-top-left"
+        className="absolute origin-top-left"
         style={{
           ...vars,
-          width: CANVAS_W,
-          height: CANVAS_H,
+          left: "50%",
+          top: 0,
+          marginLeft: -(width * scale) / 2,
+          width,
+          height,
           transform: `scale(${scale})`,
           background: "var(--hearth-bg)",
           color: "var(--hearth-text)",
