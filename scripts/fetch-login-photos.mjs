@@ -60,7 +60,10 @@ for (const photo of photos) {
       const info = await sharp(input).rotate().resize({ width: w, withoutEnlargement: true }).webp({ quality: 80 }).toFile(path.join(OUT_DIR, `${file}-${w}.webp`));
       sizes.push({ w: info.width, file: `${file}-${w}.webp` });
     }
-    credits.push({ file, sizes, photographer, source, license, lowRes: native < 1600 });
+    // `url` rides along as sourceUrl: CC BY requires a link back on
+  // redistribution, and dropping it here is what left seventeen photos
+  // credited as an unverifiable "Lance Shields - Flickr".
+  credits.push({ file, sizes, photographer, source, sourceUrl: url, license, lowRes: native < 1600 });
     process.stdout.write(`ok (native ${native}px → ${sizes.map((s) => s.w).join("/")})\n`);
   } catch (err) {
     failed++;

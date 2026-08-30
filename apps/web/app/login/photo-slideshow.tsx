@@ -7,6 +7,8 @@ export type SlidePhoto = {
   srcSet: string;
   photographer: string;
   source: string;
+  sourceUrl: string;
+  license: string;
   /** Source capped below 1600px — never stretch it past native size. */
   lowRes: boolean;
   nativeW: number;
@@ -77,8 +79,22 @@ export function PhotoSlideshow({ photos, startIndex }: { photos: SlidePhoto[]; s
         />
       ))}
       <div className="absolute inset-x-0 bottom-0 h-24" style={{ background: "linear-gradient(transparent, rgb(0 0 0 / 0.55))" }} />
+      {/*
+        CC BY and CC BY-SA require the licence to be named and the material
+        linked when it is redistributed, and every photo here is one or the
+        other. "Photographer - Flickr" alone is unverifiable: it does not say
+        which photo, or under what terms.
+      */}
       <p className="absolute bottom-3 left-4 text-xs text-white/80" aria-live="off">
-        Photo: {current?.photographer} · {current?.source}
+        Photo:{" "}
+        {current?.sourceUrl ? (
+          <a href={current.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline">
+            {current?.photographer}
+          </a>
+        ) : (
+          current?.photographer
+        )}{" "}
+        · {current?.source} · {current?.license}
       </p>
     </>
   );

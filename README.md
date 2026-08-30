@@ -135,13 +135,18 @@ Leave everything else blank. **You do not need an AWS account, an email provider
 
 ### 5. Start it
 
-> **Faster option:** from **v1.0.0** onward, pre-built images are published for
-> amd64 and arm64, so you can skip the build entirely. Create
-> `infra/compose.images.yaml` with the two `image:` lines from the
-> [release notes](https://github.com/layeroneit/FreeFamilyDisplay/releases) and
-> add `-f infra/compose.images.yaml` to the command below. Minutes of building
-> become one `docker pull`. Building from source, as written here, always works
-> too.
+> **Faster option.** From **v1.0.0** there are pre-built images for amd64 and
+> arm64, so you can skip the build entirely — add one flag:
+>
+> ```bash
+> docker compose -f infra/compose.yaml -f infra/compose.images.yaml \
+>   --env-file .env up -d
+> ```
+>
+> `infra/compose.images.yaml` ships with the project; you do not have to write
+> it. Minutes of building become one pull. Building from source, exactly as
+> written below, always works too — and is what you want if you have changed
+> any code.
 
 ```bash
 docker compose -f infra/compose.yaml --env-file .env up -d --build
@@ -155,7 +160,7 @@ Check on it:
 docker compose -f infra/compose.yaml --env-file .env ps
 ```
 
-Give it two minutes. Containers show `health: starting` at first; that is normal. You want everything `healthy` except `migrate`, which should be `exited (0)` — it has done its job. `cloudflared` should not be running at all; it only starts if you deliberately ask for it.
+Give it two minutes. Containers show `health: starting` at first; that is normal. You want `postgres`, `redis`, `web` and `worker` to reach `healthy`, and `migrate` to show `exited (0)` — it has done its job. `caddy` stays at `Up` rather than `healthy`; it defines no healthcheck, and that is not a fault. `cloudflared` should not be running at all; it only starts if you deliberately ask for it.
 
 ### 6. Open it and create your account
 
@@ -186,10 +191,10 @@ You are in. Click **Set up a display** and build your first board.
 | `POSTGRES_PASSWORD` | **Yes** | From `openssl rand -hex 24`. Hex on purpose — `/` and `+` from base64 would need escaping inside `DATABASE_URL`. |
 | `REDIS_URL` | **Yes** | `redis://redis:6379`. Just paste that. |
 | `MASTER_KEY` | **Yes** | Encrypts the calendar and photo links people paste in. Lose it and those links must be re-entered. |
-| `SESSION_SECRET` | **Yes** | Signs login cookies. Changing it logs everyone out. |
+| `SESSION_SECRET` | **Yes** | Reserved for signed cookies. Sessions are currently opaque random tokens stored hashed, so changing this does **not** log anyone out — delete the rows in the `Session` table for that. Still required, still generate a real one. |
 | `NODE_ENV` | No | Leave as-is. |
 | `AWS_REGION`, `SES_*` | **No — leave empty** | There is no email in this software. Nothing reads these. See [What this is not](#what-this-is-not). |
-| `PEXELS_API_KEY` | No | Optional. Adds more stock wallpapers. Free key from Pexels. The app ships with a built-in set and works fine without it. |
+| `PEXELS_API_KEY` | **No — leave empty** | Reserved, and currently read by nothing. The wallpapers that ship are the wallpapers you get. |
 | `GOOGLE_API_KEY` | No | Optional. Lets you point a photo widget at a public Google Drive folder. Everything else about photos works without it. |
 | `CLOUDFLARE_TUNNEL_TOKEN` | No | Only if you want the display reachable from outside your house. Off unless you explicitly ask for it. |
 
@@ -375,7 +380,7 @@ npm run check        # typecheck + lint + unit tests
 npm run dev          # Next dev server on :3010 (needs a database)
 ```
 
-`AGENTS.md` and `CLAUDE.md` carry the working rules; `docs/project-plan.md` is the specification and `docs/adr/` records the decisions that changed it — including [ADR 0004](docs/adr/0004-freeware-self-hosted-per-family.md), which is why this file exists.
+`CLAUDE.md` carries the working rules; `docs/project-plan.md` is the specification and `docs/adr/` records the decisions that changed it — including [ADR 0004](docs/adr/0004-freeware-self-hosted-per-family.md), which is why this file exists.
 
 ---
 
@@ -402,7 +407,7 @@ Don't rely on it where a mistake or an outage would cause harm &mdash; medical t
 
 ### The photographs are separately licensed
 
-This repository ships **139 photographs that are not Apache-licensed.** Each one stays under its own terms &mdash; CC0, public domain, CC BY, or CC BY-SA &mdash; and each is credited on screen where it appears.
+This repository ships **143 photographs that are not Apache-licensed.** Each one stays under its own terms &mdash; CC0, public domain, CC BY, or CC BY-SA &mdash; and each is credited on screen where it appears.
 
 The full per-image list is in **[`ATTRIBUTION.md`](ATTRIBUTION.md)**, generated from the same manifests the app reads:
 

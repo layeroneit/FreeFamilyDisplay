@@ -34,7 +34,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        component: [web, worker]
+        # `migrate` is built from the worker Dockerfile's own stage, not a file
+        # of its own. It has to be published too -- compose has three services
+        # with a `build:`, and leaving one out means the build never gets
+        # skipped.
+        component: [web, worker, migrate]
         include:
           - arch: amd64
             runner: ubuntu-latest
@@ -65,7 +69,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: infra/${{ matrix.component }}.Dockerfile
+          file: infra/${{ matrix.component == 'web' && 'web' || 'worker' }}.Dockerfile
+          target: ${{ matrix.component == 'migrate' && 'migrate' || 'runner' }}
           platforms: ${{ matrix.platform }}
           # Push without a tag; the merge job below turns the digests into one
           # multi-arch tag. Tagging here would have the two architectures
@@ -94,7 +99,7 @@ jobs:
       packages: write
     strategy:
       matrix:
-        component: [web, worker]
+        component: [web, worker, migrate]
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -120,5 +125,12 @@ jobs:
             REFS="$REFS ${IMAGE}@$(cat "$f")"
           done
           echo "Assembling $IMAGE:$TAG from:$REFS"
-          docker buildx imagetools create -t "${IMAGE}:${TAG}" -t "${IMAGE}:latest" $REFS
+          # Only a v* tag moves `latest`. A workflow_dispatch run publishes
+          # `:master`, and pointing `latest` at a branch build is how people
+          # end up running something nobody released.
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            docker buildx imagetools create -t "${IMAGE}:${TAG}" -t "${IMAGE}:latest" $REFS
+          else
+            docker buildx imagetools create -t "${IMAGE}:${TAG}" $REFS
+          fi
           docker buildx imagetools inspect "${IMAGE}:${TAG}"

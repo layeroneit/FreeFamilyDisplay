@@ -1,0 +1,32 @@
+# Run the published images instead of building from source.
+#
+#   docker compose -f infra/compose.yaml -f infra/compose.images.yaml \
+#     --env-file .env up -d
+#
+# The first build of this stack takes several minutes of `npm ci` and
+# `next build` on whatever machine you had spare. This skips it.
+#
+# Two details that are easy to get wrong and are handled here:
+#
+#   * `migrate` is a third service that builds from source. Overriding only web
+#     and worker leaves it building, so nothing is actually saved.
+#   * Naming an image next to an existing `build:` is not enough on its own --
+#     compose still builds when the image is absent locally. `pull_policy:
+#     always` is what makes it fetch.
+#
+# Pin a version rather than tracking `latest` if you would like to choose when
+# you upgrade. Tags are at:
+#   https://github.com/layeroneit/FreeFamilyDisplay/pkgs/container/freefamilydisplay-web
+
+services:
+  web:
+    image: ghcr.io/layeroneit/freefamilydisplay-web:v1.0.0
+    pull_policy: always
+
+  worker:
+    image: ghcr.io/layeroneit/freefamilydisplay-worker:v1.0.0
+    pull_policy: always
+
+  migrate:
+    image: ghcr.io/layeroneit/freefamilydisplay-migrate:v1.0.0
+    pull_policy: always

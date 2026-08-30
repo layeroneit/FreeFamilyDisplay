@@ -9,6 +9,8 @@ export type PhotoEntry = {
   photographer: string;
   source: string;
   license: string;
+  /** Link back to the original. CC BY requires it on redistribution. */
+  sourceUrl?: string;
   lowRes: boolean;
 };
 

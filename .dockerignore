@@ -17,3 +17,8 @@ dist
 /media
 packages/stockpile/images
 *.log
+
+# Candidate photos staged before ingest. Gitignored, but both Dockerfiles
+# `COPY . .`, so without this every build pushes ~478 MB of context to the
+# daemon for nothing.
+/.photo-review

@@ -36,6 +36,8 @@ export default async function LoginPage() {
     srcSet: srcSet(p),
     photographer: p.photographer,
     source: p.source,
+    sourceUrl: p.sourceUrl ?? "",
+    license: p.license,
     lowRes: p.lowRes,
     nativeW: Math.max(...p.sizes.map((s) => s.w)),
   }));

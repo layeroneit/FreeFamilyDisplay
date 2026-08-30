@@ -196,23 +196,23 @@ Supercells, lightning, mammatus, and shelf clouds. Pairs with the weather widget
 
 | Image | Photographer | Source | Licence |
 | --- | --- | --- | --- |
-| `beach-run` | Lance Shields | Flickr | CC BY 2.0 |
-| `soccer` | susieq3c | Flickr | CC BY 2.0 |
-| `football` | Fort George G. Meade | Flickr | CC BY 2.0 |
-| `game-night` | Andrew Turner | Flickr | CC BY 2.0 |
-| `campfire` | John Brighenti | Flickr | CC BY 2.0 |
-| `chicago-skyline-sunset` | Tony Webster | Wikimedia Commons | CC BY 2.0 |
-| `chicago-river-night` | Tony Webster | Wikimedia Commons | CC BY 2.0 |
-| `chicago-l-sunset` | Jonathan Lee | Wikimedia Commons | CC BY 4.0 |
-| `chicago-l-train` | Rene Schwietzke | Wikimedia Commons | CC BY 2.0 |
-| `chicago-navy-pier-wheel` | Roman Boed | Wikimedia Commons | CC BY 2.0 |
-| `lake-michigan-sunset` | aparlette | Wikimedia Commons | CC BY 2.0 |
-| `sandhill-cranes` | USFWS Mountain-Prairie | Wikimedia Commons | CC BY 2.0 |
-| `geese-marsh` | Jocelyn Anderson | Wikimedia Commons | CC BY 2.0 |
-| `whitetail-buck-grazing` | USFWS Pacific | Wikimedia Commons | CC0 |
-| `whitetail-buck-velvet` | James St. John | Wikimedia Commons | CC BY 2.0 |
-| `door-county-shore` | Aaron Volkening | Wikimedia Commons | CC BY 2.0 |
-| `great-lakes-lighthouse` | Robin Férand | Wikimedia Commons | CC BY 2.0 |
+| `beach-run` | Lance Shields | [Flickr](https://www.flickr.com/photo.gne?id=320473949) | CC BY 2.0 |
+| `soccer` | susieq3c | [Flickr](https://www.flickr.com/photo.gne?id=1425008829) | CC BY 2.0 |
+| `football` | Fort George G. Meade | [Flickr](https://www.flickr.com/photo.gne?id=6172707061) | CC BY 2.0 |
+| `game-night` | Andrew Turner | [Flickr](https://www.flickr.com/photo.gne?id=2212377184) | CC BY 2.0 |
+| `campfire` | John Brighenti | [Flickr](https://www.flickr.com/photo.gne?id=48333915077) | CC BY 2.0 |
+| `chicago-skyline-sunset` | Tony Webster | [Wikimedia Commons](https://upload.wikimedia.org/wikipedia/commons/1/16/Chicago_Skyline_at_Sunset_%2817056949776%29.jpg) | CC BY 2.0 |
+| `chicago-river-night` | Tony Webster | [Wikimedia Commons](https://upload.wikimedia.org/wikipedia/commons/d/de/Chicago_River_%28302046020%29.jpg) | CC BY 2.0 |
+| `chicago-l-sunset` | Jonathan Lee | [Wikimedia Commons](https://upload.wikimedia.org/wikipedia/commons/b/b7/North_Lawndale_Sunset.jpg) | CC BY 4.0 |
+| `chicago-l-train` | Rene Schwietzke | [Wikimedia Commons](https://upload.wikimedia.org/wikipedia/commons/c/cf/Chicago_%27L%27_-_Flickr_-_ReneS_%282%29.jpg) | CC BY 2.0 |
+| `chicago-navy-pier-wheel` | Roman Boed | [Wikimedia Commons](https://upload.wikimedia.org/wikipedia/commons/5/54/Ferris_Wheel_%2820553177218%29.jpg) | CC BY 2.0 |
+| `lake-michigan-sunset` | aparlette | [Wikimedia Commons](https://upload.wikimedia.org/wikipedia/commons/a/a6/Lake_Michigan_Sunset_-_Indiana_Dunes_State_Park.jpg) | CC BY 2.0 |
+| `sandhill-cranes` | USFWS Mountain-Prairie | [Wikimedia Commons](https://upload.wikimedia.org/wikipedia/commons/d/d7/Sandhill_Cranes_%2813893615765%29.jpg) | CC BY 2.0 |
+| `geese-marsh` | Jocelyn Anderson | [Wikimedia Commons](https://upload.wikimedia.org/wikipedia/commons/3/37/Canada_Geese_%28183318583%29.jpeg) | CC BY 2.0 |
+| `whitetail-buck-grazing` | USFWS Pacific | [Wikimedia Commons](https://upload.wikimedia.org/wikipedia/commons/e/e0/Odocoileus_virginianus_leucurus%2C_Julia_Butler_Hansen_Refuge_for_the_Columbian_White-tailed_Deer.jpg) | CC0 |
+| `whitetail-buck-velvet` | James St. John | [Wikimedia Commons](https://upload.wikimedia.org/wikipedia/commons/d/d5/Odocoileus_virginianus_%28white-tailed_deer_-_buck_in_velvet%29_%2817_July_2018%29_%28Newark%2C_Ohio%2C_USA%29_3_%2829623674898%29.jpg) | CC BY 2.0 |
+| `door-county-shore` | Aaron Volkening | [Wikimedia Commons](https://upload.wikimedia.org/wikipedia/commons/3/3a/View_at_or_near_Lynd_Point%2C_Newport_State_Park%2C_August_2019.jpg) | CC BY 2.0 |
+| `great-lakes-lighthouse` | Robin Férand | [Wikimedia Commons](https://upload.wikimedia.org/wikipedia/commons/5/52/Lighthouse_Of_Grand_Marais_%28231105297%29.jpeg) | CC BY 2.0 |
 
 ## Summary
 

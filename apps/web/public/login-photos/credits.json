@@ -10,7 +10,8 @@
     "photographer": "Lance Shields",
     "source": "Flickr",
     "license": "CC BY 2.0",
-    "lowRes": false
+    "lowRes": false,
+    "sourceUrl": "https://www.flickr.com/photo.gne?id=320473949"
   },
   {
     "file": "soccer",
@@ -23,7 +24,8 @@
     "photographer": "susieq3c",
     "source": "Flickr",
     "license": "CC BY 2.0",
-    "lowRes": true
+    "lowRes": true,
+    "sourceUrl": "https://www.flickr.com/photo.gne?id=1425008829"
   },
   {
     "file": "football",
@@ -36,7 +38,8 @@
     "photographer": "Fort George G. Meade",
     "source": "Flickr",
     "license": "CC BY 2.0",
-    "lowRes": true
+    "lowRes": true,
+    "sourceUrl": "https://www.flickr.com/photo.gne?id=6172707061"
   },
   {
     "file": "game-night",
@@ -49,7 +52,8 @@
     "photographer": "Andrew Turner",
     "source": "Flickr",
     "license": "CC BY 2.0",
-    "lowRes": true
+    "lowRes": true,
+    "sourceUrl": "https://www.flickr.com/photo.gne?id=2212377184"
   },
   {
     "file": "campfire",
@@ -62,7 +66,8 @@
     "photographer": "John Brighenti",
     "source": "Flickr",
     "license": "CC BY 2.0",
-    "lowRes": true
+    "lowRes": true,
+    "sourceUrl": "https://www.flickr.com/photo.gne?id=48333915077"
   },
   {
     "file": "chicago-skyline-sunset",
@@ -79,7 +84,8 @@
     "photographer": "Tony Webster",
     "source": "Wikimedia Commons",
     "license": "CC BY 2.0",
-    "lowRes": false
+    "lowRes": false,
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/1/16/Chicago_Skyline_at_Sunset_%2817056949776%29.jpg"
   },
   {
     "file": "chicago-river-night",
@@ -96,7 +102,8 @@
     "photographer": "Tony Webster",
     "source": "Wikimedia Commons",
     "license": "CC BY 2.0",
-    "lowRes": false
+    "lowRes": false,
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/d/de/Chicago_River_%28302046020%29.jpg"
   },
   {
     "file": "chicago-l-sunset",
@@ -113,7 +120,8 @@
     "photographer": "Jonathan Lee",
     "source": "Wikimedia Commons",
     "license": "CC BY 4.0",
-    "lowRes": false
+    "lowRes": false,
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b7/North_Lawndale_Sunset.jpg"
   },
   {
     "file": "chicago-l-train",
@@ -130,7 +138,8 @@
     "photographer": "Rene Schwietzke",
     "source": "Wikimedia Commons",
     "license": "CC BY 2.0",
-    "lowRes": false
+    "lowRes": false,
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/cf/Chicago_%27L%27_-_Flickr_-_ReneS_%282%29.jpg"
   },
   {
     "file": "chicago-navy-pier-wheel",
@@ -147,7 +156,8 @@
     "photographer": "Roman Boed",
     "source": "Wikimedia Commons",
     "license": "CC BY 2.0",
-    "lowRes": false
+    "lowRes": false,
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/54/Ferris_Wheel_%2820553177218%29.jpg"
   },
   {
     "file": "lake-michigan-sunset",
@@ -164,7 +174,8 @@
     "photographer": "aparlette",
     "source": "Wikimedia Commons",
     "license": "CC BY 2.0",
-    "lowRes": false
+    "lowRes": false,
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a6/Lake_Michigan_Sunset_-_Indiana_Dunes_State_Park.jpg"
   },
   {
     "file": "sandhill-cranes",
@@ -181,7 +192,8 @@
     "photographer": "USFWS Mountain-Prairie",
     "source": "Wikimedia Commons",
     "license": "CC BY 2.0",
-    "lowRes": false
+    "lowRes": false,
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/d/d7/Sandhill_Cranes_%2813893615765%29.jpg"
   },
   {
     "file": "geese-marsh",
@@ -194,7 +206,8 @@
     "photographer": "Jocelyn Anderson",
     "source": "Wikimedia Commons",
     "license": "CC BY 2.0",
-    "lowRes": false
+    "lowRes": false,
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/3/37/Canada_Geese_%28183318583%29.jpeg"
   },
   {
     "file": "whitetail-buck-grazing",
@@ -211,7 +224,8 @@
     "photographer": "USFWS Pacific",
     "source": "Wikimedia Commons",
     "license": "CC0",
-    "lowRes": false
+    "lowRes": false,
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e0/Odocoileus_virginianus_leucurus%2C_Julia_Butler_Hansen_Refuge_for_the_Columbian_White-tailed_Deer.jpg"
   },
   {
     "file": "whitetail-buck-velvet",
@@ -224,7 +238,8 @@
     "photographer": "James St. John",
     "source": "Wikimedia Commons",
     "license": "CC BY 2.0",
-    "lowRes": false
+    "lowRes": false,
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/d/d5/Odocoileus_virginianus_%28white-tailed_deer_-_buck_in_velvet%29_%2817_July_2018%29_%28Newark%2C_Ohio%2C_USA%29_3_%2829623674898%29.jpg"
   },
   {
     "file": "door-county-shore",
@@ -237,7 +252,8 @@
     "photographer": "Aaron Volkening",
     "source": "Wikimedia Commons",
     "license": "CC BY 2.0",
-    "lowRes": false
+    "lowRes": false,
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/3/3a/View_at_or_near_Lynd_Point%2C_Newport_State_Park%2C_August_2019.jpg"
   },
   {
     "file": "great-lakes-lighthouse",
@@ -250,6 +266,7 @@
     "photographer": "Robin Férand",
     "source": "Wikimedia Commons",
     "license": "CC BY 2.0",
-    "lowRes": false
+    "lowRes": false,
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/52/Lighthouse_Of_Grand_Marais_%28231105297%29.jpeg"
   }
 ]
