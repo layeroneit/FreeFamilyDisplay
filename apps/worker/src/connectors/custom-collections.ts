@@ -18,7 +18,7 @@ import { prisma } from "@ffd/db";
 import { createLogger } from "@ffd/log";
 import { safeFetch, UnsafeUrlError } from "../net/ssrf.js";
 import { ingestWallpaper } from "../wallpaper-ingest.js";
-import { classifyLink, driveFolderId, extractAlbumImageUrls, MAX_PHOTOS } from "./google-photos.js";
+import { classifyLink, driveFolderId, extractAlbumImageUrls, MAX_COLLECTION_PHOTOS } from "./google-photos.js";
 
 const log = createLogger("worker.collections");
 const MAX_IMAGE_BYTES = 12 * 1024 * 1024;
@@ -37,7 +37,7 @@ async function resolveLinkToImageUrls(link: string): Promise<string[]> {
   const key = process.env.GOOGLE_API_KEY;
   if (!key) throw new Error("Google Drive folders need GOOGLE_API_KEY in .env — Google Photos album links work without it.");
   const q = encodeURIComponent(`'${driveFolderId(link)}' in parents and mimeType contains 'image/' and trashed = false`);
-  const res = await safeFetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id)&pageSize=${MAX_PHOTOS}&key=${encodeURIComponent(key)}`, { accept: "application/json" });
+  const res = await safeFetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id)&pageSize=${MAX_COLLECTION_PHOTOS}&key=${encodeURIComponent(key)}`, { accept: "application/json" });
   if (res.status !== 200) throw new Error(`Google Drive answered HTTP ${res.status} — is the folder shared with "anyone with the link"?`);
   const body = JSON.parse(res.body.toString("utf8")) as { files?: Array<{ id: string }> };
   return (body.files ?? []).map((f) => `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(f.id)}?alt=media&key=${encodeURIComponent(key)}`);
@@ -57,7 +57,7 @@ export async function syncCustomCollections(mediaDir: string): Promise<void> {
       let order = 0;
       let added = 0;
       let rejected = 0;
-      for (const u of urls.slice(0, MAX_PHOTOS)) {
+      for (const u of urls.slice(0, MAX_COLLECTION_PHOTOS)) {
         const name = createHash("sha256").update(u.split("?")[0]!.split("=")[0]!).digest("hex").slice(0, 24);
         const basePath = `/media/wallpapers/${c.id}/${name}`;
         keep.add(name);

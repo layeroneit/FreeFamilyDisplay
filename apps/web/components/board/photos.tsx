@@ -43,13 +43,27 @@ export function PhotosWidget({ srcs, intervalSec, note }: { srcs: string[]; inte
   }
   // Never index past the end if the set shrank under us — no blank frame.
   const current = i % srcs.length;
+  // Mount three frames, not the whole album. Rendering every <img> meant a
+  // 400-photo album put 400 decoded images in memory on a Raspberry Pi that is
+  // also driving a screen. The outgoing frame has to stay mounted for the
+  // crossfade, and the incoming one has to be mounted early enough for the
+  // browser to have fetched it, so the window is exactly [previous, current,
+  // next] — deduped, because a one- or two-photo album overlaps. Named
+  // `frames`, not `window`: a local called window shadows the global one and
+  // silently breaks the matchMedia call above.
+  const frames = [...new Set([(current - 1 + srcs.length) % srcs.length, current, (current + 1) % srcs.length])];
   return (
     <div data-part="photos" style={{ position: "absolute", inset: 0 }}>
-      {srcs.map((s, n) => (
+      {frames.map((n) => (
         <img
-          key={s}
-          src={s}
+          key={`${n}:${srcs[n]}`}
+          src={srcs[n]}
           alt=""
+          // The next frame is mounted only to warm the cache; it must not be
+          // announced, and it must not be lazy or the preload does nothing.
+          aria-hidden={n !== current}
+          loading="eager"
+          decoding="async"
           style={{
             position: "absolute",
             inset: 0,

@@ -41,19 +41,30 @@ function EventLine({ e, day, size = 17 }: { e: CalEvent; day: Date; size?: numbe
       style={{
         fontSize: size,
         lineHeight: 1.25,
-        // Two lines, then ellipsis — a truncated "Robotics / F…" on every row
-        // tells nobody anything, and the columns have vertical room to spare.
+        // THREE lines, not two. A week is seven columns wide, so each one is
+        // only ~15 characters across at this size; two lines meant "Jazz
+        // Band…" and "Call grandma t…", which tell nobody anything. The
+        // columns have vertical room to spare — most days hold far fewer than
+        // the six events we allow — so the third line is close to free and it
+        // is what turns a truncated fragment back into whole words.
         display: "-webkit-box",
         WebkitBoxOrient: "vertical",
-        WebkitLineClamp: 2,
+        WebkitLineClamp: 3,
         overflow: "hidden",
-        overflowWrap: "anywhere",
+        // Break inside a long word only when it genuinely cannot fit, so
+        // ordinary titles keep whole words on a line.
+        overflowWrap: "break-word",
+        hyphens: "auto",
+        // Every pixel of a narrow column is a character, so the rule and its
+        // gutter are as tight as they can be while still reading as a rule.
         borderLeft: "3px solid var(--hearth-accent-1)",
-        paddingLeft: 8,
+        paddingLeft: 6,
       }}
       title={e.title}
     >
-      {timed ? <span style={{ ...muted, fontSize: size * 0.82, marginRight: 6 }}>{timeLabel(s)}</span> : null}
+      {/* The time must never break across lines — "7:15" above "AM" wastes a
+          whole line of a column that only has three. */}
+      {timed ? <span style={{ ...muted, fontSize: size * 0.82, marginRight: 5, whiteSpace: "nowrap" }}>{timeLabel(s)}</span> : null}
       {e.title}
     </li>
   );
@@ -69,7 +80,7 @@ export function WeekView({ now, days, feed }: { now: Date; days: number; feed: C
   });
   return (
     <div data-part="calendar" data-mode="week" style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(cols.length, 7)}, 1fr)`, gap: 12, flex: 1, minHeight: 0 }}>
+      <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(cols.length, 7)}, 1fr)`, gap: 8, flex: 1, minHeight: 0 }}>
         {cols.map((d, i) => (
           <div key={d.toISOString()} style={{ borderTop: `3px solid ${i === 0 ? "var(--hearth-accent-2)" : "var(--hearth-border)"}`, paddingTop: 10, minWidth: 0 }}>
             <div style={{ ...muted, fontSize: 18, textTransform: "uppercase", letterSpacing: 1 }}>{DAY[d.getDay()]}</div>

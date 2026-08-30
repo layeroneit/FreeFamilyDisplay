@@ -20,7 +20,28 @@ import path from "node:path";
 import sharp from "sharp";
 import { safeFetch, UnsafeUrlError } from "../net/ssrf.js";
 
-export const MAX_PHOTOS = 40;
+/**
+ * Ceiling for a photo WIDGET. Raised from 40 after the operator pointed a
+ * 4,000-photo album at a wall and saw the same twenty pictures: 40 was a
+ * renderer limit dressed up as a source limit, and the renderer no longer
+ * mounts every image at once (see components/board/photos.tsx).
+ *
+ * A Drive folder genuinely reaches this number because it pages. A Google
+ * Photos ALBUM link usually will not, and that is not a bug we can fix here:
+ * the album page lazy-loads, so a single fetch only ever sees the first batch
+ * of image URLs. Drive is the honest route to thousands.
+ */
+export const MAX_PHOTOS = 400;
+
+/**
+ * Wallpaper collections are curated sets meant to rotate weekly, not archives,
+ * and every one of them is resized and analysed at ingest. They keep the old,
+ * much smaller ceiling.
+ */
+export const MAX_COLLECTION_PHOTOS = 60;
+
+/** Drive returns at most 1000 per call; 100 keeps each response small. */
+const DRIVE_PAGE_SIZE = 100;
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
 /** Shortest side below this is an avatar or an icon, not a photo. */
 const MIN_PHOTO_PX = 500;
@@ -62,7 +83,7 @@ export function extractAlbumImageUrls(html: string): string[] {
     // stretched across a wall display is unmistakable and not a family photo.
     if (/^https:\/\/lh3\.googleusercontent\.com\/a[/-]/.test(base)) continue;
     seen.add(base);
-    if (seen.size >= MAX_PHOTOS) break;
+    if (seen.size >= MAX_PHOTOS) break; // only a ceiling now, not the usual stop
   }
   return [...seen];
 }
@@ -72,15 +93,34 @@ export function driveFolderId(url: string): string | null {
   return m?.[1] ?? null;
 }
 
-async function listDriveFolder(folderId: string): Promise<string[]> {
+/**
+ * Lists a shared Drive folder, FOLLOWING THE PAGE TOKEN. Without this loop a
+ * folder of four thousand photos returned only the first page and the wall
+ * showed the same handful forever.
+ */
+async function listDriveFolder(folderId: string, limit = MAX_PHOTOS): Promise<string[]> {
   const key = process.env.GOOGLE_API_KEY;
   if (!key) throw new Error("Google Drive folders need GOOGLE_API_KEY in .env — Google Photos album links work without it.");
   const q = encodeURIComponent(`'${folderId}' in parents and mimeType contains 'image/' and trashed = false`);
-  const url = `https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name,mimeType)&pageSize=${MAX_PHOTOS}&key=${encodeURIComponent(key)}`;
-  const res = await safeFetch(url, { accept: "application/json" });
-  if (res.status !== 200) throw new Error(`Google Drive answered HTTP ${res.status} — is the folder shared with "anyone with the link"?`);
-  const body = JSON.parse(res.body.toString("utf8")) as { files?: Array<{ id: string }> };
-  return (body.files ?? []).map((f) => `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(f.id)}?alt=media&key=${encodeURIComponent(key)}`);
+  const out: string[] = [];
+  let pageToken: string | undefined;
+  // Bounded by `limit`, and by a page ceiling so a malformed token that never
+  // changes cannot spin forever.
+  for (let page = 0; page < Math.ceil(limit / DRIVE_PAGE_SIZE) + 1 && out.length < limit; page++) {
+    const size = Math.min(DRIVE_PAGE_SIZE, limit - out.length);
+    const tok = pageToken ? `&pageToken=${encodeURIComponent(pageToken)}` : "";
+    const url = `https://www.googleapis.com/drive/v3/files?q=${q}&fields=nextPageToken,files(id)&pageSize=${size}&orderBy=name_natural${tok}&key=${encodeURIComponent(key)}`;
+    const res = await safeFetch(url, { accept: "application/json" });
+    if (res.status !== 200) throw new Error(`Google Drive answered HTTP ${res.status} — is the folder shared with "anyone with the link"?`);
+    const body = JSON.parse(res.body.toString("utf8")) as { files?: Array<{ id: string }>; nextPageToken?: string };
+    for (const f of body.files ?? []) {
+      if (out.length >= limit) break;
+      out.push(`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(f.id)}?alt=media&key=${encodeURIComponent(key)}`);
+    }
+    if (!body.nextPageToken || body.nextPageToken === pageToken) break;
+    pageToken = body.nextPageToken;
+  }
+  return out;
 }
 
 async function resolveAlbum(link: string): Promise<string[]> {
