@@ -17,10 +17,13 @@
 import { createHash } from "node:crypto";
 import { mkdir, readdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
+import sharp from "sharp";
 import { safeFetch, UnsafeUrlError } from "../net/ssrf.js";
 
 export const MAX_PHOTOS = 40;
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
+/** Shortest side below this is an avatar or an icon, not a photo. */
+const MIN_PHOTO_PX = 500;
 
 export type PhotoSourceKind = "google-photos" | "google-drive";
 
@@ -46,6 +49,10 @@ export function extractAlbumImageUrls(html: string): string[] {
     const base = m[0].split("=")[0]!;
     // Album pages also embed tiny avatar/profile images; those are short paths.
     if (base.length < 60) continue;
+    // Profile pictures — including the coloured letter tile Google generates
+    // for an account with no photo — live under /a/ and /a-/. One of those
+    // stretched across a wall display is unmistakable and not a family photo.
+    if (/^https:\/\/lh3\.googleusercontent\.com\/a[/-]/.test(base)) continue;
     seen.add(base);
     if (seen.size >= MAX_PHOTOS) break;
   }
@@ -98,6 +105,16 @@ export async function syncPhotoLink(link: string, widgetId: string, mediaDir: st
     try {
       const img = await safeFetch(u, { accept: "image/*", maxBytes: MAX_IMAGE_BYTES });
       if (img.status !== 200 || !img.contentType.startsWith("image/")) continue;
+      // Second line of defence against avatars, icons and sprite sheets that
+      // survive the URL filter: anything this small was never a wall photo.
+      const meta = await sharp(img.body)
+        .metadata()
+        .catch(() => null);
+      if (!meta?.width || !meta.height || Math.min(meta.width, meta.height) < MIN_PHOTO_PX) {
+        keep.delete(name);
+        files.splice(files.indexOf(name), 1);
+        continue;
+      }
       await writeFile(path.join(dir, name), img.body);
     } catch (err) {
       if (err instanceof UnsafeUrlError) throw err;

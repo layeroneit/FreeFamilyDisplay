@@ -47,6 +47,9 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 RUN addgroup -g 1001 -S ffd && adduser -u 1001 -S ffd -G ffd
+# Alpine ships no zoneinfo, so a TZ env var is silently ignored and every
+# date lands in UTC — which flips the calendar over at 7 p.m. Central.
+RUN apk add --no-cache tzdata
 
 # Production dependency tree only — no build toolchain in the runtime image.
 COPY --from=build --chown=1001:1001 /app/package.json ./package.json

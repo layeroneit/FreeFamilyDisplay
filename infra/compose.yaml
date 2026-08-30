@@ -128,6 +128,10 @@ services:
       # Internal service address for the /status page's worker probe.
       WORKER_URL: "http://worker:3002"
       MEDIA_DIR: /app/media
+      # The wall clock the household lives by. Boards render server-side, so
+      # without this the date widget flips over at UTC midnight — 7 p.m. local
+      # in Central Daylight Time.
+      TZ: ${TZ:-America/Chicago}
     volumes:
       - media:/app/media
     read_only: true
@@ -169,6 +173,8 @@ services:
       WALLPAPER_MANIFEST: /app/wallpapers/manifest.json
       MEDIA_DIR: /app/media
       GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+      # Floating/TZID-less ICS times are read as local — same zone as web.
+      TZ: ${TZ:-America/Chicago}
     volumes:
       - media:/app/media
     read_only: true

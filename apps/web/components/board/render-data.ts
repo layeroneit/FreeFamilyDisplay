@@ -6,7 +6,15 @@ import { largestSrc, loginPhotoSet } from "@/lib/board/photo-set";
 import { safeWidgetConfig } from "@/lib/board/widgets";
 import { WeatherPayloadSchema, weatherKey, type WeatherPayload } from "@/lib/board/weather-codes";
 import { currentWallpaper, type WallpaperInfo } from "@/lib/board/wallpapers";
+import { collectionFontVars } from "@/lib/board/collection-fonts";
 import type { BoardData, CalendarFeed } from "./widget-view";
+
+/** The collection's slug, which selects its lettering. Null for no collection. */
+async function collectionSlug(collectionId: string | null): Promise<string | null> {
+  if (!collectionId) return null;
+  const c = await prisma.wallpaperCollection.findUnique({ where: { id: collectionId }, select: { slug: true } });
+  return c?.slug ?? null;
+}
 
 export type BoardScene = {
   data: BoardData;
@@ -84,6 +92,9 @@ export async function loadBoardScene(board: BoardFull, viewerName: string): Prom
     if (board.matchPaletteToWallpaper && wallpaper.dominantColors.length >= 4) {
       wallpaper.dominantColors.slice(0, 4).forEach((c, i) => (varOverrides[`--hearth-accent-${i + 1}`] = c));
     }
+    // The collection carries its own lettering (operator, 2026-08-30: an anime
+    // collection should look like one, not just swap the photo).
+    Object.assign(varOverrides, collectionFontVars(await collectionSlug(board.wallpaperCollectionId)));
   }
 
   return { data, wallpaper, scrimOpacity, mood, varOverrides };

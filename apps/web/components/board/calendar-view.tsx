@@ -36,7 +36,23 @@ function EventLine({ e, day, size = 17 }: { e: CalEvent; day: Date; size?: numbe
   const s = new Date(e.start);
   const timed = !e.allDay && sameDay(s, day);
   return (
-    <li data-part="event" style={{ fontSize: size, lineHeight: 1.25, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", borderLeft: "3px solid var(--hearth-accent-1)", paddingLeft: 8 }} title={e.title}>
+    <li
+      data-part="event"
+      style={{
+        fontSize: size,
+        lineHeight: 1.25,
+        // Two lines, then ellipsis — a truncated "Robotics / F…" on every row
+        // tells nobody anything, and the columns have vertical room to spare.
+        display: "-webkit-box",
+        WebkitBoxOrient: "vertical",
+        WebkitLineClamp: 2,
+        overflow: "hidden",
+        overflowWrap: "anywhere",
+        borderLeft: "3px solid var(--hearth-accent-1)",
+        paddingLeft: 8,
+      }}
+      title={e.title}
+    >
       {timed ? <span style={{ ...muted, fontSize: size * 0.82, marginRight: 6 }}>{timeLabel(s)}</span> : null}
       {e.title}
     </li>

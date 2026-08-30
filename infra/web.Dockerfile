@@ -34,6 +34,9 @@ ENV HOSTNAME=0.0.0.0
 # Dedicated non-root account. Not the image's stock `node` user (uid 1000) —
 # an explicit uid keeps volume ownership predictable across rebuilds.
 RUN addgroup -g 1001 -S ffd && adduser -u 1001 -S ffd -G ffd
+# Alpine ships no zoneinfo, so a TZ env var is silently ignored and boards —
+# which render server-side — show tomorrow's date after 7 p.m. Central.
+RUN apk add --no-cache tzdata
 
 COPY --from=build --chown=1001:1001 /app/apps/web/.next/standalone ./
 COPY --from=build --chown=1001:1001 /app/apps/web/.next/static ./apps/web/.next/static
