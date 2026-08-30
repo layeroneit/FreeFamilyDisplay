@@ -522,6 +522,30 @@
           "photographer": "Raph.zufferey",
           "source": "Wikimedia Commons",
           "license": "CC BY-SA 3.0"
+        },
+        {
+          "file": ".photo-review/cf2-campfire-cooking-unsplash.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Campfire_Cooking_(Unsplash).jpg",
+          "name": "campfire-cooking-unsplash",
+          "photographer": "Evan  Kirby evankirby2",
+          "source": "Wikimedia Commons",
+          "license": "CC0"
+        },
+        {
+          "file": ".photo-review/cf2-campfire-at-allegany-state-par.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Campfire_at_Allegany_State_Park,_New_York_-_20211108.jpg",
+          "name": "campfire-at-allegany-state-par",
+          "photographer": "Andre Carrotflower",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/cf2-campfire-at-night.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Campfire_at_night.jpg",
+          "name": "campfire-at-night",
+          "photographer": "Lazarus000",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
         }
       ]
     },
@@ -760,6 +784,14 @@
           "photographer": "Corey Coyle",
           "source": "Wikimedia Commons",
           "license": "CC BY 3.0"
+        },
+        {
+          "file": ".photo-review/nw2-boreal-forest-2741294531.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Boreal_forest_(2741294531).jpg",
+          "name": "boreal-forest-2741294531",
+          "photographer": "Ben+Sam",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 2.0"
         }
       ]
     },

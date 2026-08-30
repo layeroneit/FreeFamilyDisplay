@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-30T14:38:18.955Z",
+  "generatedAt": "2026-08-30T14:48:07.566Z",
   "collections": [
     {
       "slug": "deep-space",
@@ -1452,6 +1452,75 @@
             "sourceUrl": "https://commons.wikimedia.org/wiki/File:Feu_de_nuit.jpg"
           },
           "sortOrder": 10
+        },
+        {
+          "basePath": "/wallpapers/campfire/campfire-cooking-unsplash",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.5421,
+          "luminanceVariance": 0.2693,
+          "dominantColors": [
+            "#ffcccc",
+            "#999999",
+            "#000000",
+            "#666699",
+            "#ffcc66"
+          ],
+          "suggestedScrimOpacity": 0.557,
+          "lqip": "data:image/webp;base64,UklGRqYAAABXRUJQVlA4IJoAAABwBACdASoYABAAPu1orU6ppiSiMAgBMB2JbACdMoAKR63/vqk8tBoi57j0AADymPNaympiFvnmV+zQPwsWLy3bAiwtPxygf13DEQx+I/0Rf+4OzZKE1lEfpZcYqZ2wWmmlQDLjDL5kdU65mowPqGI/I9hk+wzFQtI0ZtG/h/PYgxLHi/BxIbS+DE7Iv6fGLvvUtbC6RA6ygAAA",
+          "attribution": {
+            "photographer": "Evan  Kirby evankirby2",
+            "source": "Wikimedia Commons",
+            "license": "CC0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Campfire_Cooking_(Unsplash).jpg"
+          },
+          "sortOrder": 11
+        },
+        {
+          "basePath": "/wallpapers/campfire/campfire-at-allegany-state-par",
+          "width": 1920,
+          "height": 1152,
+          "meanLuminance": 0.1587,
+          "luminanceVariance": 0.1647,
+          "dominantColors": [
+            "#000000",
+            "#333300",
+            "#996600",
+            "#663333",
+            "#330033"
+          ],
+          "suggestedScrimOpacity": 0.397,
+          "lqip": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAAAwBACdASoYAA4APu1iqU2ppaOiMAgBMB2JaACdL1yBMq73heLpInmkCQgA/vQy23SZCQSDRymBDQ8M3TaYtniUbKMc+RnvMJDxLYk8L+06TA6DuAHgdrmIfP35ZFwuHXutvlXAb0eSzpYzDJpoGY4SefIeXz04tmBSKgAA",
+          "attribution": {
+            "photographer": "Andre Carrotflower",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Campfire_at_Allegany_State_Park,_New_York_-_20211108.jpg"
+          },
+          "sortOrder": 12
+        },
+        {
+          "basePath": "/wallpapers/campfire/campfire-at-night",
+          "width": 1920,
+          "height": 1080,
+          "meanLuminance": 0.5221,
+          "luminanceVariance": 0.1399,
+          "dominantColors": [
+            "#999999",
+            "#996633",
+            "#cc9966",
+            "#cccc99",
+            "#663333"
+          ],
+          "suggestedScrimOpacity": 0.518,
+          "lqip": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAADwAwCdASoYAA4APu1qrU8ppiQiMAgBMB2JagCdACBYDYDM4gPzKwgAAPx+mxJ9N4x1beFJetSuPl7l+EMpaNBEyKs/U4YIW7LGsNOUEZfY7ewbZbkn/4e07c73UQ8pqXgkv6d7ZY6y00406p4B/usDFWbpOBS4AAA=",
+          "attribution": {
+            "photographer": "Lazarus000",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Campfire_at_night.jpg"
+          },
+          "sortOrder": 13
         }
       ]
     },
@@ -2110,6 +2179,29 @@
             "sourceUrl": "https://commons.wikimedia.org/wiki/File:Fall_Colors_at_Lake_Wisconsin_-_panoramio.jpg"
           },
           "sortOrder": 11
+        },
+        {
+          "basePath": "/wallpapers/northwoods/boreal-forest-2741294531",
+          "width": 1920,
+          "height": 1440,
+          "meanLuminance": 0.3441,
+          "luminanceVariance": 0.2141,
+          "dominantColors": [
+            "#333333",
+            "#666633",
+            "#000000",
+            "#999966",
+            "#cccccc"
+          ],
+          "suggestedScrimOpacity": 0.474,
+          "lqip": "data:image/webp;base64,UklGRsQAAABXRUJQVlA4ILgAAAAwBQCdASoYABIAPu1sq1EppaOiqAqpMB2JYwC3udwLhtKexppedntfF4U7hMOUkXAsAAD+6YjJGm9Sh/GX3y68KasHstXYZfq+udOt7wqIcC7GMADidLR4BIGUcyhlUn3jUBmRaPyJGO71DBdv2ORtxFk7AVRCuPUsc/P1C9IsVd69misKwCMVDzlIC2hi23YoTyHiw1azaYOHRfRUd3WkAEqkDzVijM+4dKAj0PN3LUNm2jAIBmAA",
+          "attribution": {
+            "photographer": "Ben+Sam",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 2.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Boreal_forest_(2741294531).jpg"
+          },
+          "sortOrder": 12
         }
       ]
     },

@@ -99,6 +99,9 @@ Fire rings, sparks and dark woods. Warm light against a lot of dark — easy to 
 | `riverside-lagerfeuer` | Michael Hoelzl | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:2009_Lagerfeuer.JPG) | Public domain |
 | `simple-campfire` | Leon Bovenkerk | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:A_simple_campfire.jpg) | CC BY-SA 2.0 |
 | `night-fire-sparks` | Raph.zufferey | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Feu_de_nuit.jpg) | CC BY-SA 3.0 |
+| `campfire-cooking-unsplash` | Evan  Kirby evankirby2 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Campfire_Cooking_(Unsplash).jpg) | CC0 |
+| `campfire-at-allegany-state-par` | Andre Carrotflower | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Campfire_at_Allegany_State_Park,_New_York_-_20211108.jpg) | CC BY-SA 4.0 |
+| `campfire-at-night` | Lazarus000 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Campfire_at_night.jpg) | CC BY-SA 4.0 |
 
 ### Arcade & rigs
 
@@ -141,6 +144,7 @@ Lakes, pines, snow, fog, and birch woods across the Upper Midwest. Calm and quie
 | `crescent-lake-autumn` | Tony Webster | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Autumn_at_Crescent_Lake,_Wisconsin_(49113407061).jpg) | CC BY 2.0 |
 | `driftless-area-lake` | Corey Coyle | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Driftless_Area_and_Lake_Wisconsin_-_panoramio.jpg) | CC BY 3.0 |
 | `fall-colors-lake-wisconsin` | Corey Coyle | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Fall_Colors_at_Lake_Wisconsin_-_panoramio.jpg) | CC BY 3.0 |
+| `boreal-forest-2741294531` | Ben+Sam | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Boreal_forest_(2741294531).jpg) | CC BY-SA 2.0 |
 
 ### Cities at night
 
@@ -212,16 +216,16 @@ Supercells, lightning, mammatus, and shelf clouds. Pairs with the weather widget
 
 ## Summary
 
-139 images in total.
+143 images in total.
 
 | Licence | Images |
 | --- | --- |
-| CC BY-SA 4.0 | 32 |
+| CC BY-SA 4.0 | 34 |
 | CC BY 2.0 | 27 |
 | Public domain | 25 |
 | CC BY 4.0 | 16 |
-| CC0 | 15 |
-| CC BY-SA 2.0 | 11 |
+| CC0 | 16 |
+| CC BY-SA 2.0 | 12 |
 | CC BY-SA 3.0 | 10 |
 | CC BY 3.0 | 3 |
 
