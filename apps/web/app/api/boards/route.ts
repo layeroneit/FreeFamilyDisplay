@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { getSessionUser } from "@/lib/auth/sessions";
-import { createBoard, listBoards } from "@/lib/board/boards";
+import { BoardLimitError, createBoard, listBoards } from "@/lib/board/boards";
 import { WIDGET_TYPES } from "@/lib/board/widgets";
 import { isThemeId } from "@/lib/themes";
 import { audit } from "@/lib/audit";
@@ -39,6 +39,9 @@ export async function POST(req: NextRequest) {
     await audit({ actorId: user.id, action: "board.created", targetType: "Board", targetId: id });
     return NextResponse.json({ id }, { status: 201 });
   } catch (err) {
+    if (err instanceof BoardLimitError) {
+      return NextResponse.json({ error: err.message }, { status: 400 });
+    }
     if (err instanceof z.ZodError) {
       return NextResponse.json({ error: err.issues[0]?.message ?? "Invalid widget settings." }, { status: 400 });
     }

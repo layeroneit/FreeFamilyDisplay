@@ -1,6 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth/sessions";
 import { getBoard } from "@/lib/board/boards";
+import { WIDGET_META } from "@/lib/board/widgets";
 import { themeById, themeVars } from "@/lib/themes";
 import { BoardCanvas } from "@/components/board/canvas";
 import { WidgetFrame } from "@/components/board/widget-frame";
@@ -9,8 +10,6 @@ import { WidgetView } from "@/components/board/widget-view";
 import { RefreshTimer } from "@/app/status/refresh-timer";
 
 export const dynamic = "force-dynamic";
-
-const PLAIN = new Set(["greeting", "clock", "date"]);
 
 /**
  * Full-screen preview — the same renderer the kiosk will use in Phase 4,
@@ -30,7 +29,7 @@ export default async function BoardViewPage({ params }: { params: Promise<{ id: 
       <div className="h-full w-full">
         <BoardCanvas vars={themeVars(themeById(board.theme))} className="h-full">
           {board.widgets.map((w) => (
-            <WidgetFrame key={w.id} type={w.type} x={w.x} y={w.y} w={w.w} h={w.h} z={w.z} plain={PLAIN.has(w.type)}>
+            <WidgetFrame key={w.id} type={w.type} x={w.x} y={w.y} w={w.w} h={w.h} z={w.z} plain={WIDGET_META[w.type].plain}>
               <WidgetView widget={w} data={data} />
             </WidgetFrame>
           ))}

@@ -12,9 +12,15 @@ export function ThemePicker({ themes, current }: { themes: ThemeDef[]; current: 
   async function choose(id: string) {
     setSaving(id);
     setError(null);
-    // Instant, no round trip: repaint the page before the save even starts.
+    // Instant, no round trip: repaint the page before the save even starts —
+    // but remember what was there so a failed save can put it back.
     const t = themes.find((x) => x.id === id);
-    if (t) for (const [k, v] of Object.entries(themeVars(t))) document.body.style.setProperty(k, v);
+    const prev = themes.find((x) => x.id === current);
+    const apply = (def: ThemeDef | undefined) => {
+      if (!def) return;
+      for (const [k, v] of Object.entries(themeVars(def))) document.body.style.setProperty(k, v);
+    };
+    apply(t);
     try {
       const res = await fetch("/api/me/theme", {
         method: "POST",
@@ -22,12 +28,14 @@ export function ThemePicker({ themes, current }: { themes: ThemeDef[]; current: 
         body: JSON.stringify({ theme: id }),
       });
       if (!res.ok) {
+        apply(prev);
         setError("Couldn't save that theme. Try again.");
         return;
       }
       // Operator ask: picking a theme opens the widget picker in that look.
       router.push(`/setup?theme=${id}`);
     } catch {
+      apply(prev);
       setError("Couldn't reach the server.");
     } finally {
       setSaving(null);

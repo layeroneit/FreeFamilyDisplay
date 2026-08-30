@@ -18,12 +18,16 @@ import {
 } from "@/lib/board/widgets";
 import { themeById, themeVars, type ThemeDef } from "@/lib/themes";
 
-const PLAIN = new Set<WidgetType>(["greeting", "clock", "date"]);
-
 /**
  * Board editor: drag to move, corner handle to resize, sidebar for settings.
  * Geometry lives in canvas pixels; pointer deltas are divided by the current
  * scale so a drag on a phone and on a monitor both mean the same thing.
+ *
+ * Pointer handling (audit-hardened): one drag at a time, filtered by
+ * pointerId; `pointercancel` and `lostpointercapture` tear down like
+ * `pointerup`; `touch-action: none` on the draggable surfaces so the browser
+ * never steals the gesture for scrolling; a tap with no movement writes
+ * nothing.
  */
 export function BoardEditor({
   board,
@@ -43,9 +47,17 @@ export function BoardEditor({
   const [theme, setTheme] = useState(board.theme);
   const [msg, setMsg] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
-  const canvasRef = useRef<HTMLDivElement>(null);
+  const scaleRef = useRef(1);
+  const dragRef = useRef<{ pointerId: number } | null>(null);
+  const addingRef = useRef(false);
 
-  useEffect(() => setWidgets(initial), [initial]);
+  // Resync from the server (a new `initial` arrives only on router.refresh),
+  // but never mid-drag — otherwise a refresh landing during a gesture snaps
+  // the widget back to its server position.
+  useEffect(() => {
+    if (dragRef.current) return;
+    setWidgets(initial);
+  }, [initial]);
 
   const api = useCallback(async (path: string, init: RequestInit): Promise<boolean> => {
     const res = await fetch(path, {
@@ -60,27 +72,36 @@ export function BoardEditor({
     return true;
   }, []);
 
-  function currentScale(): number {
-    const el = canvasRef.current?.querySelector<HTMLElement>("[data-canvas]");
-    if (!el) return 1;
-    const m = /scale\(([\d.]+)\)/.exec(el.style.transform);
-    return m ? Number(m[1]) || 1 : 1;
-  }
-
-  function startDrag(e: React.PointerEvent, id: string, mode: "move" | "resize") {
+  function startDrag(e: React.PointerEvent<HTMLElement>, id: string, mode: "move" | "resize") {
     e.preventDefault();
     e.stopPropagation();
     setSelected(id);
+    if (dragRef.current) return; // one gesture at a time
     const target = widgets.find((w) => w.id === id);
     if (!target) return;
-    const scale = currentScale();
+
+    const pointerId = e.pointerId;
+    dragRef.current = { pointerId };
+    const el = e.currentTarget;
+    try {
+      el.setPointerCapture(pointerId);
+    } catch {
+      /* capture is best-effort */
+    }
+
+    const scale = scaleRef.current || 1;
     const sx = e.clientX;
     const sy = e.clientY;
     const start = { x: target.x, y: target.y, w: target.w, h: target.h, z: target.z };
     let latest: BoardWidgetRow = target;
+    let moved = false;
+
     const onMove = (ev: PointerEvent) => {
+      if (ev.pointerId !== pointerId) return;
       const dx = (ev.clientX - sx) / scale;
       const dy = (ev.clientY - sy) / scale;
+      if (!moved && Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
+      moved = true;
       const g =
         mode === "move"
           ? { ...start, x: start.x + dx, y: start.y + dy }
@@ -88,9 +109,19 @@ export function BoardEditor({
       latest = { ...target, ...normalizeGeometry(target.type, g) };
       setWidgets((ws) => ws.map((w) => (w.id === id ? latest : w)));
     };
-    const onUp = () => {
+    const finish = (ev: PointerEvent) => {
+      if (ev.pointerId !== pointerId) return;
       window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointerup", finish);
+      window.removeEventListener("pointercancel", finish);
+      el.removeEventListener("lostpointercapture", finish);
+      dragRef.current = null;
+      try {
+        el.releasePointerCapture(pointerId);
+      } catch {
+        /* already released */
+      }
+      if (!moved) return; // a tap selects; it does not write
       const { x, y, w, h, z } = latest;
       void api(`/api/boards/${board.id}/widgets/${id}`, {
         method: "PATCH",
@@ -98,15 +129,23 @@ export function BoardEditor({
       });
     };
     window.addEventListener("pointermove", onMove);
-    window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointerup", finish);
+    window.addEventListener("pointercancel", finish);
+    el.addEventListener("lostpointercapture", finish);
   }
 
   async function saveConfig(id: string, config: unknown) {
+    const previous = widgets.find((w) => w.id === id)?.config;
     setWidgets((ws) => ws.map((w) => (w.id === id ? { ...w, config } : w)));
-    if (await api(`/api/boards/${board.id}/widgets/${id}`, { method: "PATCH", body: JSON.stringify({ config }) })) {
+    const ok = await api(`/api/boards/${board.id}/widgets/${id}`, { method: "PATCH", body: JSON.stringify({ config }) });
+    if (ok) {
       setMsg("Saved.");
       router.refresh(); // server re-renders the widget content with the new config
+    } else {
+      // Roll the optimistic write back so the UI and the database agree.
+      setWidgets((ws) => ws.map((w) => (w.id === id ? { ...w, config: previous } : w)));
     }
+    return ok;
   }
 
   async function remove(id: string) {
@@ -118,9 +157,15 @@ export function BoardEditor({
   }
 
   async function add(type: WidgetType) {
+    if (addingRef.current) return; // double-tap guard
+    addingRef.current = true;
     setAdding(false);
-    if (await api(`/api/boards/${board.id}/widgets`, { method: "POST", body: JSON.stringify({ type }) })) {
-      router.refresh();
+    try {
+      if (await api(`/api/boards/${board.id}/widgets`, { method: "POST", body: JSON.stringify({ type }) })) {
+        router.refresh();
+      }
+    } finally {
+      addingRef.current = false;
     }
   }
 
@@ -210,19 +255,18 @@ export function BoardEditor({
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_300px]">
           <div
-            ref={canvasRef}
             className="rounded-xl border"
             style={{ borderColor: "var(--hearth-border)" }}
             onPointerDown={() => setSelected(null)}
           >
-            <BoardCanvas vars={vars}>
+            <BoardCanvas vars={vars} onScaleChange={(s) => (scaleRef.current = s)}>
               {widgets.map((w) => (
                 <div key={w.id}>
                   <div
                     onPointerDown={(e) => startDrag(e, w.id, "move")}
-                    style={{ position: "absolute", left: 0, top: 0, cursor: "move" }}
+                    style={{ position: "absolute", left: 0, top: 0, cursor: "move", touchAction: "none" }}
                   >
-                    <WidgetFrame type={w.type} x={w.x} y={w.y} w={w.w} h={w.h} z={w.z} plain={PLAIN.has(w.type)}>
+                    <WidgetFrame type={w.type} x={w.x} y={w.y} w={w.w} h={w.h} z={w.z} plain={WIDGET_META[w.type].plain}>
                       <div style={{ pointerEvents: "none", height: "100%", position: "relative" }}>{slots[w.id]}</div>
                     </WidgetFrame>
                   </div>
@@ -250,6 +294,7 @@ export function BoardEditor({
                       height: 28,
                       zIndex: 1001 + w.z,
                       cursor: "nwse-resize",
+                      touchAction: "none",
                       background: "var(--hearth-accent-1)",
                       borderRadius: 6,
                       opacity: selected === w.id ? 1 : 0.35,
@@ -266,7 +311,7 @@ export function BoardEditor({
           >
             {sel ? (
               <WidgetSettings
-                key={sel.id}
+                key={`${sel.id}:${JSON.stringify(sel.config)}`}
                 widget={sel}
                 onSave={(c) => void saveConfig(sel.id, c)}
                 onRemove={() => void remove(sel.id)}
@@ -297,6 +342,12 @@ export function BoardEditor({
       </div>
     </main>
   );
+}
+
+function clampInt(raw: string, min: number, max: number, fallback: number): number {
+  const n = Number(raw);
+  if (!Number.isFinite(n) || raw.trim() === "") return fallback;
+  return Math.min(max, Math.max(min, Math.round(n)));
 }
 
 function WidgetSettings({
@@ -369,14 +420,14 @@ function WidgetSettings({
         )}
         {widget.type === "calendar" && (
           <label className="block">
-            Days shown
-            <input type="number" min={1} max={14} className={field} style={input} value={Number(draft["days"] ?? 7)} onChange={(e) => set("days", Number(e.target.value))} />
+            Days shown (1–14)
+            <input type="number" min={1} max={14} className={field} style={input} value={Number(draft["days"] ?? 7)} onChange={(e) => set("days", clampInt(e.target.value, 1, 14, 7))} />
           </label>
         )}
         {widget.type === "photos" && (
           <label className="block">
-            Seconds per photo
-            <input type="number" min={5} max={600} className={field} style={input} value={Number(draft["intervalSec"] ?? 20)} onChange={(e) => set("intervalSec", Number(e.target.value))} />
+            Seconds per photo (5–600)
+            <input type="number" min={5} max={600} className={field} style={input} value={Number(draft["intervalSec"] ?? 20)} onChange={(e) => set("intervalSec", clampInt(e.target.value, 5, 600, 20))} />
           </label>
         )}
         {widget.type === "notes" && (

@@ -12,20 +12,27 @@ export function BoardCanvas({
   vars,
   children,
   className,
+  onScaleChange,
 }: {
   vars: Record<string, string>;
   children: ReactNode;
   className?: string;
+  /** Reports the current scale so an editor can convert pointer deltas. */
+  onScaleChange?: (scale: number) => void;
 }) {
   const outer = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.5);
+  const report = useRef(onScaleChange);
+  report.current = onScaleChange;
 
   useEffect(() => {
     const el = outer.current;
     if (!el) return;
     const ro = new ResizeObserver(() => {
       const r = el.getBoundingClientRect();
-      setScale(Math.min(r.width / CANVAS_W, r.height / CANVAS_H) || 0.5);
+      const s = Math.min(r.width / CANVAS_W, r.height / CANVAS_H) || 0.5;
+      setScale(s);
+      report.current?.(s);
     });
     ro.observe(el);
     return () => ro.disconnect();

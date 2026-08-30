@@ -15,6 +15,20 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ci -d ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     steps:
       - uses: actions/checkout@v4
 
@@ -42,6 +56,18 @@ jobs:
 
       - name: Test
         run: npm test
+
+      - name: Apply migrations to the CI database
+        env:
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+        run: npm run db:deploy
+
+      - name: Cross-tenant isolation test (real Postgres)
+        # CLAUDE.md: the tenancy test is not optional. It runs against the
+        # migrated service database, never against anything shared.
+        env:
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+        run: npm run test:db
 
       - name: Validate compose file
         run: docker compose -f infra/compose.yaml config --quiet

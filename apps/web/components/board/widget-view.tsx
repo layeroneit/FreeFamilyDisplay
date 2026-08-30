@@ -84,7 +84,7 @@ export function WidgetView({ widget, data }: { widget: BoardWidgetRow; data: Boa
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: `repeat(${Math.min(5, w.daily.length)}, 1fr)`,
+              gridTemplateColumns: `repeat(${Math.max(1, Math.min(5, w.daily.length))}, 1fr)`,
               gap: 8,
               marginTop: "auto",
             }}

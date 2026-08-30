@@ -29,7 +29,9 @@ export function isWidgetType(v: string): v is WidgetType {
 
 /** Per-type config schemas — every field has a default so `{}` is valid. */
 export const WIDGET_CONFIG = {
-  greeting: z.object({ name: z.string().trim().max(40).default("") }),
+  greeting: z.object({
+    name: z.string().trim().max(40, "Keep the greeting name under 40 characters.").default(""),
+  }),
   clock: z.object({
     format: z.enum(["12h", "24h"]).default("12h"),
     showSeconds: z.boolean().default(false),
@@ -65,6 +67,9 @@ export type WidgetMeta = {
   minSize: { w: number; h: number };
   /** Pre-ticked in the setup wizard. */
   starter: boolean;
+  /** Renders as bare text on the background, no surface card. ONE definition —
+   *  the editor and the kiosk must never disagree about it (plan §4.2). */
+  plain: boolean;
 };
 
 export const WIDGET_META: Record<WidgetType, WidgetMeta> = {
@@ -74,6 +79,7 @@ export const WIDGET_META: Record<WidgetType, WidgetMeta> = {
     defaultSize: { w: 900, h: 120 },
     minSize: { w: 300, h: 80 },
     starter: true,
+    plain: true,
   },
   clock: {
     label: "Clock",
@@ -81,6 +87,7 @@ export const WIDGET_META: Record<WidgetType, WidgetMeta> = {
     defaultSize: { w: 480, h: 160 },
     minSize: { w: 240, h: 100 },
     starter: true,
+    plain: true,
   },
   date: {
     label: "Date",
@@ -88,6 +95,7 @@ export const WIDGET_META: Record<WidgetType, WidgetMeta> = {
     defaultSize: { w: 480, h: 80 },
     minSize: { w: 240, h: 60 },
     starter: true,
+    plain: true,
   },
   weather: {
     label: "Weather",
@@ -95,6 +103,7 @@ export const WIDGET_META: Record<WidgetType, WidgetMeta> = {
     defaultSize: { w: 480, h: 360 },
     minSize: { w: 300, h: 200 },
     starter: true,
+    plain: false,
   },
   calendar: {
     label: "Calendar",
@@ -102,6 +111,7 @@ export const WIDGET_META: Record<WidgetType, WidgetMeta> = {
     defaultSize: { w: 1300, h: 560 },
     minSize: { w: 600, h: 300 },
     starter: true,
+    plain: false,
   },
   photos: {
     label: "Photos",
@@ -109,6 +119,7 @@ export const WIDGET_META: Record<WidgetType, WidgetMeta> = {
     defaultSize: { w: 480, h: 320 },
     minSize: { w: 240, h: 180 },
     starter: true,
+    plain: false,
   },
   quote: {
     label: "Quote of the day",
@@ -116,6 +127,7 @@ export const WIDGET_META: Record<WidgetType, WidgetMeta> = {
     defaultSize: { w: 1300, h: 120 },
     minSize: { w: 400, h: 80 },
     starter: true,
+    plain: false,
   },
   notes: {
     label: "Notes",
@@ -123,6 +135,7 @@ export const WIDGET_META: Record<WidgetType, WidgetMeta> = {
     defaultSize: { w: 1300, h: 120 },
     minSize: { w: 300, h: 80 },
     starter: false,
+    plain: false,
   },
 };
 

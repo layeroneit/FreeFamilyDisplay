@@ -1,9 +1,9 @@
 /**
  * Worker entrypoint.
  *
- * Phase 0 is deliberately empty of jobs. This process exists, connects to its
- * dependencies, answers health probes, and shuts down cleanly. The BullMQ
- * scheduler and connector fetching arrive in Phase 2 (plan §10).
+ * Runs the scheduled jobs (weather today; connectors in Phase 2) and answers
+ * health probes. Plain intervals for now — BullMQ arrives with the first job
+ * that genuinely needs a durable queue (wallpaper rotation, plan §6.6.0).
  *
  * The reason this service exists at all, from day one: plan §4.2 forbids `web`
  * from making outbound third-party calls during a request. That rule needs
@@ -114,9 +114,11 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
   }
 
   if (path === "/jobs/weather" && req.method === "POST") {
-    // Internal-network ops trigger (the editor calls this after a weather
-    // widget is configured so the first forecast lands in seconds, not 15 min).
-    void runWeatherCycle().catch(() => undefined);
+    // Internal-network trigger: `web` pokes this when a weather widget is
+    // created or its town changes, so the first forecast lands in seconds
+    // rather than on the next 15-minute tick. Joins an in-flight cycle rather
+    // than stacking a new one; not reachable from the LAN (no published port).
+    void runWeatherCycle();
     send(res, 202, { status: "started" });
     return;
   }

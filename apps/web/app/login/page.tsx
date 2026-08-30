@@ -46,8 +46,10 @@ export default async function LoginPage() {
 
   return (
     <main className="grid min-h-dvh grid-cols-1 lg:grid-cols-2">
-      {/* Photo / gradient panel */}
-      <div className="relative hidden overflow-hidden lg:block" aria-hidden="true">
+      {/* Photo / gradient panel. Not aria-hidden: the photo credit inside it is
+          a license obligation and must reach assistive tech; the images
+          themselves carry empty alt text. */}
+      <div className="relative hidden overflow-hidden lg:block">
         {photos.length > 0 ? (
           <PhotoSlideshow photos={photos} startIndex={dayIndex} />
         ) : (

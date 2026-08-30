@@ -15,11 +15,13 @@ export function PhotosWidget({ srcs, intervalSec, note }: { srcs: string[]; inte
     if (reduced || srcs.length < 2) return;
     const id = setInterval(() => setI((n) => (n + 1) % srcs.length), Math.max(5, intervalSec) * 1000);
     return () => clearInterval(id);
-  }, [reduced, srcs.length, intervalSec]);
+  }, [reduced, srcs, intervalSec]);
 
   if (srcs.length === 0) {
     return <div style={{ color: "var(--hearth-text-muted)", fontSize: 24 }}>No photos yet.</div>;
   }
+  // Never index past the end if the set shrank under us — no blank frame.
+  const current = i % srcs.length;
   return (
     <div data-part="photos" style={{ position: "absolute", inset: 0 }}>
       {srcs.map((s, n) => (
@@ -33,7 +35,7 @@ export function PhotosWidget({ srcs, intervalSec, note }: { srcs: string[]; inte
             width: "100%",
             height: "100%",
             objectFit: "cover",
-            opacity: n === i ? 1 : 0,
+            opacity: n === current ? 1 : 0,
             transition: reduced ? "none" : "opacity 1200ms ease-in-out",
           }}
           draggable={false}

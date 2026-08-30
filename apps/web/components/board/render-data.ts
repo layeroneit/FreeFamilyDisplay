@@ -4,17 +4,23 @@ import path from "node:path";
 import { prisma } from "@ffd/db";
 import type { BoardFull } from "@/lib/board/boards";
 import { safeWidgetConfig } from "@/lib/board/widgets";
-import { weatherKey, type WeatherPayload } from "@/lib/board/weather-codes";
+import { WeatherPayloadSchema, weatherKey, type WeatherPayload } from "@/lib/board/weather-codes";
 import type { BoardData } from "./widget-view";
 
+// The sample set is baked into the image at build time; read it once per
+// process rather than doing blocking file I/O on every board render.
+let samplePhotoCache: string[] | null = null;
+
 function samplePhotoSrcs(): string[] {
+  if (samplePhotoCache) return samplePhotoCache;
   try {
     const dir = path.join(process.cwd(), "public", "login-photos");
     const credits = JSON.parse(readFileSync(path.join(dir, "credits.json"), "utf8")) as Array<{ file: string }>;
-    return credits.filter((c) => existsSync(path.join(dir, c.file))).map((c) => `/login-photos/${c.file}`);
+    samplePhotoCache = credits.filter((c) => existsSync(path.join(dir, c.file))).map((c) => `/login-photos/${c.file}`);
   } catch {
-    return [];
+    samplePhotoCache = [];
   }
+  return samplePhotoCache;
 }
 
 /** Everything the renderer needs, resolved from Postgres only (plan §4.2). */
@@ -34,9 +40,10 @@ export async function loadBoardData(board: BoardFull, viewerName: string): Promi
     : [];
   const weather: Record<string, WeatherPayload | undefined> = {};
   for (const r of rows) {
-    const p = r.payload as Partial<WeatherPayload>;
-    // A row that only ever recorded an error has an empty payload — treat as missing.
-    if (p && p.current && p.daily) weather[r.key] = p as WeatherPayload;
+    // An error-only row has an empty payload; a future upstream shape change
+    // fails validation. Both render as "fetching…" rather than a 500.
+    const parsed = WeatherPayloadSchema.safeParse(r.payload);
+    if (parsed.success) weather[r.key] = parsed.data;
   }
 
   return { viewerName, photoSrcs: samplePhotoSrcs(), weather, now: new Date() };

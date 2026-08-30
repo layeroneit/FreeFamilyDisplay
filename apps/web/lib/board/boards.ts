@@ -14,6 +14,17 @@ import {
   type WidgetGeometry,
   type WidgetType,
 } from "./widgets";
+import { pokeWorkerWeather } from "./worker-poke";
+
+/** Family scale; also the rail against one account fanning out weather fetches. */
+export const MAX_BOARDS_PER_USER = 20;
+
+export class BoardLimitError extends Error {
+  constructor() {
+    super(`You've reached the limit of ${MAX_BOARDS_PER_USER} displays. Delete one to add another.`);
+    this.name = "BoardLimitError";
+  }
+}
 
 export type BoardSummary = { id: string; name: string; theme: string; updatedAt: Date; widgetCount: number };
 
@@ -71,6 +82,8 @@ export async function createBoard(
   userId: string,
   input: { name: string; theme: string; widgets: WidgetType[]; configs?: Partial<Record<WidgetType, unknown>> },
 ): Promise<string> {
+  const existing = await prisma.board.count({ where: { userId } });
+  if (existing >= MAX_BOARDS_PER_USER) throw new BoardLimitError();
   const rows = input.widgets.map((type, i) => {
     const g = STARTER_LAYOUT[type];
     return { type, ...g, z: i, config: parseWidgetConfig(type, input.configs?.[type]) as object };
@@ -79,6 +92,7 @@ export async function createBoard(
     data: { userId, name: input.name, theme: input.theme, widgets: { create: rows } },
     select: { id: true },
   });
+  if (input.widgets.includes("weather")) pokeWorkerWeather();
   return board.id;
 }
 
@@ -113,6 +127,7 @@ export async function addWidget(
     select: { id: true, type: true, x: true, y: true, w: true, h: true, z: true, config: true },
   });
   await prisma.board.update({ where: { id: boardId }, data: { updatedAt: new Date() } });
+  if (type === "weather") pokeWorkerWeather();
   return { ...row, type };
 }
 
@@ -132,6 +147,7 @@ export async function updateWidget(
   if (patch.config !== undefined) data.config = parseWidgetConfig(w.type, patch.config) as object;
   await prisma.boardWidget.update({ where: { id: widgetId }, data });
   await prisma.board.update({ where: { id: boardId }, data: { updatedAt: new Date() } });
+  if (w.type === "weather" && patch.config !== undefined) pokeWorkerWeather();
   return true;
 }
 

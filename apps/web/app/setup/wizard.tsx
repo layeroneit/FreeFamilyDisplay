@@ -79,7 +79,9 @@ export function SetupWizard({
   const [picked, setPicked] = useState<Set<WidgetType>>(
     () => new Set(WIDGET_TYPES.filter((t) => WIDGET_META[t].starter)),
   );
-  const [greetingName, setGreetingName] = useState(viewerName);
+  // Display names allow 80 chars; the greeting config allows 40 — prefill
+  // within the limit so the default happy path can never 400.
+  const [greetingName, setGreetingName] = useState(viewerName.slice(0, 40));
   const [weatherLocation, setWeatherLocation] = useState("");
   const [units, setUnits] = useState<"f" | "c">("f");
   const [name, setName] = useState("Kitchen");

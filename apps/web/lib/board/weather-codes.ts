@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 /** WMO weather interpretation codes (Open-Meteo) → label + glyph. */
 export function describeWeatherCode(code: number, isDay = true): { label: string; glyph: string } {
   if (code === 0) return { label: "Clear", glyph: isDay ? "☀️" : "🌙" };
@@ -24,9 +26,30 @@ export function weatherKey(location: string): string {
   return location.trim().toLowerCase().replace(/\s+/g, " ");
 }
 
-/** Shape the worker writes to CachedPayload(kind="weather"). */
-export type WeatherPayload = {
-  place: { name: string; country: string; lat: number; lon: number };
-  current: { tempC: number; code: number; windKmh: number; isDay: boolean; time: string };
-  daily: Array<{ date: string; code: number; maxC: number; minC: number; pop: number | null }>;
-};
+/**
+ * Shape the worker writes to CachedPayload(kind="weather"). Validated on the
+ * way OUT of the database too (CLAUDE.md: zod at every trust boundary) — a
+ * malformed row degrades to "fetching…" instead of crashing the board.
+ */
+export const WeatherPayloadSchema = z.object({
+  place: z.object({ name: z.string(), country: z.string(), lat: z.number().finite(), lon: z.number().finite() }),
+  current: z.object({
+    tempC: z.number().finite(),
+    code: z.number().int(),
+    windKmh: z.number().finite(),
+    isDay: z.boolean(),
+    time: z.string(),
+  }),
+  daily: z
+    .array(
+      z.object({
+        date: z.string(),
+        code: z.number().int(),
+        maxC: z.number().finite(),
+        minC: z.number().finite(),
+        pop: z.number().nullable(),
+      }),
+    )
+    .min(1),
+});
+export type WeatherPayload = z.infer<typeof WeatherPayloadSchema>;
