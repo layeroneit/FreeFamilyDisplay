@@ -396,11 +396,25 @@ function DisplaySettings({
               className="overflow-hidden rounded-lg border text-left text-xs"
               style={{ ...field, borderColor: board.wallpaperCollectionId === c.id ? "var(--hearth-accent-1)" : "var(--hearth-border)", borderWidth: board.wallpaperCollectionId === c.id ? 2 : 1 }}
             >
-              {c.cover ? <img src={`${c.cover.basePath}-1920.webp`} alt="" className="h-16 w-full object-cover" style={{ background: `center / cover url(${c.cover.lqip})` }} loading="lazy" /> : <div className="h-16" />}
+              {c.cover ? (
+                <img src={`${c.cover.basePath}-1920.webp`} alt="" className="h-16 w-full object-cover" style={{ background: `center / cover url(${c.cover.lqip})` }} loading="lazy" />
+              ) : (
+                // A tag-fed theme has no cover until its first sync. An empty
+                // grey box reads as broken, so say what it is instead.
+                <div className="flex h-16 items-center justify-center text-[11px]" style={{ background: "linear-gradient(135deg, var(--hearth-surface), var(--hearth-bg))", color: "var(--hearth-text-muted)" }}>
+                  {c.sourceTags ? "fetched on demand" : ""}
+                </div>
+              )}
               <span className="block px-2 py-1 font-semibold">{c.name}</span>
               <span className="block px-2 pb-1" style={{ color: "var(--hearth-text-muted)" }}>
-                {c.count} photos{c.isBuiltin ? "" : " · yours"}
-                {!c.isBuiltin && c.count === 0 && !c.lastError ? " · syncing…" : ""}
+                {/* A tag-fed theme ships as a name and a search, so it holds no
+                    images until somebody picks it. "0 photos" reads as broken;
+                    it is actually waiting to be asked. */}
+                {c.count === 0 && c.sourceTags
+                  ? board.wallpaperCollectionId === c.id
+                    ? "fetching images now…"
+                    : "fills in when you pick it"
+                  : `${c.count} photos${c.isBuiltin ? "" : " · yours"}${!c.isBuiltin && c.count === 0 && !c.lastError ? " · syncing…" : ""}`}
               </span>
               {c.lastError ? (
                 <span className="block px-2 pb-1 text-[11px]" style={{ color: "var(--hearth-accent-4)" }}>
