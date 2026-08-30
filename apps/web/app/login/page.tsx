@@ -82,6 +82,25 @@ export default async function LoginPage() {
             </a>{" "}
             (as is, no warranty, use at your own risk).
           </p>
+
+          {/* Built-by credit. The mark keeps its own colours rather than being
+              tinted to the active theme — it belongs to Layer One, not to this
+              app's palette. Plain <img>: the file is a small static SVG, so
+              next/image would add a loader for no benefit. */}
+          <footer className="mt-10 border-t pt-5 text-center" style={{ borderColor: "var(--hearth-border)" }}>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.3em]" style={{ color: "var(--hearth-text-muted)" }}>
+              Built by
+            </p>
+            <a
+              href="https://layeroneconsultants.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 inline-block rounded-lg px-2 py-1 transition-opacity hover:opacity-80"
+              aria-label="Layer One Consultants"
+            >
+              <img src="/brand/layer-one.svg" alt="Layer One" width={292} height={72} className="h-7 w-auto" />
+            </a>
+          </footer>
         </div>
       </div>
     </main>
