@@ -10,7 +10,12 @@
 
 {
 	admin off
-	auto_https off
+	# NOT `auto_https off` — that disables certificate MANAGEMENT too, so
+	# `tls internal` below never mints anything and every handshake fails with
+	# "internal error / no peer certificate" (found on first HTTPS deploy).
+	# disable_redirects keeps automation on and only drops the http→https
+	# redirect, which is meaningless here (the :8080 site is internal-only).
+	auto_https disable_redirects
 	servers {
 		# Trust forwarded headers only from proxies inside the compose network.
 		trusted_proxies static private_ranges
