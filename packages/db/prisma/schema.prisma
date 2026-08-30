@@ -373,6 +373,13 @@ enum CanvasPreset {
 }
 
 enum WallpaperRotation {
+  /// Sub-daily intervals are derived from the wall clock at render time
+  /// rather than advanced by the worker - see lib/board/wallpapers.ts. The
+  /// board reloads every 5 minutes, so EVERY_5_MIN is the practical floor.
+  EVERY_5_MIN
+  EVERY_15_MIN
+  EVERY_30_MIN
+  HOURLY
   DAILY
   WEEKLY
   MONTHLY

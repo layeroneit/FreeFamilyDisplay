@@ -19,7 +19,7 @@ type EditorBoard = {
   theme: string;
   canvas: CanvasPreset;
   wallpaperCollectionId: string | null;
-  wallpaperRotation: "DAILY" | "WEEKLY" | "MONTHLY" | "MANUAL";
+  wallpaperRotation: "EVERY_5_MIN" | "EVERY_15_MIN" | "EVERY_30_MIN" | "HOURLY" | "DAILY" | "WEEKLY" | "MONTHLY" | "MANUAL";
   wallpaperOrder: "SEQUENTIAL" | "SHUFFLE";
   scrimOpacityOverride: number | null;
   matchPaletteToWallpaper: boolean;
@@ -421,6 +421,10 @@ function DisplaySettings({
               <label className="text-xs">
                 Rotate
                 <select value={board.wallpaperRotation} onChange={(e) => onSave({ wallpaperRotation: e.target.value })} className="mt-1 w-full rounded-lg border px-2 py-1" style={field}>
+                  <option value="EVERY_5_MIN">Every 5 minutes</option>
+                  <option value="EVERY_15_MIN">Every 15 minutes</option>
+                  <option value="EVERY_30_MIN">Every 30 minutes</option>
+                  <option value="HOURLY">Hourly</option>
                   <option value="DAILY">Daily</option>
                   <option value="WEEKLY">Weekly (Mon 4am)</option>
                   <option value="MONTHLY">Monthly</option>

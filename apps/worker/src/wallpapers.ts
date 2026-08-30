@@ -78,6 +78,10 @@ export function lastBoundary(rotation: WallpaperRotation, now: Date): Date | nul
   const d = new Date(now);
   d.setHours(4, 0, 0, 0);
   if (rotation === "MANUAL") return null;
+  // Sub-daily rotations are derived from the clock at render time (see
+  // apps/web/lib/board/wallpapers.ts). The worker must not also advance a
+  // pointer for them, or the two would fight and the board would jump.
+  if (rotation === "EVERY_5_MIN" || rotation === "EVERY_15_MIN" || rotation === "EVERY_30_MIN" || rotation === "HOURLY") return null;
   if (rotation === "DAILY") {
     if (d > now) d.setDate(d.getDate() - 1);
     return d;

@@ -17,7 +17,7 @@
     "build": "npm run build:packages && npm run build --workspace=@ffd/web",
     "typecheck": "tsc --build --force && tsc -p packages/log/tsconfig.test.json && tsc -p packages/crypto/tsconfig.test.json && tsc -p packages/db/tsconfig.tools.json && tsc -p apps/worker/tsconfig.test.json && npm run typecheck --workspace=@ffd/web",
     "lint": "eslint .",
-    "test": "tsx --test packages/log/src/logger.test.ts packages/crypto/src/crypto.test.ts apps/web/lib/auth/auth.test.ts apps/web/lib/board/widgets.test.ts apps/worker/src/net/ssrf.test.ts apps/worker/src/wallpapers.test.ts apps/worker/src/connectors/ics.test.ts apps/worker/src/connectors/google-photos.test.ts apps/worker/src/connectors/folder-collections.test.ts apps/worker/src/connectors/anime-booru.test.ts",
+    "test": "tsx --test packages/log/src/logger.test.ts packages/crypto/src/crypto.test.ts apps/web/lib/auth/auth.test.ts apps/web/lib/board/widgets.test.ts apps/web/lib/board/rotation.test.ts apps/worker/src/net/ssrf.test.ts apps/worker/src/wallpapers.test.ts apps/worker/src/connectors/ics.test.ts apps/worker/src/connectors/google-photos.test.ts apps/worker/src/connectors/folder-collections.test.ts apps/worker/src/connectors/anime-booru.test.ts",
     "photos:login": "node scripts/fetch-login-photos.mjs",
     "check": "npm run typecheck && npm run lint && npm run test",
     "db:generate": "npm run generate --workspace=@ffd/db",

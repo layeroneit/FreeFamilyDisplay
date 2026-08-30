@@ -6,6 +6,7 @@
 
 import "server-only";
 import { prisma } from "@ffd/db";
+import { clockIndex, isClockRotation } from "./rotation";
 import type { BoardFull } from "./boards";
 import { patchBoardStyle } from "./boards";
 
@@ -145,6 +146,23 @@ export async function listWallpapers(userId: string, collectionId: string): Prom
 export async function currentWallpaper(board: BoardFull): Promise<WallpaperInfo | null> {
   if (!board.wallpaperCollectionId) return null;
   const skipped = board.style.wallpaperSkipped ?? [];
+
+  if (isClockRotation(board.wallpaperRotation)) {
+    // Pinning still wins: "hold this one" has to mean that at any interval.
+    const pinned = board.style.wallpaperPinned;
+    if (pinned && !skipped.includes(pinned)) {
+      const w = await prisma.wallpaper.findFirst({ where: { id: pinned, collectionId: board.wallpaperCollectionId }, select: wallpaperSelect });
+      if (w) return toInfo(w);
+    }
+    const all = await prisma.wallpaper.findMany({
+      where: { collectionId: board.wallpaperCollectionId, id: { notIn: skipped } },
+      orderBy: { sortOrder: "asc" },
+      select: wallpaperSelect,
+    });
+    const i = clockIndex(board.wallpaperRotation, all.length, Date.now());
+    return i === null ? null : toInfo(all[i]!);
+  }
+
   if (board.currentWallpaperId && !skipped.includes(board.currentWallpaperId)) {
     const w = await prisma.wallpaper.findFirst({
       where: { id: board.currentWallpaperId, collectionId: board.wallpaperCollectionId },
