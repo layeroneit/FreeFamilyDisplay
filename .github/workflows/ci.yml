@@ -47,6 +47,7 @@ jobs:
         run: docker compose -f infra/compose.yaml config --quiet
         env:
           APP_URL: http://localhost:8080
+          SITE_HOST: localhost
           DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
           REDIS_URL: redis://localhost:6379
           POSTGRES_USER: ci
@@ -63,6 +64,7 @@ jobs:
         run: docker compose -f infra/compose.yaml build web worker
         env:
           APP_URL: http://localhost:8080
+          SITE_HOST: localhost
           DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
           REDIS_URL: redis://localhost:6379
           POSTGRES_USER: ci
