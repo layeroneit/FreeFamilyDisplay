@@ -19,7 +19,7 @@ export default async function SetupPage({ searchParams }: { searchParams: Promis
           themes={THEMES}
           initialTheme={initialTheme}
           viewerName={user.displayName}
-          startStep={fromQuery ? 2 : 1}
+          startStep={fromQuery ? 2 : 0}
         />
       </div>
     </main>
