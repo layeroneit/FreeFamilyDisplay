@@ -55,13 +55,21 @@ export default async function DashboardPage() {
           ) : (
             <ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
               {boards.map((b) => (
-                <li key={b.id}>
-                  <Link href={`/boards/${b.id}`} className="flex items-center justify-between rounded-lg border p-3 hover:opacity-90" style={{ borderColor: "var(--hearth-border)", background: "var(--hearth-bg)" }}>
+                <li key={b.id} className="flex items-stretch gap-2">
+                  <Link href={`/boards/${b.id}`} className="flex flex-1 items-center justify-between rounded-lg border p-3 hover:opacity-90" style={{ borderColor: "var(--hearth-border)", background: "var(--hearth-bg)" }}>
                     <span>
                       <span className="block font-semibold">{b.name}</span>
                       <span className="block text-xs" style={{ color: "var(--hearth-text-muted)" }}>{b.widgetCount} widgets · {themeById(b.theme).name}</span>
                     </span>
                     <span className="text-sm" style={{ color: "var(--hearth-accent-2)" }}>Edit →</span>
+                  </Link>
+                  <Link
+                    href={`/boards/${b.id}/view`}
+                    title="Open this display full-screen on the screen you're using right now"
+                    className="flex items-center rounded-lg px-3 text-sm font-semibold hover:opacity-90"
+                    style={{ background: "var(--hearth-accent-1)", color: "#1a1a1a" }}
+                  >
+                    ▶ Show
                   </Link>
                 </li>
               ))}

@@ -10,12 +10,15 @@ import { WidgetFrame } from "@/components/board/widget-frame";
 import { loadBoardScene } from "@/components/board/render-data";
 import { WidgetView } from "@/components/board/widget-view";
 import { RefreshTimer } from "@/app/status/refresh-timer";
+import { KioskControls } from "./kiosk-controls";
 
 export const dynamic = "force-dynamic";
 
 /**
- * Full-screen preview — the same renderer the kiosk will use in Phase 4,
- * minus the device token. Session-gated for now.
+ * The wall-screen renderer. Session-gated until Phase 4 adds device tokens:
+ * sign in once on the screen's browser (90-day session), open the board,
+ * tap Start. The overlay detects the screen's shape and offers to switch
+ * the display to match.
  */
 export default async function BoardViewPage({ params }: { params: Promise<{ id: string }> }) {
   const user = await getSessionUser();
@@ -31,6 +34,7 @@ export default async function BoardViewPage({ params }: { params: Promise<{ id: 
   return (
     <div className="fixed inset-0 flex items-center justify-center" style={{ background: "#000" }}>
       <RefreshTimer intervalMs={5 * 60_000} />
+      <KioskControls boardId={board.id} canvas={board.canvas} />
       <div className="h-full w-full">
         <BoardCanvas vars={vars} width={size.w} height={size.h} className="h-full">
           <BoardBackdrop wallpaper={scene.wallpaper} scrimOpacity={scene.scrimOpacity} mood={scene.mood} canvasW={size.w} effects />
