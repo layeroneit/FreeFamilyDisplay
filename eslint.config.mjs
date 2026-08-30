@@ -9,6 +9,7 @@ export default tseslint.config(
       "**/dist/**",
       "**/generated/**",
       "packages/db/prisma/migrations/**",
+      ".audit-tmp/**",
     ],
   },
   js.configs.recommended,

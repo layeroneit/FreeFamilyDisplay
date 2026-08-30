@@ -367,6 +367,24 @@ export function SetupWizard({
                   The usual suspects are ticked. Tap to toggle; you can rearrange everything after.
                 </p>
               </div>
+              {startStep === WIDGETS ? (
+                <div role="radiogroup" aria-label="Screen shape" className="flex flex-wrap justify-center gap-2">
+                  {CANVAS_PRESET_IDS.map((id) => (
+                    <button
+                      key={id}
+                      type="button"
+                      role="radio"
+                      aria-checked={id === canvas}
+                      onClick={() => setCanvas(id)}
+                      className="rounded-xl border px-3 py-1.5 text-xs font-bold"
+                      style={{ borderColor: id === canvas ? accent : "var(--hearth-border)", boxShadow: id === canvas ? `0 0 0 2px ${accent}` : undefined, background: "var(--hearth-surface)" }}
+                      title={CANVAS_PRESETS[id].hint}
+                    >
+                      {CANVAS_PRESETS[id].label} · {CANVAS_PRESETS[id].w}×{CANVAS_PRESETS[id].h}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {WIDGET_TYPES.map((w) => {
                   const on = picked.has(w);

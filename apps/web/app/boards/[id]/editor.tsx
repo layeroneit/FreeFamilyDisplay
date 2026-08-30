@@ -406,13 +406,17 @@ export function BoardEditor({
                 <span className="block px-2 py-1 font-semibold">{c.name}</span>
                 <span className="block px-2 pb-1" style={{ color: "var(--hearth-text-muted)" }}>
                   {c.count} photos{c.isBuiltin ? "" : " · yours"}
+                  {!c.isBuiltin && c.count === 0 && !c.lastError ? " · syncing…" : ""}
                 </span>
+                {c.lastError ? (
+                  <span className="block px-2 pb-1 text-[11px]" style={{ color: "var(--hearth-accent-4)" }}>
+                    {c.lastError}
+                  </span>
+                ) : null}
               </button>
             ))}
           </div>
-          <p className="mt-2 text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
-            <strong>Add your own</strong> — paste a Google Photos album or Drive folder link into a Photos widget; custom wallpaper collections from those links arrive with the photo connector.
-          </p>
+          <AddOwnCollection onCreated={(id) => onSave({ wallpaperCollectionId: id })} />
           {board.wallpaperCollectionId ? (
             <div className="mt-2 space-y-2">
               <div className="flex gap-1">
@@ -472,6 +476,62 @@ export function BoardEditor({
       </div>
     );
   }
+}
+
+/** "Add your own" (spec §7): name + Google Photos album / Drive folder link → private collection. */
+function AddOwnCollection({ onCreated }: { onCreated: (id: string) => void }) {
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [link, setLink] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const input = { background: "var(--hearth-bg)", borderColor: "var(--hearth-border)", color: "var(--hearth-text)" };
+  async function create() {
+    setBusy(true);
+    setErr(null);
+    try {
+      const res = await fetch("/api/wallpapers", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ name, link }) });
+      const body = (await res.json().catch(() => null)) as { id?: string; error?: string } | null;
+      if (!res.ok || !body?.id) {
+        setErr(body?.error ?? "Couldn't add that.");
+        return;
+      }
+      setOpen(false);
+      setName("");
+      setLink("");
+      onCreated(body.id);
+      router.refresh();
+    } catch {
+      setErr("Couldn't reach the server.");
+    } finally {
+      setBusy(false);
+    }
+  }
+  if (!open) {
+    return (
+      <button type="button" onClick={() => setOpen(true)} className="mt-2 w-full rounded-lg border border-dashed px-3 py-2 text-left text-xs" style={{ borderColor: "var(--hearth-accent-1)", color: "var(--hearth-text)" }}>
+        <span className="block font-semibold">+ Add your own collection</span>
+        <span style={{ color: "var(--hearth-text-muted)" }}>Anime, your vacation, the kids’ season — paste a Google Photos album or Drive folder link. It syncs every 15 minutes.</span>
+      </button>
+    );
+  }
+  return (
+    <div className="mt-2 space-y-2 rounded-lg border p-2" style={{ borderColor: "var(--hearth-accent-1)" }}>
+      <input placeholder="Collection name (e.g. Anime)" value={name} onChange={(e) => setName(e.target.value)} maxLength={80} className="w-full rounded-lg border px-3 py-1.5 text-sm" style={input} />
+      <input type="url" placeholder="https://photos.app.goo.gl/… or a Drive folder link" value={link} onChange={(e) => setLink(e.target.value)} maxLength={2048} className="w-full rounded-lg border px-3 py-1.5 text-sm" style={input} autoComplete="off" spellCheck={false} />
+      <p className="text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
+        Images need 1920px+ on the long edge. Only you can see this collection. The link is stored encrypted and never shown again.
+      </p>
+      <p aria-live="polite" className="min-h-4 text-[11px]" style={{ color: "var(--hearth-accent-4)" }}>{err}</p>
+      <div className="flex gap-2">
+        <button type="button" disabled={busy || !name.trim() || !link.trim()} onClick={() => void create()} className="rounded-lg px-3 py-1.5 text-xs font-semibold disabled:opacity-50" style={{ background: "var(--hearth-accent-1)", color: "#1a1a1a" }}>
+          {busy ? "Adding…" : "Add collection"}
+        </button>
+        <button type="button" onClick={() => setOpen(false)} className="rounded-lg border px-3 py-1.5 text-xs" style={{ borderColor: "var(--hearth-border)" }}>Cancel</button>
+      </div>
+    </div>
+  );
 }
 
 function clampInt(raw: string, min: number, max: number, fallback: number): number {

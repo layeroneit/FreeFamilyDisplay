@@ -32,7 +32,7 @@ export default async function DashboardPage() {
               Hey, {user.displayName}
             </h1>
             <p className="mt-1 text-sm" style={{ color: "var(--hearth-text-muted)" }}>
-              {user.role === "OPERATOR" ? "Operator" : "Member"} · {user.email}
+              {user.role === "OPERATOR" ? "Operator" : "Member"} · {user.email} · Free Family Display, always free
             </p>
           </div>
           <LogoutButton />

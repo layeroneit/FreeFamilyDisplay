@@ -277,10 +277,14 @@ model WallpaperCollection {
   description String? @db.VarChar(200)
   isBuiltin   Boolean @default(false)
 
-  /// Custom collections synced from a share URL (Phase 5 connector) — a
-  /// credential, encrypted at rest when that lands. Null for uploads/built-ins.
-  sourceUrl    String?   @db.VarChar(1024)
+  /// Custom collections synced from a pasted share link. The link is a
+  /// credential: stored encrypted (@ffd/crypto envelope), shown only as
+  /// sourceMask. Null for built-ins.
+  sourceSecret String?   @db.VarChar(2048)
+  sourceMask   String?   @db.VarChar(200)
   lastSyncedAt DateTime?
+  /// Actionable, secret-free ("album returned 404"). Shown in the editor.
+  lastError    String?   @db.VarChar(255)
 
   createdAt DateTime @default(now())
 

@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { getSessionUser } from "@/lib/auth/sessions";
+import { termsCurrent } from "@/lib/terms";
 import { getBoard } from "@/lib/board/boards";
 import { requestAdvance, skipCurrent, togglePin } from "@/lib/board/wallpapers";
 
@@ -12,6 +13,7 @@ const Input = z.object({ action: z.enum(["next", "pin", "skip"]) });
 export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
   const user = await getSessionUser();
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
+  if (!termsCurrent(user)) return NextResponse.json({ error: "Accept the agreement first." }, { status: 403 });
   const { id } = await ctx.params;
   const parsed = Input.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: "Unknown action." }, { status: 400 });

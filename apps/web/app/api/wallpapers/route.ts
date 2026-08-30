@@ -1,12 +1,74 @@
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
+import { z } from "zod";
+import { prisma } from "@ffd/db";
+import { encryptSecret, maskUrl } from "@ffd/crypto";
 import { getSessionUser } from "@/lib/auth/sessions";
+import { termsCurrent } from "@/lib/terms";
 import { listCollections } from "@/lib/board/wallpapers";
+import { pokeWorkerConnectors } from "@/lib/board/worker-poke";
+import { audit } from "@/lib/audit";
 
 export const dynamic = "force-dynamic";
+
+const MAX_CUSTOM_COLLECTIONS = 10;
+
+const CreateInput = z.object({
+  name: z.string().trim().min(1, "Give the collection a name.").max(80),
+  link: z.string().trim().min(1, "Paste a link.").max(2048),
+});
+
+function checkGoogleLink(raw: string): string {
+  let u: URL;
+  try {
+    u = new URL(raw);
+  } catch {
+    throw new Error("That doesn't look like a valid link.");
+  }
+  if (u.protocol !== "https:") throw new Error("Only https:// links are allowed.");
+  const h = u.hostname.toLowerCase();
+  const ok = h === "photos.app.goo.gl" || h === "photos.google.com" || (h === "drive.google.com" && /\/folders\/[A-Za-z0-9_-]+/.test(u.pathname));
+  if (!ok) throw new Error("Paste a Google Photos shared-album link or a Google Drive folder link.");
+  return u.toString();
+}
 
 /** Collections the signed-in user may choose from: built-ins plus their own. */
 export async function GET() {
   const user = await getSessionUser();
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
   return NextResponse.json({ collections: await listCollections(user.id) });
+}
+
+/**
+ * "Add your own" (spec §7): a private collection fed from a pasted link.
+ * The link is a credential — encrypted at rest, masked in responses.
+ */
+export async function POST(req: NextRequest) {
+  const user = await getSessionUser();
+  if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
+  if (!termsCurrent(user)) return NextResponse.json({ error: "Accept the agreement first." }, { status: 403 });
+
+  const parsed = CreateInput.safeParse(await req.json().catch(() => null));
+  if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Invalid input." }, { status: 400 });
+
+  const count = await prisma.wallpaperCollection.count({ where: { ownerId: user.id } });
+  if (count >= MAX_CUSTOM_COLLECTIONS) {
+    return NextResponse.json({ error: `You've reached the limit of ${MAX_CUSTOM_COLLECTIONS} collections. Delete one to add another.` }, { status: 400 });
+  }
+
+  let link: string;
+  try {
+    link = checkGoogleLink(parsed.data.link);
+  } catch (err) {
+    return NextResponse.json({ error: err instanceof Error ? err.message : "Invalid link." }, { status: 400 });
+  }
+
+  // Two-step so the ciphertext is bound to the row id.
+  const created = await prisma.wallpaperCollection.create({
+    data: { slug: `c_${user.id.slice(-6)}_${Date.now().toString(36)}`, ownerId: user.id, name: parsed.data.name, isBuiltin: false, sourceMask: maskUrl(link) },
+    select: { id: true },
+  });
+  await prisma.wallpaperCollection.update({ where: { id: created.id }, data: { sourceSecret: encryptSecret(link, `collection:${created.id}`) } });
+  await audit({ actorId: user.id, action: "wallpapers.collection.created", targetType: "WallpaperCollection", targetId: created.id });
+  pokeWorkerConnectors();
+  return NextResponse.json({ id: created.id }, { status: 201 });
 }

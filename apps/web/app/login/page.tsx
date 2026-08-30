@@ -62,7 +62,7 @@ export default async function LoginPage() {
           <p
             className="text-sm font-semibold uppercase tracking-widest"
             style={{ color: "var(--hearth-accent-2)" }}
-          >Free Family Display</p>
+          >Free Family Display <span style={{ color: "var(--hearth-text-muted)" }}>· Always free</span></p>
           {/* "Welcome back" over the brief's "Welcome home" — operator feedback
               2026-08-29: "home" read strangely on a sign-in screen. */}
           <h1
@@ -76,7 +76,11 @@ export default async function LoginPage() {
           </p>
           <LoginForm />
           <p className="mt-6 text-xs" style={{ color: "var(--hearth-text-muted)" }}>
-            Accounts are invite-only. Ask the person who runs this display.
+            Accounts are invite-only. Ask the person who runs this display. By signing in you accept the{" "}
+            <a href="/terms" className="underline" style={{ color: "var(--hearth-accent-2)" }}>
+              agreement
+            </a>{" "}
+            (as is, no warranty, use at your own risk).
           </p>
         </div>
       </div>

@@ -29,6 +29,10 @@ export type CollectionInfo = {
   isBuiltin: boolean;
   count: number;
   cover: Pick<WallpaperInfo, "basePath" | "lqip"> | null;
+  /** Custom collections only: masked source link + last sync outcome. */
+  sourceMask: string | null;
+  lastSyncedAt: Date | null;
+  lastError: string | null;
 };
 
 const wallpaperSelect = {
@@ -84,6 +88,9 @@ export async function listCollections(userId: string): Promise<CollectionInfo[]>
       name: true,
       description: true,
       isBuiltin: true,
+      sourceMask: true,
+      lastSyncedAt: true,
+      lastError: true,
       _count: { select: { wallpapers: true } },
       wallpapers: { orderBy: { sortOrder: "asc" }, take: 1, select: { basePath: true, lqip: true } },
     },
@@ -96,6 +103,9 @@ export async function listCollections(userId: string): Promise<CollectionInfo[]>
     isBuiltin: r.isBuiltin,
     count: r._count.wallpapers,
     cover: r.wallpapers[0] ?? null,
+    sourceMask: r.sourceMask,
+    lastSyncedAt: r.lastSyncedAt,
+    lastError: r.lastError,
   }));
 }
 

@@ -71,6 +71,9 @@ export default async function StatusPage() {
   if (!termsCurrent(user)) redirect("/terms");
   if (user.role !== "OPERATOR") redirect("/dashboard");
 
+  const connectorRows = await prisma.cachedPayload
+    .findMany({ orderBy: { fetchedAt: "desc" }, take: 40, select: { kind: true, key: true, fetchedAt: true, lastError: true, lastErrorAt: true } })
+    .catch(() => [] as Array<{ kind: string; key: string; fetchedAt: Date; lastError: string | null; lastErrorAt: Date | null }>);
   const [db, worker, counts, recentAudit] = await Promise.all([
     timed(() => isDatabaseReachable()),
     probeWorker(),
@@ -240,9 +243,40 @@ export default async function StatusPage() {
           )}
         </section>
 
-        <p className="mt-4 text-xs" style={{ color: "var(--hearth-text-muted)" }}>
-          Coming with Phase 2: per-connector health — last success, last error, next run.
-        </p>
+        {/* Connector health — every cached source, newest first */}
+        <section className="mt-5 rounded-xl border p-5" style={{ background: "var(--hearth-surface)", borderColor: "var(--hearth-border)" }}>
+          <h2 className="text-lg font-semibold">Connectors</h2>
+          <p className="mb-3 text-xs" style={{ color: "var(--hearth-text-muted)" }}>
+            Weather, calendars, photo links, wallpaper collections — what the worker last fetched, and what failed.
+          </p>
+          {connectorRows.length === 0 ? (
+            <p className="text-sm" style={{ color: "var(--hearth-text-muted)" }}>Nothing fetched yet.</p>
+          ) : (
+            <ul className="divide-y" style={{ borderColor: "var(--hearth-border)" }}>
+              {connectorRows.map((r) => {
+                const failing = Boolean(r.lastError) && (r.fetchedAt.getTime() === 0 || (r.lastErrorAt !== null && r.lastErrorAt > r.fetchedAt));
+                return (
+                  <li key={`${r.kind}:${r.key}`} className="flex items-center justify-between gap-3 py-2 text-sm">
+                    <span className="min-w-0">
+                      <span className="mr-2 rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase" style={{ background: "var(--hearth-bg)" }}>{r.kind}</span>
+                      <span className="font-medium">{r.kind === "weather" || r.kind === "geocode" ? r.key : `widget ${r.key.slice(-6)}`}</span>
+                      {r.lastError ? (
+                        <span className="block truncate text-xs" style={{ color: failing ? "var(--hearth-accent-4)" : "var(--hearth-text-muted)" }}>
+                          {failing ? "" : "last error (recovered): "}
+                          {r.lastError}
+                        </span>
+                      ) : null}
+                    </span>
+                    <span className="flex shrink-0 items-center gap-2 text-xs" style={{ color: "var(--hearth-text-muted)" }}>
+                      {r.fetchedAt.getTime() > 0 ? `fetched ${timeAgo(r.fetchedAt)}` : "never fetched"}
+                      <span className="h-2.5 w-2.5 rounded-full" style={{ background: failing ? "var(--hearth-accent-4)" : "var(--hearth-accent-3)" }} />
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </section>
       </div>
     </main>
   );

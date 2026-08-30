@@ -261,6 +261,12 @@ Two Google paths matter here and they are not the same thing:
 ICS URL and goes through §6.1 unchanged. That is why OAuth is deferred (§6.2) —
 nothing extra is needed for calendars.
 
+> **Reversed 2026-08-30 (operator decision: "a Google URL link as a day-1
+> option").** The worker now reads a shared album's public page for its image
+> URLs — best-effort, labeled as such, with the Drive-folder path as the
+> reliable alternative and a plain-language failure message if Google changes
+> the page. The paragraph below records why this was originally avoided.
+
 **Google Photos does not offer a paste-a-URL path, and this is worth stating
 plainly so it does not get attempted twice.** A shared album link resolves to an
 HTML page, not a feed. There is no unauthenticated API behind it. The Library API

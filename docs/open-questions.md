@@ -75,6 +75,18 @@ CSS is documented (§7.6 promises token names are the stable contract).
 the wallpaper ingest ladder (~1,500 files across 14+ collections) must not
 land on the container root disk.
 
+## Deferred, with plumbing already in place
+
+**Low-power display tier for effects.** `WidgetFrame.reduceEffects` and
+`BoardBackdrop.effects` exist, but every render passes full effects: the
+per-display "reduce effects" switch (spec §2, plan §7.8) needs the Phase 4
+`displays` table to know which screen is asking. Until then the only gate
+is the viewer's reduced-motion preference.
+
+**Image ladder is WebP at 1920/2560 only.** No AVIF, no JPEG, no 3840 — a 4K
+TV scales the 2560 asset. Spec §4 wants the full ladder; add it when a 4K wall
+display exists to verify against.
+
 ## Parked proposals
 
 **Grafana "NOC page" (operator request, 2026-08-29).** Self-hosted Grafana is

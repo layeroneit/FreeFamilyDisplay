@@ -20,3 +20,6 @@ packages/stockpile/images/
 
 *.log
 .DS_Store
+
+# scratch
+.audit-tmp/

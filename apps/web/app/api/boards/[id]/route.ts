@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { getSessionUser } from "@/lib/auth/sessions";
+import { termsCurrent } from "@/lib/terms";
 import { deleteBoard, getBoard, updateBoard, type BoardPatch } from "@/lib/board/boards";
 import { CANVAS_PRESET_IDS, publicWidgetConfig, type CanvasPreset } from "@/lib/board/widgets";
 import { canUseCollection, requestAdvance } from "@/lib/board/wallpapers";
@@ -41,6 +42,7 @@ export async function GET(_req: NextRequest, ctx: Ctx) {
 export async function PATCH(req: NextRequest, ctx: Ctx) {
   const user = await getSessionUser();
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
+  if (!termsCurrent(user)) return NextResponse.json({ error: "Accept the agreement first." }, { status: 403 });
   const { id } = await ctx.params;
   const parsed = PatchInput.safeParse(await req.json().catch(() => null));
   if (!parsed.success) {
