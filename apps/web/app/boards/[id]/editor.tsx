@@ -19,6 +19,7 @@ type EditorBoard = {
   theme: string;
   canvas: CanvasPreset;
   wallpaperCollectionId: string | null;
+  cycleCollections: boolean;
   wallpaperRotation: "EVERY_5_MIN" | "EVERY_15_MIN" | "EVERY_30_MIN" | "HOURLY" | "DAILY" | "WEEKLY" | "MONTHLY" | "MANUAL";
   wallpaperOrder: "SEQUENTIAL" | "SHUFFLE";
   scrimOpacityOverride: number | null;
@@ -420,6 +421,15 @@ function DisplaySettings({
             <div className="grid grid-cols-2 gap-2">
               <label className="text-xs">
                 Rotate
+                <label className="mt-2 flex items-start gap-2 text-xs">
+                  <input type="checkbox" checked={board.cycleCollections} onChange={(e) => onSave({ cycleCollections: e.target.checked })} />
+                  <span>
+                    Change theme every week
+                    <span className="block" style={{ color: "var(--hearth-text-muted)" }}>
+                      Monday 4am, a different built-in theme each week, shuffled. The photos inside it keep changing on the schedule below.
+                    </span>
+                  </span>
+                </label>
                 <select value={board.wallpaperRotation} onChange={(e) => onSave({ wallpaperRotation: e.target.value })} className="mt-1 w-full rounded-lg border px-2 py-1" style={field}>
                   <option value="EVERY_5_MIN">Every 5 minutes</option>
                   <option value="EVERY_15_MIN">Every 15 minutes</option>

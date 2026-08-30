@@ -38,6 +38,7 @@ export default async function BoardPage({ params }: { params: Promise<{ id: stri
         canvas: board.canvas,
         wallpaperCollectionId: board.wallpaperCollectionId,
         wallpaperRotation: board.wallpaperRotation,
+        cycleCollections: board.cycleCollections,
         wallpaperOrder: board.wallpaperOrder,
         scrimOpacityOverride: board.scrimOpacityOverride,
         matchPaletteToWallpaper: board.matchPaletteToWallpaper,

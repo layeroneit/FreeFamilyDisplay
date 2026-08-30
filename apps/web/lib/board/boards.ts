@@ -53,6 +53,7 @@ export type BoardFull = {
   widgets: BoardWidgetRow[];
   wallpaperCollectionId: string | null;
   wallpaperRotation: WallpaperRotation;
+  cycleCollections: boolean;
   wallpaperOrder: WallpaperOrder;
   currentWallpaperId: string | null;
   scrimOpacityOverride: number | null;
@@ -72,6 +73,7 @@ const boardSelect = {
   canvas: true,
   wallpaperCollectionId: true,
   wallpaperRotation: true,
+  cycleCollections: true,
   wallpaperOrder: true,
   currentWallpaperId: true,
   scrimOpacityOverride: true,
@@ -143,6 +145,7 @@ export type BoardPatch = {
   canvas?: CanvasPreset;
   wallpaperCollectionId?: string | null;
   wallpaperRotation?: WallpaperRotation;
+  cycleCollections?: boolean;
   wallpaperOrder?: WallpaperOrder;
   scrimOpacityOverride?: number | null;
   matchPaletteToWallpaper?: boolean;

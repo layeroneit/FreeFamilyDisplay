@@ -170,7 +170,80 @@ export async function advanceBoard(boardId: string, opts: { force?: boolean } = 
   return true;
 }
 
+/**
+ * Moves a board to a different THEME - the outer loop, weekly.
+ *
+ * Two rotations are nested here and they must not be confused. The inner loop
+ * changes the PHOTO inside a collection and is either clock-derived (every 5
+ * minutes and friends) or advanced by advanceBoard() on a 4am boundary. This
+ * one changes WHICH COLLECTION the board is showing at all, once a week.
+ *
+ * Shuffled without repeats across the built-ins, reusing pickNext so the
+ * "don't repeat until the set is exhausted" rule is written once. The set of
+ * already-shown collections lives on the board, like the image-level one,
+ * because built-in collections are shared and per-board taste must not leak
+ * between households.
+ */
+export async function advanceCollection(boardId: string, opts: { force?: boolean } = {}): Promise<boolean> {
+  const board = await prisma.board.findUnique({
+    where: { id: boardId },
+    select: { id: true, cycleCollections: true, wallpaperCollectionId: true, lastCollectionRotatedAt: true, style: true },
+  });
+  if (!board?.cycleCollections) return false;
+  if (!opts.force && !isDue("WEEKLY", board.lastCollectionRotatedAt, new Date())) return false;
+
+  // Built-ins only: a household's own collections are a deliberate choice, not
+  // something to be cycled away from without being asked.
+  const collections = await prisma.wallpaperCollection.findMany({
+    where: { isBuiltin: true, wallpapers: { some: {} } },
+    orderBy: { slug: "asc" },
+    select: { id: true },
+  });
+  if (collections.length < 2) return false;
+
+  const style = (board.style && typeof board.style === "object" ? board.style : {}) as Record<string, unknown>;
+  const shown = Array.isArray(style["collectionsShown"]) ? (style["collectionsShown"] as string[]) : [];
+  const next = pickNext(
+    collections.map((c, i) => ({ id: c.id, sortOrder: i })),
+    board.wallpaperCollectionId,
+    "SHUFFLE",
+    shown,
+  );
+  if (!next.id || next.id === board.wallpaperCollectionId) return false;
+
+  await prisma.board.update({
+    where: { id: board.id },
+    data: {
+      wallpaperCollectionId: next.id,
+      lastCollectionRotatedAt: new Date(),
+      // The image-level state all referred to the OLD collection. A pin in
+      // particular points at an image this board can no longer show, and
+      // leaving it set would freeze the new theme on its fallback image.
+      currentWallpaperId: null,
+      lastRotatedAt: null,
+      style: { ...style, collectionsShown: next.shown, wallpaperShown: [], wallpaperPinned: null },
+    },
+  });
+  return true;
+}
+
+export async function runCollectionCycle(): Promise<void> {
+  const boards = await prisma.board.findMany({ where: { cycleCollections: true }, select: { id: true } });
+  let moved = 0;
+  for (const b of boards) {
+    try {
+      if (await advanceCollection(b.id)) moved++;
+    } catch (err) {
+      log.warn("collection rotation failed", { boardId: b.id, error: err instanceof Error ? err.message : "unknown" });
+    }
+  }
+  if (moved > 0) log.info("board themes rotated", { boards: moved });
+}
+
 export async function runWallpaperCycle(): Promise<void> {
+  // The theme moves first: if this is the week's changeover, the image-level
+  // pass below should already be working inside the new collection.
+  await runCollectionCycle();
   const boards = await prisma.board.findMany({
     where: { wallpaperCollectionId: { not: null }, wallpaperRotation: { not: "MANUAL" } },
     select: { id: true },

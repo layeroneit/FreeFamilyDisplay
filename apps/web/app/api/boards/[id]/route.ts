@@ -16,7 +16,9 @@ const PatchInput = z
     theme: z.string().max(32).refine(isThemeId, "Unknown theme.").optional(),
     canvas: z.enum(CANVAS_PRESET_IDS as [string, ...string[]]).optional(),
     wallpaperCollectionId: z.string().max(64).nullable().optional(),
-    wallpaperRotation: z.enum(["DAILY", "WEEKLY", "MONTHLY", "MANUAL"]).optional(),
+    wallpaperRotation: z.enum(["EVERY_5_MIN", "EVERY_15_MIN", "EVERY_30_MIN", "HOURLY", "DAILY", "WEEKLY", "MONTHLY", "MANUAL"]).optional(),
+    /** Weekly THEME rotation - the outer loop, independent of the interval above. */
+    cycleCollections: z.boolean().optional(),
     wallpaperOrder: z.enum(["SEQUENTIAL", "SHUFFLE"]).optional(),
     scrimOpacityOverride: z.number().min(0).max(1).nullable().optional(),
     matchPaletteToWallpaper: z.boolean().optional(),
@@ -58,6 +60,7 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
   if (d.canvas !== undefined) patch.canvas = d.canvas as CanvasPreset;
   if (d.wallpaperCollectionId !== undefined) patch.wallpaperCollectionId = d.wallpaperCollectionId;
   if (d.wallpaperRotation !== undefined) patch.wallpaperRotation = d.wallpaperRotation;
+  if (d.cycleCollections !== undefined) patch.cycleCollections = d.cycleCollections;
   if (d.wallpaperOrder !== undefined) patch.wallpaperOrder = d.wallpaperOrder;
   if (d.scrimOpacityOverride !== undefined) patch.scrimOpacityOverride = d.scrimOpacityOverride;
   if (d.matchPaletteToWallpaper !== undefined) patch.matchPaletteToWallpaper = d.matchPaletteToWallpaper;

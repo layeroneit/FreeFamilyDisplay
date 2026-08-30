@@ -318,8 +318,15 @@ by direct ID.
   time
 - Do not compute per-widget luminance sampling — global scrim plus panel blur
   is sufficient and far cheaper
-- Do not auto-switch collections by date or season. People pick a collection
-  because they like it.
+- ~~Do not auto-switch collections by date or season.~~ **Overridden by the
+  operator 2026-08-30.** A board can now move itself to a different built-in
+  collection every Monday 04:00 (`Board.cycleCollections`), shuffled without
+  repeats. The reasoning behind the original rule still holds for a household
+  that picked a theme on purpose, so it is OFF by default and only the
+  built-ins take part - a collection someone assembled themselves is never
+  cycled away from. Two nested rotations, not one: the THEME changes weekly,
+  the PHOTOS inside it change on `wallpaperRotation`, which now goes down to
+  every 5 minutes.
 - Do not ship a scraper or a franchise-term image search **as a built-in
   collection or committed asset** — see the operator override in §6 for the
   user-created, fetched-to-your-own-box path that does ship

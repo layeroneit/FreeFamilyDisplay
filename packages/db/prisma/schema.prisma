@@ -201,6 +201,14 @@ model Board {
   currentWallpaperId    String?
   currentWallpaper      Wallpaper?           @relation("BoardCurrentWallpaper", fields: [currentWallpaperId], references: [id], onDelete: SetNull)
   lastRotatedAt         DateTime?
+
+  /// Weekly THEME rotation - the outer loop. When set, the board moves itself
+  /// to a different built-in collection every Monday 04:00, while the images
+  /// inside that collection keep rotating on wallpaperRotation (the inner
+  /// loop). Spec §10 said not to auto-switch collections; the operator
+  /// overrode that on 2026-08-30, see docs/specs/wallpaper-collections.md.
+  cycleCollections        Boolean   @default(false)
+  lastCollectionRotatedAt DateTime?
   /// 0–1; null = use the image's suggested value.
   scrimOpacityOverride  Float?
   matchPaletteToWallpaper Boolean @default(false)
