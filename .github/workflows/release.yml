@@ -54,6 +54,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # A Docker reference must be lowercase, and this repository is not
+      # (layeroneit/FreeFamilyDisplay). GitHub Actions expressions have no
+      # lowercase function, so it is computed here instead.
+      - name: Compute image name
+        run: echo "IMAGE=$(echo "${REGISTRY}/${GITHUB_REPOSITORY}-${{ matrix.component }}" | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
+
       - name: Build and push by digest
         id: build
         uses: docker/build-push-action@v6
@@ -64,7 +70,7 @@ jobs:
           # Push without a tag; the merge job below turns the digests into one
           # multi-arch tag. Tagging here would have the two architectures
           # racing to overwrite each other.
-          outputs: type=image,name=${{ env.REGISTRY }}/${{ github.repository }}-${{ matrix.component }},push-by-digest=true,name-canonical=true,push=true
+          outputs: type=image,name=${{ env.IMAGE }},push-by-digest=true,name-canonical=true,push=true
           cache-from: type=gha,scope=${{ matrix.component }}-${{ matrix.arch }}
           cache-to: type=gha,mode=max,scope=${{ matrix.component }}-${{ matrix.arch }}
 
