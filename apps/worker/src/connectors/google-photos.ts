@@ -15,7 +15,7 @@
  */
 
 import { createHash } from "node:crypto";
-import { mkdir, readdir, rm, writeFile } from "node:fs/promises";
+import { mkdir, readdir, rm } from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
 import { safeFetch, UnsafeUrlError } from "../net/ssrf.js";
@@ -181,7 +181,19 @@ export async function syncPhotoLink(link: string, widgetId: string, mediaDir: st
       if (!cached) {
         const img = await safeFetch(u, { accept: "image/*", maxBytes: MAX_IMAGE_BYTES });
         if (img.status !== 200 || !img.contentType.startsWith("image/")) continue;
-        await writeFile(abs, img.body);
+        // Re-encode rather than writing the source bytes through. Two reasons:
+        //
+        // 1. EXIF. Photos carry camera make and model, software version, and
+        //    sometimes GPS. sharp drops all of it unless asked to keep it, so
+        //    re-encoding strips the lot. This path used to write source bytes
+        //    verbatim, which was harmless only by luck -- Google renditions
+        //    arrive metadata-free, but any other source (an iCloud shared
+        //    album, a phone upload) does not. The wallpaper path has always
+        //    stripped; now this one matches it.
+        // 2. Orientation. .rotate() with no argument bakes in the EXIF
+        //    orientation before that tag is discarded, so a photo taken
+        //    sideways stays upright instead of flipping once the tag is gone.
+        await sharp(img.body).rotate().jpeg({ quality: 88 }).toFile(abs);
       }
       // Re-checked on every sync, not just on download: an image cached before
       // this rule existed has to be able to fall out of the set.
