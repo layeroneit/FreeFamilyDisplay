@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth/sessions";
-import { THEMES, themeById, themeVars } from "@/lib/themes";
+import { THEMES, themeById } from "@/lib/themes";
 import { ThemePicker } from "./theme-picker";
 import { LogoutButton } from "./logout-button";
+import { ProfileEditor } from "./profile-editor";
 
 export const metadata = { title: "Dashboard — FreeFamilyDisplay" };
 export const dynamic = "force-dynamic";
@@ -12,13 +13,11 @@ export default async function DashboardPage() {
   const user = await getSessionUser();
   if (!user) redirect("/login");
 
+  // Theme tokens come from the root layout now — this page just renders.
   const theme = themeById(user.uiTheme);
 
   return (
-    <main
-      className="min-h-dvh px-6 py-10"
-      style={{ ...themeVars(theme), background: "var(--hearth-bg)", color: "var(--hearth-text)" }}
-    >
+    <main className="min-h-dvh px-6 py-10">
       <div className="mx-auto max-w-4xl">
         <header className="flex items-center justify-between">
           <div>
@@ -34,6 +33,14 @@ export default async function DashboardPage() {
           </div>
           <LogoutButton />
         </header>
+
+        <section
+          className="mt-8 rounded-xl border p-5"
+          style={{ background: "var(--hearth-surface)", borderColor: "var(--hearth-border)" }}
+        >
+          <h2 className="text-lg font-semibold">Profile</h2>
+          <ProfileEditor currentName={user.displayName} />
+        </section>
 
         <section
           className="mt-8 rounded-xl border p-5"

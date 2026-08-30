@@ -80,11 +80,19 @@ export default async function LoginPage() {
       {/* Form panel */}
       <div className="flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-sm">
+          <p
+            className="text-sm font-semibold uppercase tracking-widest"
+            style={{ color: "var(--hearth-accent-2)" }}
+          >
+            FreeFamilyDisplay
+          </p>
+          {/* "Welcome back" over the brief's "Welcome home" — operator feedback
+              2026-08-29: "home" read strangely on a sign-in screen. */}
           <h1
-            className="text-4xl font-semibold tracking-tight"
+            className="mt-2 text-4xl font-semibold tracking-tight"
             style={{ fontFamily: "var(--hearth-font-display)", color: "var(--hearth-text)" }}
           >
-            Welcome home
+            Welcome back
           </h1>
           <p className="mt-2 text-base" style={{ color: "var(--hearth-text-muted)" }}>
             Finally, a free family calendar that is customizable and easy to use.

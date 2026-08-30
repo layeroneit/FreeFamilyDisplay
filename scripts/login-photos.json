@@ -1,4 +1,40 @@
 {
-  "_comment": "Hand-picked login-page photography (docs/design/login-brief.md). Each entry is downloaded, resized, EXIF-stripped, and self-hosted by scripts/fetch-login-photos.mjs — the app NEVER hotlinks. Pick warm, bright family/home scenes where faces are not the focal point. Fill url with a direct image URL you are licensed to use (Pexels/Openverse/Wikimedia); keep license + attribution honest — the credit renders on the page.",
-  "photos": []
+  "_comment": "Hand-picked login-page photography (docs/design/login-brief.md). Each entry is downloaded, resized, EXIF-stripped, and self-hosted by scripts/fetch-login-photos.mjs — the app NEVER hotlinks. Every image below was visually reviewed before inclusion (warm, bright, no identifiable people) and licensing verified via the Openverse API. The credit line renders on the login page.",
+  "photos": [
+    {
+      "url": "https://live.staticflickr.com/7300/13916488814_4fcb209d07_b.jpg",
+      "file": "breakfast-pancakes.webp",
+      "photographer": "kalyan02",
+      "source": "Flickr",
+      "license": "CC BY 2.0"
+    },
+    {
+      "url": "https://live.staticflickr.com/7451/12495708994_d27fd17038_b.jpg",
+      "file": "morning-strawberries.webp",
+      "photographer": "Helen.Yang",
+      "source": "Flickr",
+      "license": "CC BY 2.0"
+    },
+    {
+      "url": "https://live.staticflickr.com/2413/2503836572_df6ed2c4c7_b.jpg",
+      "file": "picnic-basket.webp",
+      "photographer": "uberculture",
+      "source": "Flickr",
+      "license": "CC BY 2.0"
+    },
+    {
+      "url": "https://live.staticflickr.com/2773/4263272885_1a49ea5209_b.jpg",
+      "file": "spring-tulips.webp",
+      "photographer": "Horia Varlan",
+      "source": "Flickr",
+      "license": "CC BY 2.0"
+    },
+    {
+      "url": "https://live.staticflickr.com/7356/11142064274_15cde3b6b9_b.jpg",
+      "file": "winter-path.webp",
+      "photographer": "Nicholas_T",
+      "source": "Flickr",
+      "license": "CC BY 2.0"
+    }
+  ]
 }

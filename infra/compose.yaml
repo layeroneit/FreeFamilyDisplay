@@ -33,6 +33,7 @@ volumes:
   pgdata:
   redisdata:
   media:
+  caddydata:
 
 services:
   postgres:
@@ -202,20 +203,21 @@ services:
     # stays dropped.
     cap_add:
       - NET_BIND_SERVICE
-    # Published on the VM's interface so LAN displays can reach it directly and
-    # skip the tunnel entirely (plan §8.6). Host side is 8443 by operator
-    # preference; Caddy still listens on 8080 inside the network, so the
-    # Caddyfile is unchanged. Plain HTTP — browsers must be given the scheme
-    # explicitly (http://host:8443), since 8443 alone often implies HTTPS.
+    # HTTPS on 8443 (operator requirement) — Caddy terminates TLS with its
+    # internal CA. SITE_HOST is the LAN address the cert is minted for.
+    # /data holds the CA and must PERSIST (a tmpfs would mint a new CA — and a
+    # new browser warning — on every restart).
+    environment:
+      SITE_HOST: ${SITE_HOST:?set SITE_HOST in .env (the LAN IP, e.g. 192.168.1.50)}
     ports:
-      - "8443:8080"
+      - "8443:8443"
     volumes:
       - ../infra/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddydata:/data
     read_only: true
     tmpfs:
       - /tmp
       - /config
-      - /data
     networks:
       - ffd_net
     depends_on:

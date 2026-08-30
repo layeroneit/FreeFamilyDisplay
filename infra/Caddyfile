@@ -1,19 +1,26 @@
 # FreeFamilyDisplay — internal proxy (plan §4.2, §8.4)
 #
-# TLS terminates at Cloudflare; Caddy here is the internal proxy and the place
-# security headers are set. It listens on plain HTTP because the only things
-# that reach it are cloudflared (same Docker network) and LAN displays.
+# HTTPS on 8443 via Caddy's internal CA (operator requirement, 2026-08-29:
+# "ensure this is ran in https"). Self-signed for a LAN IP, so browsers warn
+# once per device — accept it; the alternative is credentials crossing the LAN
+# in cleartext. The CA lives on a persistent volume so the cert is stable
+# across restarts. Cloudflare-terminated TLS still arrives in Phase 6 for the
+# tunnel path, which keeps using the plain :8080 site below (internal only,
+# never published on the host).
 
 {
 	admin off
 	auto_https off
 	servers {
-		# Trust forwarded headers only from the tunnel/proxy in front of us.
+		# Trust forwarded headers only from proxies inside the compose network.
 		trusted_proxies static private_ranges
 	}
 }
 
-:8080 {
+# SITE_HOST is the LAN address displays and phones use, e.g. 192.168.1.50.
+{$SITE_HOST}:8443 {
+	tls internal
+
 	encode zstd gzip
 
 	header {
@@ -21,14 +28,10 @@
 		Referrer-Policy "strict-origin-when-cross-origin"
 		Permissions-Policy "accelerometer=(), camera=(), geolocation=(), gyroscope=(), microphone=(), payment=(), usb=()"
 		X-Frame-Options "DENY"
-		# HSTS is deliberately absent until the hostname is stable (plan §8.4).
-		# Turning it on early against a hostname that later changes is a long,
-		# self-inflicted outage. Phase 6 adds it.
+		# HSTS still waits for the stable public hostname (plan §8.4, Phase 6).
 		-Server
 	}
 
-	# Health probes stay unlogged — they run every 15 seconds forever and would
-	# otherwise be the entire access log.
 	@health path /healthz /readyz
 	log_skip @health
 
@@ -38,6 +41,24 @@
 		# tunnel that is cloudflared's container IP for every visitor, which
 		# collapses all rate limiting onto one shared key and makes every
 		# audit-log IP identical.
+		header_up X-Real-IP {client_ip}
+	}
+
+	log {
+		output stdout
+		format json
+	}
+}
+
+# Plain-HTTP site for the future cloudflared path (TLS terminates at
+# Cloudflare). Reachable only inside the compose network — not published.
+:8080 {
+	encode zstd gzip
+
+	@health path /healthz /readyz
+	log_skip @health
+
+	reverse_proxy web:3010 {
 		header_up X-Real-IP {client_ip}
 	}
 

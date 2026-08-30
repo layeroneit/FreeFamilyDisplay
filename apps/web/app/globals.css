@@ -33,6 +33,21 @@ body {
   font-family: var(--hearth-font-body);
 }
 
+/* Admin-surface-only ambient pulse (NOC page). The kiosk renderer never uses
+ * continuous animation (§7.8); this class must not appear on kiosk routes. */
+@keyframes hearth-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, currentColor 45%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 7px transparent;
+  }
+}
+.noc-pulse {
+  animation: hearth-pulse 2.4s ease-in-out infinite;
+}
+
 /*
  * Plan §7.8: the kiosk renderer targets a Raspberry Pi. Respect the OS-level
  * reduced-motion setting, and note that the kiosk surface disables animation

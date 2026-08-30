@@ -10,11 +10,13 @@ dist/
 !.env.example
 
 # Runtime data — image cache, uploads, stockpile binaries (plan §6.6.1 keeps the
-# manifest in git and the images out of it). Login photos are fetched/processed
-# by scripts/fetch-login-photos.mjs on the deploy host, same policy.
+# manifest in git and the images out of it). Exception: the CURATED login-photo
+# set (5 reviewed, licensed webps, ~540 KB total) IS committed — it must exist
+# at image-build time for the standalone bundle, and hand-reviewed licensing is
+# exactly what belongs in a diff. The §6.6.1 stockpile (~250 images) stays out.
 media/
 packages/stockpile/images/
-apps/web/public/login-photos/
+.photo-review/
 
 *.log
 .DS_Store
