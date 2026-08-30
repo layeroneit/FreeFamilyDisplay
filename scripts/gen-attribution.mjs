@@ -104,15 +104,23 @@ const missing = [
   ...login.filter((p) => !p.photographer || !p.license).map((p) => p.file),
 ];
 
-console.log(`ATTRIBUTION.md: ${total} images, ${licences.size} distinct licences`);
+// The repo bans the console object outright (eslint.config.mjs): it leaks a
+// credential exactly as easily as a plain log does, and the sibling scripts
+// write to the streams directly. Match that rather than adding disables.
+const out = (t) => process.stdout.write(`${t}
+`);
+const err = (t) => process.stderr.write(`${t}
+`);
+
+out(`ATTRIBUTION.md: ${total} images, ${licences.size} distinct licences`);
 for (const [lic, n] of [...licences].sort((a, b) => b[1] - a[1])) {
-  console.log(`  ${String(n).padStart(3)}  ${lic}`);
+  out(`  ${String(n).padStart(3)}  ${lic}`);
 }
 if (missing.length) {
   // An image nobody can credit must not ship from a public repo.
-  console.error(`\nMISSING CREDIT on ${missing.length} image(s):`);
-  missing.forEach((m) => console.error(`  ${m}`));
+  err(`\nMISSING CREDIT on ${missing.length} image(s):`);
+  missing.forEach((m) => err(`  ${m}`));
   process.exit(1);
 }
 const noLink = login.filter((p) => !p.sourceUrl).length;
-if (noLink) console.warn(`\nNote: ${noLink} sign-in photo(s) have no sourceUrl.`);
+if (noLink) err(`\nNote: ${noLink} sign-in photo(s) have no sourceUrl.`);
