@@ -16,6 +16,10 @@
 	# disable_redirects keeps automation on and only drops the http→https
 	# redirect, which is meaningless here (the :8080 site is internal-only).
 	auto_https disable_redirects
+	# Clients never send SNI for a bare IP address, so without a default Caddy
+	# has no way to pick a certificate and the handshake dies with "internal
+	# error". Serve the SITE_HOST cert whenever SNI is absent.
+	default_sni {$SITE_HOST}
 	servers {
 		# Trust forwarded headers only from proxies inside the compose network.
 		trusted_proxies static private_ranges
