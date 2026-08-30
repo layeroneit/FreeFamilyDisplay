@@ -104,8 +104,14 @@ model Session {
   @@index([expiresAt])
 }
 
-/// Single-use signup token. There is no public registration (plan §3) — an
-/// invite is the only way an account comes into existence.
+/// Single-use signup token. There is no public registration (plan §3), with
+/// exactly one permanent exception: the first-run form at /welcome, reachable
+/// only while this table's User sibling is empty (ADR 0004). Every account
+/// after that first one comes from an invite.
+///
+/// NOT YET IMPLEMENTED — no route, no UI, and nothing in the codebase writes a
+/// row here. Until that exists, the first account is the only account an
+/// instance can create through the app.
 model Invite {
   id String @id @default(cuid())
 
@@ -303,6 +309,13 @@ model WallpaperCollection {
   /// joins it under the drop root so it cannot escape. Not a credential, so
   /// unlike sourceSecret it is stored and displayed in the clear.
   sourceFolder String? @db.VarChar(64)
+
+  /// Alternative source: search terms for a public anime image index. Not a
+  /// credential and not a URL - a space-separated tag list the owner typed,
+  /// e.g. "scenery kimetsu_no_yaiba". The worker appends the fixed rating and
+  /// blocklist itself; see apps/worker/src/connectors/anime-booru.ts for why
+  /// that is not the caller's decision to make.
+  sourceTags String? @db.VarChar(200)
 
   /// Free text the owner attaches to a collection they assembled themselves,
   /// rendered with the image on the board. Exists so a set of art someone

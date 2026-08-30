@@ -579,22 +579,26 @@ function DisplayLinkPanel({ board }: { board: EditorBoard }) {
 }
 
 /**
- * "Add your own" (spec §7). Two sources:
+ * "Add your own" (spec §7). Three sources:
  *   link   — a Google Photos album or Drive folder, synced over the network.
  *   folder — a directory the operator filled on the server itself. This is
  *            the path for art already on disk: nothing is fetched and nothing
  *            leaves the machine.
- * Either way the set is private to its owner. `rightsNote` rides along and is
+ *   tags   - search terms for a public anime image index, fetched onto this
+ *            server. Nothing is committed to the repo or shipped in the
+ *            image; see apps/worker/src/connectors/anime-booru.ts.
+ * Every one of them is private to its owner. `rightsNote` rides along and is
  * printed with the credit line on the board, which is where a collection of
  * someone else's artwork can say whose it is.
  */
 function AddOwnCollection({ onCreated }: { onCreated: (id: string) => void }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [mode, setMode] = useState<"link" | "folder">("link");
+  const [mode, setMode] = useState<"link" | "folder" | "tags">("link");
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
   const [folder, setFolder] = useState("");
+  const [tags, setTags] = useState("");
   const [folders, setFolders] = useState<Array<{ name: string; images: number }> | null>(null);
   const [rightsNote, setRightsNote] = useState("");
   const [busy, setBusy] = useState(false);
@@ -622,7 +626,7 @@ function AddOwnCollection({ onCreated }: { onCreated: (id: string) => void }) {
     setBusy(true);
     setErr(null);
     try {
-      const payload = mode === "folder" ? { name, folder, rightsNote } : { name, link, rightsNote };
+      const payload = mode === "folder" ? { name, folder, rightsNote } : mode === "tags" ? { name, tags, rightsNote } : { name, link, rightsNote };
       const res = await fetch("/api/wallpapers", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) });
       const body = (await res.json().catch(() => null)) as { id?: string; error?: string } | null;
       if (!res.ok || !body?.id) {
@@ -633,6 +637,7 @@ function AddOwnCollection({ onCreated }: { onCreated: (id: string) => void }) {
       setName("");
       setLink("");
       setFolder("");
+      setTags("");
       setRightsNote("");
       onCreated(body.id);
       router.refresh();
@@ -652,7 +657,7 @@ function AddOwnCollection({ onCreated }: { onCreated: (id: string) => void }) {
     );
   }
 
-  const tab = (id: "link" | "folder", label: string) => (
+  const tab = (id: "link" | "folder" | "tags", label: string) => (
     <button
       type="button"
       onClick={() => setMode(id)}
@@ -663,12 +668,13 @@ function AddOwnCollection({ onCreated }: { onCreated: (id: string) => void }) {
     </button>
   );
 
-  const ready = name.trim() !== "" && (mode === "folder" ? folder !== "" : link.trim() !== "");
+  const ready = name.trim() !== "" && (mode === "folder" ? folder !== "" : mode === "tags" ? tags.trim() !== "" : link.trim() !== "");
 
   return (
     <div className="mt-2 space-y-2 rounded-lg border p-2" style={{ borderColor: "var(--hearth-accent-1)" }}>
       <div className="flex gap-2">
         {tab("folder", "Folder on the server")}
+        {tab("tags", "Anime by tag")}
         {tab("link", "Google link")}
       </div>
 
@@ -694,6 +700,32 @@ function AddOwnCollection({ onCreated }: { onCreated: (id: string) => void }) {
           )}
           <p className="text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
             Images need 1920px+ on the long edge. Nothing is uploaded anywhere — the files stay on your server and only you can see this collection.
+          </p>
+        </>
+      ) : mode === "tags" ? (
+        <>
+          <input
+            placeholder="Tags, e.g. scenery kimetsu_no_yaiba"
+            value={tags}
+            onChange={(e) => setTags(e.target.value)}
+            maxLength={200}
+            className="w-full rounded-lg border px-3 py-1.5 text-sm"
+            style={input}
+            autoComplete="off"
+            spellCheck={false}
+          />
+          <p className="text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
+            Pulls matching art from a public anime image index onto this server, at 1920px+ only. Try a series tag with a scene tag:{" "}
+            <code>scenery kimetsu_no_yaiba</code>, <code>scenery shingeki_no_kyojin</code>, <code>no_humans scenery</code>. Fewer tags find more images.
+          </p>
+          <p className="text-[11px]" style={{ color: "var(--hearth-accent-4)" }}>
+            Read this before you put it on a wall: only general-rated images are fetched and a long blocklist is always applied, but that index is
+            tagged by its own users, not verified. It reliably keeps out sexual content; it is less reliable about violence and upsetting imagery.
+            Check the collection before a young child sees it, and use Skip on anything you do not want back.
+          </p>
+          <p className="text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
+            This art belongs to the artists who drew it. It is fetched to your own server for your own screens and is never shared or redistributed
+            by this app; each image links back to its artist where the index knows one.
           </p>
         </>
       ) : (
@@ -869,7 +901,7 @@ function WidgetSettings({
           <>
             <label className="block">
               Seconds per photo (5–600)
-              <input type="number" min={5} max={600} className={field} style={input} value={Number(draft["intervalSec"] ?? 20)} onChange={(e) => set("intervalSec", clampInt(e.target.value, 5, 600, 20))} />
+              <input type="number" min={5} max={600} className={field} style={input} value={Number(draft["intervalSec"] ?? 60)} onChange={(e) => set("intervalSec", clampInt(e.target.value, 5, 600, 60))} />
             </label>
             <LinkField
               label="Photo source (Google Photos shared album link, or a Google Drive folder shared with “anyone with the link”)"

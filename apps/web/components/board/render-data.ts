@@ -10,10 +10,12 @@ import { collectionFontVars } from "@/lib/board/collection-fonts";
 import type { BoardData, CalendarFeed } from "./widget-view";
 
 /** The collection's slug, which selects its lettering. Null for no collection. */
-async function collectionMeta(collectionId: string | null): Promise<{ slug: string | null; rightsNote: string | null }> {
-  if (!collectionId) return { slug: null, rightsNote: null };
-  const c = await prisma.wallpaperCollection.findUnique({ where: { id: collectionId }, select: { slug: true, rightsNote: true } });
-  return { slug: c?.slug ?? null, rightsNote: c?.rightsNote ?? null };
+async function collectionMeta(
+  collectionId: string | null,
+): Promise<{ slug: string | null; rightsNote: string | null; sourceTags: string | null }> {
+  if (!collectionId) return { slug: null, rightsNote: null, sourceTags: null };
+  const c = await prisma.wallpaperCollection.findUnique({ where: { id: collectionId }, select: { slug: true, rightsNote: true, sourceTags: true } });
+  return { slug: c?.slug ?? null, rightsNote: c?.rightsNote ?? null, sourceTags: c?.sourceTags ?? null };
 }
 
 export type BoardScene = {
@@ -99,7 +101,10 @@ export async function loadBoardScene(board: BoardFull, viewerName: string): Prom
     // collection should look like one, not just swap the photo).
     const meta = await collectionMeta(board.wallpaperCollectionId);
     rightsNote = meta.rightsNote;
-    Object.assign(varOverrides, collectionFontVars(meta.slug));
+    // A tag-fed collection is anime art by construction, but its slug is
+    // generated per user, so it can never match a name in the font table.
+    // Ask for the anime lettering by name instead.
+    Object.assign(varOverrides, collectionFontVars(meta.sourceTags ? "anime" : meta.slug));
   }
 
   return { data, wallpaper, scrimOpacity, mood, varOverrides, rightsNote };

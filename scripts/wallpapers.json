@@ -251,6 +251,219 @@
           "license": "CC BY 4.0"
         }
       ]
+    },
+    {
+      "slug": "northwoods",
+      "name": "Northwoods",
+      "description": "Lakes, pines, snow, fog, and birch woods across the Upper Midwest. Calm and quiet.",
+      "images": [
+        {
+          "file": ".photo-review/nw-andrew-lake-dock.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Andrew_Lake_Sunset_-_Dock_at_Sibley_State_Park_-_Minnesota.jpg",
+          "name": "andrew-lake-dock",
+          "photographer": "Tony Webster",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 2.0"
+        },
+        {
+          "file": ".photo-review/nw-little-gabro-lake.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Little_Gabro_Lake,_clouds,_approaching_sunset_765.jpg",
+          "name": "little-gabro-lake",
+          "photographer": "Dankarl",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/nw-misty-pines.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Misty_pines_%E2%80%93_Panorama_(Greg_Zaal_via_Poly_Haven).jpg",
+          "name": "misty-pines",
+          "photographer": "Greg Zaal",
+          "source": "Wikimedia Commons",
+          "license": "CC0"
+        },
+        {
+          "file": ".photo-review/nw-birch-winter.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Winter_scene_in_Forest_Park_with_stream_cutting_through_snow-covered_ground_and_small_pavilion_in_distance_seen_through_birch_trees.jpg",
+          "name": "birch-winter-stream",
+          "photographer": "Emil Boehl",
+          "source": "Wikimedia Commons",
+          "license": "Public domain"
+        },
+        {
+          "file": ".photo-review/nw-upson-lake-road.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Upson_Lake_Road_-_Autumn_in_Northern_Wisconsin_(49044933032).jpg",
+          "name": "upson-lake-road-autumn",
+          "photographer": "Tony Webster",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 2.0"
+        },
+        {
+          "file": ".photo-review/nw-lake-vermilion.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Lake_Vermilion_Sunset,_Tower,_Minnesota_(36201633246).jpg",
+          "name": "lake-vermilion-sunset",
+          "photographer": "Tony Webster",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 2.0"
+        },
+        {
+          "file": ".photo-review/nw-campbell-birch-snow.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Light_snow_on_BLM_Campbell_Tract_forest_(29700344465).jpg",
+          "name": "campbell-birch-snow",
+          "photographer": "Bob Wick / BLM Alaska",
+          "source": "Wikimedia Commons",
+          "license": "Public domain"
+        },
+        {
+          "file": ".photo-review/nw-farm-snow-illinois.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Thin_blanket_of_snow_covering_the_farm_-_Flickr_-_Joe_K_Gage.jpg",
+          "name": "illinois-farm-snow",
+          "photographer": "Joseph Gage",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 2.0"
+        }
+      ]
+    },
+    {
+      "slug": "cities-at-night",
+      "name": "Cities at night",
+      "description": "Skylines, bridges, and wet streets after dark. Deep blacks with bright accents — pairs well with the arcade collection.",
+      "images": [
+        {
+          "file": ".photo-review/city-chicago-skyline.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Chicago_skyline_at_night_from_360_Chicago_observation_deck_(49712821158).jpg",
+          "name": "chicago-skyline-night",
+          "photographer": "Matt Kieffer",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 2.0"
+        },
+        {
+          "file": ".photo-review/city-nyc-empire-view.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:New_York_City_Skyline_from_Top_of_Empire_State_Building.jpg",
+          "name": "nyc-skyline-from-esb",
+          "photographer": "Jody Claborn",
+          "source": "Wikimedia Commons",
+          "license": "Public domain"
+        },
+        {
+          "file": ".photo-review/city-hk-harbour.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Hong_Kong_Harbour_Night_2019-06-11.jpg",
+          "name": "hong-kong-harbour-night",
+          "photographer": "Benh LIEU SONG",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/city-sf-bay-bridge.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:San_Francisco_Bay_Bridge_Western_Span_at_night.jpg",
+          "name": "sf-bay-bridge-night",
+          "photographer": "Dllu",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/city-wet-street-neon.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:DFC_0505_Neon-lit_city_street_at_night_reflected_in_a_rain_puddle_colorful_signs_and_lights_mirrored_on_the_wet_pavement.jpg",
+          "name": "wet-street-neon-reflection",
+          "photographer": "PattayaPatrol",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/city-shanghai-skyline.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Night_lights_of_Shanghai.jpg",
+          "name": "shanghai-night-lights",
+          "photographer": "David Zhang",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 2.0"
+        },
+        {
+          "file": ".photo-review/city-queensboro-bridge.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Queensboro_Bridge_New_York_October_2016_003.jpg",
+          "name": "queensboro-bridge-night",
+          "photographer": "King of Hearts",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/city-woljeonggyo-bridge.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Illuminated_Woljeonggyo_Bridge_at_blue_hour_in_Gyeongju_South_Korea.jpg",
+          "name": "woljeonggyo-bridge-blue-hour",
+          "photographer": "Basile Morin",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "slug": "storms",
+      "name": "Storms",
+      "description": "Supercells, lightning, mammatus, and shelf clouds. Pairs with the weather widget.",
+      "images": [
+        {
+          "file": ".photo-review/st-supercell-wide.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Supercell_059.jpg",
+          "name": "supercell-over-lake",
+          "photographer": "Šime Barešić",
+          "source": "Wikimedia Commons",
+          "license": "CC0"
+        },
+        {
+          "file": ".photo-review/st-supercell-updraft.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Supercell_with_bell-bottom_updraft.jpg",
+          "name": "supercell-bell-bottom-updraft",
+          "photographer": "Rollingskyphoto",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 4.0"
+        },
+        {
+          "file": ".photo-review/st-lightning-iss-africa.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Bright_lightning_storms_illuminate_the_cloudy_landscape_of_western_Africa_(iss073e0816985).jpg",
+          "name": "lightning-from-orbit",
+          "photographer": "NASA Johnson Space Center / Kimiya Yui",
+          "source": "Wikimedia Commons",
+          "license": "Public domain"
+        },
+        {
+          "file": ".photo-review/st-mammatus-pittsburgh.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Mammatus_clouds,_Pittsburgh,_2022-06-16,_04.jpg",
+          "name": "mammatus-sunset",
+          "photographer": "Cbaile19",
+          "source": "Wikimedia Commons",
+          "license": "CC0"
+        },
+        {
+          "file": ".photo-review/st-shelf-cloud-nj.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Shelf_Cloud_Over_Mount_Laurel_New_Jersey_August_11,_2021_(51372605582).jpg",
+          "name": "shelf-cloud-new-jersey",
+          "photographer": "Anthony Quintano",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 2.0"
+        },
+        {
+          "file": ".photo-review/st-shelf-cloud-italy.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Eastern_italy_storm_with_shelf_cloud,_9th_July_2019.jpg",
+          "name": "shelf-cloud-italy",
+          "photographer": "Marek Wikipedista",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/st-rainstorm-prairie.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Rainstorm_over_a_Sawgrass_Prairie_-_2020_Photo_Contest_(52687302392).jpg",
+          "name": "rainstorm-sawgrass-prairie",
+          "photographer": "David Carrillo / NPS",
+          "source": "Wikimedia Commons",
+          "license": "Public domain"
+        },
+        {
+          "file": ".photo-review/st-storm-wetland-sd.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Storms_over_Althen_WPA_Lake_Andes_Wetland_Management_District_South_Dakota_(52388583566).jpg",
+          "name": "storm-over-south-dakota-wetland",
+          "photographer": "Marcie Hebert / USFWS",
+          "source": "Wikimedia Commons",
+          "license": "Public domain"
+        }
+      ]
     }
   ]
 }

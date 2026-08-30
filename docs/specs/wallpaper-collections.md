@@ -216,6 +216,33 @@ next to the built-in list, not buried in settings.
 franchise terms. Do not add a "find me anime wallpapers" button. The upload
 path is the answer.
 
+> **Operator override, 2026-08-30 — a tag-fed anime source ships.** Asked for a
+> fourth time, with specific APIs named. Implemented as
+> `apps/worker/src/connectors/anime-booru.ts`: the operator types tags, and
+> their own instance fetches matching images onto their own media volume.
+>
+> The line above still holds where it matters, and is now *harder*, because the
+> repo is public: **nothing is committed and nothing ships in the image.** What
+> changed is the acknowledgement that a family fetching art onto their own
+> machine for their own wall is not this project redistributing it. Each image
+> keeps a link back to its artist, and the collection carries a rights note that
+> renders on screen.
+>
+> Of the three APIs proposed, only **Safebooru** is fit for purpose: it returns
+> `width`/`height` in the listing, so the connector filters for wall-sized
+> images *before* downloading. `nekosapi.com` returns no dimensions at all and
+> serves portrait character art; `api.nekosia.cat` returns dimensions but its
+> whole catalogue is portrait/square character art; `nekos.best` is behind a
+> Cloudflare bot challenge and cannot be reached from a headless box.
+>
+> **Two things to be honest about, in the code and in the UI.** The index's
+> rating is crowd-tagged, not verified — it reliably excludes sexual content and
+> does *not* reliably exclude gore or violence, so `rating:general` plus a fixed
+> blocklist is applied to every query *and* re-checked on every result before
+> download. And the images are unlicensed reposts of artists' work; the index
+> claims no rights and carries no licence field. This is a private-display path,
+> not a licensed source, and the copy on screen says so.
+
 ---
 
 ## 7. Custom collections
@@ -293,6 +320,8 @@ by direct ID.
   is sufficient and far cheaper
 - Do not auto-switch collections by date or season. People pick a collection
   because they like it.
-- Do not ship a scraper or a franchise-term image search
+- Do not ship a scraper or a franchise-term image search **as a built-in
+  collection or committed asset** — see the operator override in §6 for the
+  user-created, fetched-to-your-own-box path that does ship
 - Do not push wallpaper changes to displays. They poll.
 - Do not default palette-matching to on

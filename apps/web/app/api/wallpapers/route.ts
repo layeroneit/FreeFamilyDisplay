@@ -23,9 +23,35 @@ const CreateInput = z
       .max(64)
       .regex(/^[A-Za-z0-9 ._-]+$/, "Use a plain folder name — no slashes.")
       .optional(),
+    /**
+     * Search terms for the public anime image index. Shape-checked here only:
+     * the worker owns the real query (it appends the fixed rating and the
+     * blocklist) and reports anything wrong through lastError, exactly as the
+     * link path does.
+     */
+    tags: z
+      .string()
+      .trim()
+      .max(200)
+      .regex(/^[A-Za-z0-9_.'()+:\s,-]+$/, "Use tags like scenery kimetsu_no_yaiba - letters, digits and underscores.")
+      .optional(),
     rightsNote: z.string().trim().max(300).optional(),
   })
-  .refine((v) => Boolean(v.link) !== Boolean(v.folder), "Give either a link or a folder, not both.");
+  .refine(
+    (v) => [v.link, v.folder, v.tags].filter(Boolean).length === 1,
+    "Give exactly one source: a link, a folder, or tags.",
+  );
+
+/** Shallow guard so obvious mistakes answer immediately instead of via lastError. */
+function checkTags(raw: string): string {
+  const terms = raw.toLowerCase().split(/[\s,]+/).filter(Boolean);
+  if (terms.length === 0) throw new Error("Add at least one tag, for example: scenery kimetsu_no_yaiba");
+  if (terms.length > 8) throw new Error("Use at most 8 tags - more tags means fewer matches, not better ones.");
+  // The rating is the worker's to set, and exclusions are always applied.
+  if (terms.some((t) => t.startsWith("rating:"))) throw new Error("Rating is fixed for safety and can't be set here.");
+  if (terms.some((t) => t.startsWith("-"))) throw new Error("Excluding tags isn't supported - the safety exclusions are always applied.");
+  return terms.join(" ");
+}
 
 function checkGoogleLink(raw: string): string {
   let u: URL;
@@ -67,6 +93,32 @@ export async function POST(req: NextRequest) {
 
   const slug = `c_${user.id.slice(-6)}_${Date.now().toString(36)}`;
   const rightsNote = parsed.data.rightsNote || null;
+
+  if (parsed.data.tags) {
+    let tags: string;
+    try {
+      tags = checkTags(parsed.data.tags);
+    } catch (err) {
+      return NextResponse.json({ error: err instanceof Error ? err.message : "Invalid tags." }, { status: 400 });
+    }
+    // Not a credential: the operator typed these and needs to see them to edit
+    // them. A rights note is forced on, because this collection is other
+    // people's artwork and the board says so on screen.
+    const created = await prisma.wallpaperCollection.create({
+      data: {
+        slug,
+        ownerId: user.id,
+        name: parsed.data.name,
+        isBuiltin: false,
+        sourceTags: tags,
+        rightsNote: rightsNote ?? "Fan art - rights remain with the original artists.",
+      },
+      select: { id: true },
+    });
+    await audit({ actorId: user.id, action: "wallpapers.collection.created", targetType: "WallpaperCollection", targetId: created.id });
+    pokeWorkerConnectors();
+    return NextResponse.json({ id: created.id }, { status: 201 });
+  }
 
   if (parsed.data.folder) {
     // A folder on the server the operator already filled — nothing to fetch,

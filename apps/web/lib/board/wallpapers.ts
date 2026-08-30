@@ -33,6 +33,8 @@ export type CollectionInfo = {
   sourceMask: string | null;
   /** Folder-fed collections: the drop sub-directory name. */
   sourceFolder: string | null;
+  /** Tag-fed collections: the search terms the owner typed. Not a secret. */
+  sourceTags: string | null;
   /** Owner-written note rendered with the image (e.g. a rights disclaimer). */
   rightsNote: string | null;
   lastSyncedAt: Date | null;
@@ -93,6 +95,7 @@ export async function listCollections(userId: string): Promise<CollectionInfo[]>
       description: true,
       isBuiltin: true,
       sourceFolder: true,
+      sourceTags: true,
       rightsNote: true,
       sourceMask: true,
       lastSyncedAt: true,
@@ -108,6 +111,7 @@ export async function listCollections(userId: string): Promise<CollectionInfo[]>
     description: r.description,
     isBuiltin: r.isBuiltin,
     sourceFolder: r.sourceFolder,
+    sourceTags: r.sourceTags,
     rightsNote: r.rightsNote,
     count: r._count.wallpapers,
     cover: r.wallpapers[0] ?? null,

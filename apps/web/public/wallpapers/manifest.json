@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-30T02:53:43.647Z",
+  "generatedAt": "2026-08-30T12:22:26.789Z",
   "collections": [
     {
       "slug": "deep-space",
@@ -654,6 +654,577 @@
             "sourceUrl": "https://commons.wikimedia.org/wiki/File:Gaming-PC_20240426_HOF2496-HDR_RAW-Export.png"
           },
           "sortOrder": 6
+        }
+      ]
+    },
+    {
+      "slug": "northwoods",
+      "name": "Northwoods",
+      "description": "Lakes, pines, snow, fog, and birch woods across the Upper Midwest. Calm and quiet.",
+      "wallpapers": [
+        {
+          "basePath": "/wallpapers/northwoods/andrew-lake-dock",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.3463,
+          "luminanceVariance": 0.1929,
+          "dominantColors": [
+            "#666666",
+            "#000000",
+            "#333366",
+            "#cc6666",
+            "#999999"
+          ],
+          "suggestedScrimOpacity": 0.469,
+          "lqip": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAAAQBACdASoYABAAPu1orU2ppqSiMAgBMB2JZACdMoMrZElpbFg+s1BVkAD9TPcXYG/F7AZzOdDyg0V+unpZ/grJm8Lbbhb7t0dWh9mTBl6U1RQAswRaQbWtxLAqR7EE1Vwr8xWLTFNA+AhLlJLE7a/61ZkfDQInFdJVWNbXUtZoAA==",
+          "attribution": {
+            "photographer": "Tony Webster",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 2.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Andrew_Lake_Sunset_-_Dock_at_Sibley_State_Park_-_Minnesota.jpg"
+          },
+          "sortOrder": 0
+        },
+        {
+          "basePath": "/wallpapers/northwoods/little-gabro-lake",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.4071,
+          "luminanceVariance": 0.2554,
+          "dominantColors": [
+            "#333333",
+            "#cccccc",
+            "#999999",
+            "#666666",
+            "#003300"
+          ],
+          "suggestedScrimOpacity": 0.506,
+          "lqip": "data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAAAQBACdASoYABAAPu1iqk2ppaQiMAgBMB2JZQC7AB6GjtoefrzD20SvegD91axXfg5dg3JYsso0+mcZw3EcZvc3QU5PVgcFaotg+Ok2SSztFEGd9Az1qtAJ78ycGuaJMJE1IRX24K2QqMDMUiCSEMCQWQCCWMMat6fcDYfaXAA=",
+          "attribution": {
+            "photographer": "Dankarl",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Little_Gabro_Lake,_clouds,_approaching_sunset_765.jpg"
+          },
+          "sortOrder": 1
+        },
+        {
+          "basePath": "/wallpapers/northwoods/misty-pines",
+          "width": 1920,
+          "height": 960,
+          "meanLuminance": 0.5242,
+          "luminanceVariance": 0.2672,
+          "dominantColors": [
+            "#333333",
+            "#cccccc",
+            "#999999",
+            "#666633",
+            "#ffffff"
+          ],
+          "suggestedScrimOpacity": 0.55,
+          "lqip": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAACQAwCdASoYAAwAPu1iqU2ppaQiMAgBMB2JQBdgBCzBR1L22EIAAP7q6oSyNDAkv+i0VBhzUOdiYaGKJXt4u+nqFLDyYMncuEG5zxw52MLzDx1tnud2Jx19KR+Yt7wm4FBZuu9HTGAKNaWBgAA=",
+          "attribution": {
+            "photographer": "Greg Zaal",
+            "source": "Wikimedia Commons",
+            "license": "CC0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Misty_pines_%E2%80%93_Panorama_(Greg_Zaal_via_Poly_Haven).jpg"
+          },
+          "sortOrder": 2
+        },
+        {
+          "basePath": "/wallpapers/northwoods/birch-winter-stream",
+          "width": 1920,
+          "height": 1388,
+          "meanLuminance": 0.5703,
+          "luminanceVariance": 0.1723,
+          "dominantColors": [
+            "#cccc99",
+            "#996666",
+            "#666633",
+            "#999999",
+            "#333333"
+          ],
+          "suggestedScrimOpacity": 0.543,
+          "lqip": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAACQBACdASoYABEAPu1mq08ppaOiKA1RMB2JZwDImA0HCgg2NCt+dI1QDit3Q/AAy6yxh4UC0xpaJ54Bl+cFYgty0WHgdjfjlDWh34sygspymIBWVTa505hdiDK+NjEL0xW8kL0i6aiTO5Q9mweTXk5bWizK8Rq47Np4HRM24MHqAOEz5gAAAA==",
+          "attribution": {
+            "photographer": "Emil Boehl",
+            "source": "Wikimedia Commons",
+            "license": "Public domain",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Winter_scene_in_Forest_Park_with_stream_cutting_through_snow-covered_ground_and_small_pavilion_in_distance_seen_through_birch_trees.jpg"
+          },
+          "sortOrder": 3
+        },
+        {
+          "basePath": "/wallpapers/northwoods/upson-lake-road-autumn",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.3723,
+          "luminanceVariance": 0.1621,
+          "dominantColors": [
+            "#666633",
+            "#333300",
+            "#6699cc",
+            "#3366cc",
+            "#99cccc"
+          ],
+          "suggestedScrimOpacity": 0.471,
+          "lqip": "data:image/webp;base64,UklGRrAAAABXRUJQVlA4IKQAAACQBACdASoYABAAPu1iqU2ppaOiMAgBMB2JbAC7MoRwACoUQ00vtTFhfdi2DPwA/qCx3gyOdrKlWjgiTFiudH0Xcol+93Jb7NLVRYOkOqA9VFmsp74hBvmQWXFTqiYCK4kAp3CrH4NRw5g9G0cTgiMxtE2afBbH9PGHkCGicQ8CbtIyMoMVgRYFbekim4q52Oh6JX0xBxlZ5WdrRL+yTIzrGuAAAA==",
+          "attribution": {
+            "photographer": "Tony Webster",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 2.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Upson_Lake_Road_-_Autumn_in_Northern_Wisconsin_(49044933032).jpg"
+          },
+          "sortOrder": 4
+        },
+        {
+          "basePath": "/wallpapers/northwoods/lake-vermilion-sunset",
+          "width": 1920,
+          "height": 1286,
+          "meanLuminance": 0.3753,
+          "luminanceVariance": 0.1561,
+          "dominantColors": [
+            "#333333",
+            "#336699",
+            "#666666",
+            "#000000",
+            "#999999"
+          ],
+          "suggestedScrimOpacity": 0.47,
+          "lqip": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAABQBACdASoYABAAPu1iqk2ppaQiMAgBMB2JYgCdMoACrKO+bGsXwkBdnSQAAMsnizk8rkn/3fnLlwssJ+qkUYb7FJnEJzhm4N5rvnUZKtgBt1x2wDII+njRMHuGAAAA",
+          "attribution": {
+            "photographer": "Tony Webster",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 2.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Lake_Vermilion_Sunset,_Tower,_Minnesota_(36201633246).jpg"
+          },
+          "sortOrder": 5
+        },
+        {
+          "basePath": "/wallpapers/northwoods/campbell-birch-snow",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.4253,
+          "luminanceVariance": 0.183,
+          "dominantColors": [
+            "#333333",
+            "#666666",
+            "#9999cc",
+            "#669999",
+            "#330000"
+          ],
+          "suggestedScrimOpacity": 0.495,
+          "lqip": "data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAAAQBACdASoYABAAPu1iqU2ppaOiMAgBMB2JQBOgZYA+T0wY1MEr3HGjgADu54Lt1+mAE0/5wPQhxuo7sT0jZ8C3HR0XWIit5iALUCRaaU1DV3ipORTCZgCkGfQLK3phSy5o1UctJJamI6JsmK0yoC6b6y7ENjQl7AC2oh0X84jr059WWPp9zB2WGP1qhLyK1+KfoqKNgYMQAA==",
+          "attribution": {
+            "photographer": "Bob Wick / BLM Alaska",
+            "source": "Wikimedia Commons",
+            "license": "Public domain",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Light_snow_on_BLM_Campbell_Tract_forest_(29700344465).jpg"
+          },
+          "sortOrder": 6
+        },
+        {
+          "basePath": "/wallpapers/northwoods/illinois-farm-snow",
+          "width": 1920,
+          "height": 996,
+          "meanLuminance": 0.8187,
+          "luminanceVariance": 0.2036,
+          "dominantColors": [
+            "#ffffff",
+            "#cccccc",
+            "#666666",
+            "#999999",
+            "#333333"
+          ],
+          "suggestedScrimOpacity": 0.62,
+          "lqip": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAACQAwCdASoYAAwAPu1iqU2ppaOiMAgBMB2JaQAAVGHJbEe2VP4AAP7iOwfTLEaS4DLXvYg8DgD280pplduStjUyOE9dI3TtBCzcoNnvHy6bT+kUfyHO0Ppc+EtW+ZW3YlSLGmN1/scMkJh5aIAAAA==",
+          "attribution": {
+            "photographer": "Joseph Gage",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 2.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Thin_blanket_of_snow_covering_the_farm_-_Flickr_-_Joe_K_Gage.jpg"
+          },
+          "sortOrder": 7
+        }
+      ]
+    },
+    {
+      "slug": "cities-at-night",
+      "name": "Cities at night",
+      "description": "Skylines, bridges, and wet streets after dark. Deep blacks with bright accents — pairs well with the arcade collection.",
+      "wallpapers": [
+        {
+          "basePath": "/wallpapers/cities-at-night/chicago-skyline-night",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.1488,
+          "luminanceVariance": 0.1012,
+          "dominantColors": [
+            "#333333",
+            "#000000",
+            "#666633",
+            "#663300",
+            "#996666"
+          ],
+          "suggestedScrimOpacity": 0.377,
+          "lqip": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAACQAwCdASoYABAAPu1kqk4ppaQiMAgBMB2JZQCo9C0Hxlf8qRqAAP7vNeQ02W2GCUYGR3rtOOrh9FlFElTdjXPOFpNuZdQxkCOFWHi+KNwGAkJ3QUopL/y/rKE3M8OeLUyoTAAA",
+          "attribution": {
+            "photographer": "Matt Kieffer",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 2.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Chicago_skyline_at_night_from_360_Chicago_observation_deck_(49712821158).jpg"
+          },
+          "sortOrder": 0
+        },
+        {
+          "basePath": "/wallpapers/cities-at-night/nyc-skyline-from-esb",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.2939,
+          "luminanceVariance": 0.1921,
+          "dominantColors": [
+            "#000033",
+            "#666666",
+            "#003366",
+            "#333333",
+            "#999999"
+          ],
+          "suggestedScrimOpacity": 0.451,
+          "lqip": "data:image/webp;base64,UklGRpwAAABXRUJQVlA4IJAAAABwBACdASoYABAAPu1iqU2ppaOiMAgBMB2JZACdH8AguhfxollI+DStwKWd7AD+8MNJhN9p+keG0It0dz+LsZD0dAXV/hRvB3SbWkidD5VvRosfzQFvScWJAgVT1bs0Pox71bI9/JEbgI2GOIFnoPEsn+diPHilg9UayZcoc3hrxl44Z+Ao63Ve++GGNGEDAAA=",
+          "attribution": {
+            "photographer": "Jody Claborn",
+            "source": "Wikimedia Commons",
+            "license": "Public domain",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:New_York_City_Skyline_from_Top_of_Empire_State_Building.jpg"
+          },
+          "sortOrder": 1
+        },
+        {
+          "basePath": "/wallpapers/cities-at-night/hong-kong-harbour-night",
+          "width": 1920,
+          "height": 908,
+          "meanLuminance": 0.3505,
+          "luminanceVariance": 0.1722,
+          "dominantColors": [
+            "#333333",
+            "#666699",
+            "#666633",
+            "#000000",
+            "#999999"
+          ],
+          "suggestedScrimOpacity": 0.466,
+          "lqip": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAAAQBACdASoYAAsAPu1iqU2ppaOiMAgBMB2JQBOmUGRtguG+Qoaou79qAAD1l3vrMjxxu3/wCSh+Ul1jZ/PWbphc7JUILQtNrP1xw2Rbvut1Wlym8FhSrZAJ+8AT8/T5e/V6lcSP9t5AYnE9EVrJJR32omnzwAAA",
+          "attribution": {
+            "photographer": "Benh LIEU SONG",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hong_Kong_Harbour_Night_2019-06-11.jpg"
+          },
+          "sortOrder": 2
+        },
+        {
+          "basePath": "/wallpapers/cities-at-night/sf-bay-bridge-night",
+          "width": 1920,
+          "height": 1080,
+          "meanLuminance": 0.2825,
+          "luminanceVariance": 0.2434,
+          "dominantColors": [
+            "#000033",
+            "#333366",
+            "#6699cc",
+            "#336699",
+            "#99cccc"
+          ],
+          "suggestedScrimOpacity": 0.46,
+          "lqip": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAAAwBACdASoYAA4APu1iqk4ppaQiMAgBMB2JQBOmUABp0l3h/Cu9Zt+OmwAA/vKd7uPapESukMDLdo8dtpT1RMpXHn2tLS3pth3CFP6Kt6xPaRkKZ2UaHDb+qsVxWdwp67EhzGtsNyC2vf8IFLmmbHkC/wuYV0qjnFUVOUzjYVQAAA==",
+          "attribution": {
+            "photographer": "Dllu",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:San_Francisco_Bay_Bridge_Western_Span_at_night.jpg"
+          },
+          "sortOrder": 3
+        },
+        {
+          "basePath": "/wallpapers/cities-at-night/wet-street-neon-reflection",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.0958,
+          "luminanceVariance": 0.1573,
+          "dominantColors": [
+            "#000000",
+            "#333333",
+            "#666666",
+            "#999999",
+            "#cccccc"
+          ],
+          "suggestedScrimOpacity": 0.373,
+          "lqip": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAAAwBACdASoYABAAPu1iqU2ppaOiMAgBMB2JZQAFEB7k0M6vffa50IWk8gAA/u9n5Ol7C1DG8oKC1PH/o2Gxejctn0nH6MiUywzqxIhAXGoojTa5hQc+SqzWbWfGTcLoZUy74wHG2a3INeM4XbI3cm6g/sKhvuVhi0PKGUM/tGfln/LfX24U8AAA",
+          "attribution": {
+            "photographer": "PattayaPatrol",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:DFC_0505_Neon-lit_city_street_at_night_reflected_in_a_rain_puddle_colorful_signs_and_lights_mirrored_on_the_wet_pavement.jpg"
+          },
+          "sortOrder": 4
+        },
+        {
+          "basePath": "/wallpapers/cities-at-night/shanghai-night-lights",
+          "width": 1920,
+          "height": 1281,
+          "meanLuminance": 0.3618,
+          "luminanceVariance": 0.1701,
+          "dominantColors": [
+            "#666666",
+            "#333333",
+            "#999966",
+            "#663300",
+            "#996633"
+          ],
+          "suggestedScrimOpacity": 0.469,
+          "lqip": "data:image/webp;base64,UklGRtQAAABXRUJQVlA4IMgAAABQBACdASoYABAAPu1iqU2ppaOiMAgBMB2JbACdMoACDEqr76ghUvtuCbgAAP6jMl9S6XcXuGSf6sBGf/65QsBeTYcE/FVdT7ExgyjhUav2q0dR+i6sLci2/I1kdDF55wCU4BEkLTcvnfNf0RqkRitf/EgeviVDsVHqHAsX8cvnyOozr49b+gOfO3uNBWt8i8xIL8b1Gf2WhvPSX4FTP39gQSMs4MCmXaCfw4/RbWdQHi5u/0/n79IFtwCDaURfz91m25hPy3oAAA==",
+          "attribution": {
+            "photographer": "David Zhang",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 2.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Night_lights_of_Shanghai.jpg"
+          },
+          "sortOrder": 5
+        },
+        {
+          "basePath": "/wallpapers/cities-at-night/queensboro-bridge-night",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.3585,
+          "luminanceVariance": 0.1686,
+          "dominantColors": [
+            "#6666cc",
+            "#333333",
+            "#000000",
+            "#336699",
+            "#9999cc"
+          ],
+          "suggestedScrimOpacity": 0.468,
+          "lqip": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAAAwBACdASoYABAAPu1iqU2ppaOiMAgBMB2JbACdMoMYACzKnXU9Fqv5iIAA/hQQgxEM0rdBJDySvTXqS9c0wg/mVaHT7oBgri/iF0/kWlfz2ciIrHyFjo+Kv3nl63j9OAm9WULiy+sCccWW9nc02+iGSlpNl5eDDIZQXSiWlKB1x1sjJgU8yAAA",
+          "attribution": {
+            "photographer": "King of Hearts",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Queensboro_Bridge_New_York_October_2016_003.jpg"
+          },
+          "sortOrder": 6
+        },
+        {
+          "basePath": "/wallpapers/cities-at-night/woljeonggyo-bridge-blue-hour",
+          "width": 1920,
+          "height": 960,
+          "meanLuminance": 0.3493,
+          "luminanceVariance": 0.1299,
+          "dominantColors": [
+            "#0066cc",
+            "#003399",
+            "#336699",
+            "#003333",
+            "#666666"
+          ],
+          "suggestedScrimOpacity": 0.455,
+          "lqip": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAAAQBQCdASoYAAwAPu1iqU2ppaOiMAgBMB2JbACdMoRwIr/23QFm7mh2+3J4q3eWDa4AAP4PNdUYi4tBLptAB4WKTvAt4/jiqf8QngX2sDf69fu5os5nNBc6lhSbOp942G8XuMY009zl+zoYbE0BE9XR3QYPov0/8VampuuI8I84cWd1lRumXUMHDxz6AAAA",
+          "attribution": {
+            "photographer": "Basile Morin",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Illuminated_Woljeonggyo_Bridge_at_blue_hour_in_Gyeongju_South_Korea.jpg"
+          },
+          "sortOrder": 7
+        }
+      ]
+    },
+    {
+      "slug": "storms",
+      "name": "Storms",
+      "description": "Supercells, lightning, mammatus, and shelf clouds. Pairs with the weather widget.",
+      "wallpapers": [
+        {
+          "basePath": "/wallpapers/storms/supercell-over-lake",
+          "width": 1920,
+          "height": 1053,
+          "meanLuminance": 0.4277,
+          "luminanceVariance": 0.1508,
+          "dominantColors": [
+            "#996666",
+            "#cc9966",
+            "#666633",
+            "#333300",
+            "#999999"
+          ],
+          "suggestedScrimOpacity": 0.487,
+          "lqip": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAABwBACdASoYAA0APu1iqU2ppaOiMAgBMB2JbACdMoR3ACx5JR5ROfL0tcTwAAD2pJfeJ13SC28ApRIYtrCVoJuYdlEo5LjOx7uz6XKyUHik//RjmOK2KeOkF7VJLsUHt0ZzBWr4QCsr69Q+TbXiqBCSV2fRfIbh1sgeaZ0oBW/oigwAAAA=",
+          "attribution": {
+            "photographer": "Šime Barešić",
+            "source": "Wikimedia Commons",
+            "license": "CC0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Supercell_059.jpg"
+          },
+          "sortOrder": 0
+        },
+        {
+          "basePath": "/wallpapers/storms/supercell-bell-bottom-updraft",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.2384,
+          "luminanceVariance": 0.1767,
+          "dominantColors": [
+            "#333333",
+            "#000000",
+            "#666666",
+            "#999999",
+            "#cccccc"
+          ],
+          "suggestedScrimOpacity": 0.428,
+          "lqip": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAADwAwCdASoYABAAPu1iqU2ppaOiMAgBMB2JZwAAXrmMcf2eq+4zrcTAAN40CIhBjoPIxFVeXQ7DK9sRAij0Si8cnr5Ge/bruSFa/hn2k/IcxaZHT1M+RvE7NTHPPpNDgAA=",
+          "attribution": {
+            "photographer": "Rollingskyphoto",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Supercell_with_bell-bottom_updraft.jpg"
+          },
+          "sortOrder": 1
+        },
+        {
+          "basePath": "/wallpapers/storms/lightning-from-orbit",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.1119,
+          "luminanceVariance": 0.1129,
+          "dominantColors": [
+            "#000000",
+            "#333333",
+            "#666633",
+            "#336666",
+            "#666699"
+          ],
+          "suggestedScrimOpacity": 0.367,
+          "lqip": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAACwAwCdASoYABAAPu1iqk2ppaQiMAgBMB2JZwAAW9Lw1+0yhb4uAAD+9CASrlK7hGVUpgV1E2ToB80IvPq95S50f+sM7zlYfowlyFA6ou1oXvC1IMMUAA==",
+          "attribution": {
+            "photographer": "NASA Johnson Space Center / Kimiya Yui",
+            "source": "Wikimedia Commons",
+            "license": "Public domain",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bright_lightning_storms_illuminate_the_cloudy_landscape_of_western_Africa_(iss073e0816985).jpg"
+          },
+          "sortOrder": 2
+        },
+        {
+          "basePath": "/wallpapers/storms/mammatus-sunset",
+          "width": 1920,
+          "height": 1440,
+          "meanLuminance": 0.429,
+          "luminanceVariance": 0.0813,
+          "dominantColors": [
+            "#cc6633",
+            "#663333",
+            "#996600"
+          ],
+          "suggestedScrimOpacity": 0.47,
+          "lqip": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAAAQBQCdASoYABIAPu1mqk8ppaOiKA1RMB2JYgCsABGHT6j9RXl7nBUpVnrPfh/w34AAAP1B/kuoUip+cfZJWaWeMVevr731a0g9h5Hb9UTbh0NqsjMRt2ZllE5gy9chYW6OQc1r7yjAMzrNQEIcn5yEOT8/zP9lTkVp8QPwqDcBWQdgHAAAAA==",
+          "attribution": {
+            "photographer": "Cbaile19",
+            "source": "Wikimedia Commons",
+            "license": "CC0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mammatus_clouds,_Pittsburgh,_2022-06-16,_04.jpg"
+          },
+          "sortOrder": 3
+        },
+        {
+          "basePath": "/wallpapers/storms/shelf-cloud-new-jersey",
+          "width": 1920,
+          "height": 1281,
+          "meanLuminance": 0.3596,
+          "luminanceVariance": 0.1969,
+          "dominantColors": [
+            "#333333",
+            "#666699",
+            "#6699cc",
+            "#000000",
+            "#336666"
+          ],
+          "suggestedScrimOpacity": 0.475,
+          "lqip": "data:image/webp;base64,UklGRpgAAABXRUJQVlA4IIwAAAAQBACdASoYABAAPu1iqU2ppaQiMAgBMB2JQBOnKAAZliu+55Mz/2mCAADvX7tvoofpr12Uj+yHVlV47QvVhCoAivfvxCtkt13UeEkRPKNgnzueetxNwMoZJdNMzu8Zg448MNKU2DR8xLthBERj1dMXQqbvzngZ/AhGXc7LvQe3XCWhYhqsR6iO9YAAAA==",
+          "attribution": {
+            "photographer": "Anthony Quintano",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 2.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Shelf_Cloud_Over_Mount_Laurel_New_Jersey_August_11,_2021_(51372605582).jpg"
+          },
+          "sortOrder": 4
+        },
+        {
+          "basePath": "/wallpapers/storms/shelf-cloud-italy",
+          "width": 1920,
+          "height": 991,
+          "meanLuminance": 0.5803,
+          "luminanceVariance": 0.1761,
+          "dominantColors": [
+            "#cccccc",
+            "#999999",
+            "#666699",
+            "#336666",
+            "#333333"
+          ],
+          "suggestedScrimOpacity": 0.547,
+          "lqip": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAAAQBACdASoYAAwAPu1iqU2ppaOiMAgBMB2JQBOmUABWE1ofcjc9psvkAAD+s6YPCIpw8Yxfm8LnuBV8l4GiDxXVi9NmpxBrsjooTmvFi+Mmx4Wg/vQszLVKl8k7BMDnJkqNfew/7brRcPvwGgAAAA==",
+          "attribution": {
+            "photographer": "Marek Wikipedista",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Eastern_italy_storm_with_shelf_cloud,_9th_July_2019.jpg"
+          },
+          "sortOrder": 5
+        },
+        {
+          "basePath": "/wallpapers/storms/rainstorm-sawgrass-prairie",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.2487,
+          "luminanceVariance": 0.1946,
+          "dominantColors": [
+            "#333333",
+            "#000000",
+            "#666699",
+            "#9999cc",
+            "#cccccc"
+          ],
+          "suggestedScrimOpacity": 0.436,
+          "lqip": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAABwBACdASoYABAAPu1qrU8ppiQiMAgBMB2JYgC0+f/gPI6sH05w6IKE4LEIAAD+7Mu17FLWJe6Spyw44vcqoIGwDMlBu+CpBkj7Z/0AS/kv3xoOBaA2/GZn8HMBjqO8wkLeoTuaHHHMDQhQjzi/Pofpg5drnVyoaVO8cMAA",
+          "attribution": {
+            "photographer": "David Carrillo / NPS",
+            "source": "Wikimedia Commons",
+            "license": "Public domain",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Rainstorm_over_a_Sawgrass_Prairie_-_2020_Photo_Contest_(52687302392).jpg"
+          },
+          "sortOrder": 6
+        },
+        {
+          "basePath": "/wallpapers/storms/storm-over-south-dakota-wetland",
+          "width": 1920,
+          "height": 1440,
+          "meanLuminance": 0.5015,
+          "luminanceVariance": 0.2084,
+          "dominantColors": [
+            "#9999cc",
+            "#333300",
+            "#669999",
+            "#cccccc",
+            "#336633"
+          ],
+          "suggestedScrimOpacity": 0.528,
+          "lqip": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAABQBACdASoYABIAPu1qqk8ppiOpsBgIATAdiWMAABKKLWtDwJz9PT97AoQAAPyh4n32y4c6mfxDC9rmUm18Cv1Z19CxoP4eL352OlTPYnfbtMKNvonEQvS84wucceG4QmFrb5Yp8knlMyS04HkqTR9cmW0GZ4RTT9d2f9AA",
+          "attribution": {
+            "photographer": "Marcie Hebert / USFWS",
+            "source": "Wikimedia Commons",
+            "license": "Public domain",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Storms_over_Althen_WPA_Lake_Andes_Wetland_Management_District_South_Dakota_(52388583566).jpg"
+          },
+          "sortOrder": 7
         }
       ]
     }

@@ -10,7 +10,9 @@
  * generic families. A bundled, self-hosted webfont per collection is the
  * follow-up (docs/open-questions.md).
  *
- * Custom collections (any slug not listed) keep the theme's own fonts.
+ * Custom collections (any slug not listed) keep the theme's own fonts, except
+ * tag-fed anime collections, which ask for the "anime" pair by name because
+ * their slug is generated per user (see components/board/render-data.ts).
  */
 
 export type FontPair = { display: string; body: string };
@@ -32,6 +34,21 @@ const COLLECTION_FONTS: Record<string, FontPair> = {
   mountains: {
     display: '"Iowan Old Style", "Palatino Linotype", Palatino, Georgia, ui-serif, serif',
     body: '"Avenir Next", "Segoe UI", ui-sans-serif, system-ui, sans-serif',
+  },
+  // Quiet and cold-weather; a newspaper-masthead serif for the Northwoods.
+  northwoods: {
+    display: '"Iowan Old Style", "Hoefler Text", "Palatino Linotype", Georgia, ui-serif, serif',
+    body: '"Segoe UI", ui-sans-serif, system-ui, sans-serif',
+  },
+  // Tight grotesque signage - reads like a transit board after dark.
+  "cities-at-night": {
+    display: '"Helvetica Neue Condensed", "Arial Narrow", "Oswald", "Segoe UI", ui-sans-serif, sans-serif',
+    body: '"Inter", "Segoe UI", ui-sans-serif, system-ui, sans-serif',
+  },
+  // Broadcast-weather weight: heavy, plain, legible across a room.
+  storms: {
+    display: '"Franklin Gothic Medium", "Haettenschweiler", "Arial Black", "Segoe UI", ui-sans-serif, sans-serif',
+    body: '"Roboto Condensed", "Segoe UI", ui-sans-serif, system-ui, sans-serif',
   },
   // Soft geometric with generous counters — the poster-lettering look.
   anime: {

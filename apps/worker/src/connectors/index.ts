@@ -15,6 +15,7 @@ import { parseIcs } from "./ics.js";
 import { syncPhotoLink } from "./google-photos.js";
 import { syncCustomCollections } from "./custom-collections.js";
 import { syncFolderCollections } from "./folder-collections.js";
+import { syncTagCollections } from "./anime-booru.js";
 
 const log = createLogger("worker.connectors");
 const MEDIA_DIR = process.env.MEDIA_DIR ?? "/app/media";
@@ -141,6 +142,7 @@ export function runConnectorCycle(): Promise<void> {
       await syncPhotos();
       await syncCustomCollections(MEDIA_DIR);
       await syncFolderCollections(MEDIA_DIR);
+      await syncTagCollections(MEDIA_DIR);
     })()
       .catch((err: unknown) => log.error("connector cycle crashed", { error: err instanceof Error ? err.message : "unknown" }))
       .finally(() => {
