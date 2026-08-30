@@ -7,7 +7,7 @@ operator chose the existing LXC during deployment)
 ## Context
 
 Plan §8.7 specifies "unprivileged LXC, Debian 13, nesting enabled." The host is
-Proxmox VE ("the operator's own host"), which serves both this project and the operator's other project.
+Proxmox VE (the operator’s own host), which serves both this project and another of theirs.
 
 Docker inside an unprivileged LXC works, but it needs `nesting=1` and
 `keyctl=1`, and it stacks Docker's `overlay2` on top of the LXC's filesystem on
@@ -18,8 +18,8 @@ has lost storage before.
 
 ## Decision
 
-FreeFamilyDisplay runs in an **Ubuntu 24.04 LTS VM** on the operator's own host: 4 vCPU, 8 GB
-RAM, 40 GB disk, separate from the the operator's other project container.
+FreeFamilyDisplay runs in an **Ubuntu 24.04 LTS VM** on that host: 4 vCPU, 8 GB
+RAM, 40 GB disk, separate from that project’s container.
 
 Every container hardening rule in §8.7 still applies **inside** the VM:
 

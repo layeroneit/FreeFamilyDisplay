@@ -6,7 +6,7 @@
 
 ADR 0001 chose an Ubuntu VM over an LXC, mainly for storage-layering simplicity
 under Postgres and a cleaner restore story. During deployment, the guest that
-actually existed on the operator's own host ("FreeDisplay", 192.168.1.50) turned out to be an
+actually existed on that host ("FreeDisplay", 192.168.1.50) turned out to be an
 LXC. Asked directly, with the tradeoffs restated, the operator chose to proceed
 on the LXC rather than create the VM.
 
@@ -16,7 +16,7 @@ consequences in view. It is recorded here so the documentation matches reality
 
 ## Decision
 
-FreeFamilyDisplay runs in the existing **Ubuntu 24.04 LXC** on the operator's own host.
+FreeFamilyDisplay runs in the existing **Ubuntu 24.04 LXC** on that host.
 
 Preconditions before Docker is installed (operator actions, Proxmox web UI):
 

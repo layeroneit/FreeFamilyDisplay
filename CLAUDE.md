@@ -13,10 +13,10 @@ A self-hosted family dashboard. Private instance, ~10 accounts, ~15 wall display
 3. If a requirement is ambiguous, ask. A wrong assumption baked into the connector interface costs a week.
 4. **Next.js 16 differs from your training data.** APIs, conventions, and file structure may all have changed. Read the relevant guide in `node_modules/next/dist/docs/` before writing App Router code. Heed deprecation notices.
 
-## This is not the operator's other project
+## This is not the operator’s other project
 
-The operator also maintains the operator's other project, which shares this stack. That is the whole
-relationship. **Do not import the operator's other project code, copy its schema, or assume its
+The operator also maintains another project, which shares this stack. That is the whole
+relationship. **Do not import the operator’s other project code, copy its schema, or assume its
 patterns apply.** Tag is password-based, sells subscriptions, serves minors, and
 grants operators moderation visibility — all four are things this project
 deliberately does not do. See §4.5 of the plan.
@@ -63,7 +63,7 @@ Sending goes through AWS SES on a **shared account that also serves a production
 - Never log a magic-link URL or token, in full or in part. Log the user id and the fact that a link was sent.
 - Check `email_suppressions` before every send. Never retry a hard bounce.
 - Consume a login token on first use even if session creation subsequently fails.
-- Use the Hearth IAM principal and configuration set. Never the operator's other project's credentials or identity.
+- Use the Hearth IAM principal and configuration set. Never the other project's credentials or identity.
 - Do not add new email types without asking. Every additional message is a reason for someone to mute the domain.
 
 ## Theming and custom CSS

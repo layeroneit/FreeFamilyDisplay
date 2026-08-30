@@ -50,7 +50,7 @@ are cut off" reports, and it is a display setting, not a renderer bug.
 
 ## Host state
 
-**Does the Ubuntu VM exist on the operator's own host yet, and what storage backs it?** Per
+**Does the Ubuntu VM exist on that host yet, and what storage backs it?** Per
 CLAUDE.md, no Proxmox storage command is ever run from here — this is an operator
 task, and the answer only needs reporting back.
 
@@ -60,7 +60,7 @@ task, and the answer only needs reporting back.
 The v2 plan contradicted itself: §4.1 named Auth.js's credentials provider while
 §8.1 described a hand-rolled token table. Resolved by dropping Auth.js entirely —
 v3 §4.1 specifies hand-rolled passwordless auth with a signed session cookie,
-following the operator's other project's session mechanism but none of its credential model.
+following the other project's session mechanism but none of its credential model.
 
 **~~`webcal://` cannot be fetched directly.~~** *(2026-08-29)* It is an http(s)
 URL with a different scheme label. Rewrite to `https` before fetching — never

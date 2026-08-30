@@ -99,7 +99,7 @@ only reset path.
 - **Charter §2 "Not for: the public…"** splits. It stays true of one
   *instance* — ten accounts is the size of the thing. It is false of the
   *project*, which is now published for anyone to run.
-- **Charter §5's "shared AWS SES account" and the the operator's other project relationship** are
+- **Charter §5's "shared AWS SES account" and the the operator’s other project relationship** are
   operator-private facts. They stay in the internal docs and never appear in
   anything a stranger reads.
 - **Plan §8.4 "TLS via Cloudflare"** is no longer the default. The shipped

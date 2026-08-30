@@ -1,6 +1,6 @@
-# Runbook — Creating the FreeFamilyDisplay VM on the operator's own host
+# Runbook — Creating the FreeFamilyDisplay VM on that host
 
-**Status:** Active · **Applies to:** Proxmox VE host "the operator's own host" · **Guest:** Ubuntu Server 24.04 LTS
+**Status:** Active · **Applies to:** Proxmox VE host the operator’s own host · **Guest:** Ubuntu Server 24.04 LTS
 **Decision record:** `adr/0001-vm-over-lxc.md` (VM, not LXC — read it if the sizing looks arbitrary)
 
 This is a follow-along for standing the VM up by hand, at the console. Every VM
@@ -20,12 +20,12 @@ audit. That audit is done and the stack has been running since 2026-08-29 —
 
 ## 1. Create the VM (Proxmox web UI)
 
-1. In the web UI, select **the operator's own host → local (or your ISO storage) → ISO Images →
+1. In the web UI, select **the operator’s own host → local (or your ISO storage) → ISO Images →
    Download from URL** and fetch the current `ubuntu-24.04.x-live-server-amd64.iso`
    from `https://releases.ubuntu.com/24.04/`. Verify the checksum shown matches
    the one on the release page.
 2. Click **Create VM** (top right). Work through the tabs in order.
-3. **General:** Node `the operator's own host`, next free VM ID, Name `freefamilydisplay`.
+3. **General:** Node `the operator’s own host`, next free VM ID, Name `freefamilydisplay`.
    Tick **Start at boot** — a wall-display backend that stays down after a power
    blip fails the "operator doesn't think about it" test.
 4. **OS:** select the Ubuntu 24.04 ISO. Type **Linux**, version **6.x - 2.6 Kernel**.

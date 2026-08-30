@@ -1,14 +1,14 @@
 # FreeFamilyDisplay — Self-Hosted Family Dashboard
 
 **Project plan and build specification — v3**
-Host: Proxmox VE ("the operator's own host"), Ubuntu 24.04 LTS VM
+Host: Proxmox VE (the operator’s own host), Ubuntu 24.04 LTS VM
 Scale: ~10 accounts, ~15 displays, family and friends only
 
 > ⚠️ **Read `docs/adr/0004-freeware-self-hosted-per-family.md` before trusting
 > this document's hosting model.** Everything below assumes ONE operator
 > hosting ONE instance for family members he invites. That is no longer the
 > distribution model: this is freeware, one self-hosted instance per household,
-> and the operator's own host is simply the operator's own copy. The ADR lists what it
+> and that host is simply the operator's own copy. The ADR lists what it
 > invalidates; the load-bearing items are:
 >
 > - **§3.2 "No public registration"** gains one narrow, permanent exception —
@@ -39,7 +39,7 @@ Scale: ~10 accounts, ~15 displays, family and friends only
 > 1. **Runs in an Ubuntu 24.04 LTS VM, not an unprivileged LXC** (§8.7). See
 >    `docs/adr/0001-vm-over-lxc.md`. All container hardening still applies inside
 >    the VM.
-> 2. **The stack follows the operator's other project's** (§4.1) — Next 16, Prisma 7, Tailwind v4,
+> 2. **The stack follows that project's** (§4.1) — Next 16, Prisma 7, Tailwind v4,
 >    hand-rolled sessions. Rationale in §4.1. Drizzle and Auth.js are out.
 > 3. **This stays a standalone app; it does not merge into Tag** (§4.5). Family
 >    sharing is achieved by consuming Tag's existing ICS share links as an
@@ -126,7 +126,7 @@ Two surfaces, and the split is the whole design:
 | Exposure | Cloudflare Tunnel |
 
 **Why this stack and not the v2 one.** The operator of this project also
-maintains the operator's other project, which runs Next 16, Prisma 7, and Tailwind v4 with hand-rolled
+maintains another project, which runs Next 16, Prisma 7, and Tailwind v4 with hand-rolled
 signed-cookie sessions. Running a family side project on a second ORM (Drizzle)
 and a second auth library (Auth.js) doubles the maintenance context for no
 benefit. Sharing the stack means one set of habits, one migration workflow, and
@@ -170,7 +170,7 @@ redis          queue + cache
 /docs                  ADRs, runbook, restore procedure
 ```
 
-**npm workspaces, not pnpm.** the operator's other project uses npm, and npm is what is installed on
+**npm workspaces, not pnpm.** that project uses npm, and npm is what is installed on
 the operator's machine. A second package manager for a side project is friction
 without payoff.
 
@@ -190,15 +190,15 @@ interface Connector<TConfig, TPayload> {
 }
 ```
 
-`zod` is a new dependency relative to the operator's other project, which does not use it. It is
+`zod` is a new dependency relative to that project, which does not use it. It is
 justified by the style rule requiring schemas at every trust boundary, and by
 this interface — connector config is user-supplied and must be validated before
 it reaches a fetch.
 
-### 4.5 Relationship to the operator's other project
+### 4.5 Relationship to the operator’s other project
 
-**FreeFamilyDisplay is a standalone application. It does not merge into the operator's other project,
-and the operator's other project code is not imported here.** The two share an operator, a host, and a
+**FreeFamilyDisplay is a standalone application. It does not merge into that project,
+and its code is not imported here.** The two share an operator, a host, and a
 stack — nothing else.
 
 Family sharing between the two works through data, not code. Tag already emits
@@ -255,7 +255,7 @@ Any `webcal://` or `https://` ICS URL. Covers iCloud published calendars, Google
 
 The user pastes one URL into one text box. That is the entire flow. Build this first — it is also the cheapest way to test the calendar widget.
 
-**This is also the the operator's other project integration path (§4.5).** A Tag calendar share link is
+**This is also that project’s integration path (§4.5).** A calendar share link from that project is
 an ICS URL behind a revocable bearer token. It arrives through this connector
 with no special handling, which is the point — a family member's Tag calendar
 lands on the kitchen wall without either codebase knowing about the other.
@@ -413,19 +413,19 @@ the record; `cached_images.attribution_json` is populated from it at seed time.
 
 ### 6.7 Email — AWS SES (reused account)
 
-The SES account already serving the operator's other project is reused. **Reused account, not reused configuration.** Three separations are required:
+The SES account already already in use elsewhere is reused. **Reused account, not reused configuration.** Three separations are required:
 
-**Separate verified identity.** Register a distinct sending domain or subdomain for Hearth with its own DKIM keys and its own SPF alignment. Family should not receive calendar mail from a the operator's other project address, and a domain reputation problem on one project should not follow the other.
+**Separate verified identity.** Register a distinct sending domain or subdomain for Hearth with its own DKIM keys and its own SPF alignment. Family should not receive calendar mail from a the operator’s other project address, and a domain reputation problem on one project should not follow the other.
 
-**Separate IAM principal.** Create a dedicated IAM user or role for Hearth scoped to `ses:SendEmail` and `ses:SendRawEmail` only, with a condition restricting the `From` address to the Hearth identity. Do not reuse the operator's other project's credentials. If Hearth is compromised, it must not be able to send as the operator's other project.
+**Separate IAM principal.** Create a dedicated IAM user or role for Hearth scoped to `ses:SendEmail` and `ses:SendRawEmail` only, with a condition restricting the `From` address to the Hearth identity. Do not reuse the other project's credentials. If Hearth is compromised, it must not be able to send as the operator’s other project.
 
 **Separate configuration set.** Give Hearth its own SES configuration set with an SNS event destination for bounces, complaints, and deliveries. This is what lets you attribute a reputation problem to the right project.
 
-**Bounce and complaint handling is mandatory, not optional.** SES enforces reputation at the *account* level. Bounces from Hearth count against the account the operator's other project depends on. AWS reviews accounts around 5% bounce and 0.1% complaint rates. A dozen hand-typed family addresses is low volume but high typo risk — one wrong address retried on a schedule is enough to matter.
+**Bounce and complaint handling is mandatory, not optional.** SES enforces reputation at the *account* level. Bounces from Hearth count against the account the operator’s other project depends on. AWS reviews accounts around 5% bounce and 0.1% complaint rates. A dozen hand-typed family addresses is low volume but high typo risk — one wrong address retried on a schedule is enough to matter.
 
 Required: subscribe to the SNS topic, write bounced and complained addresses to `email_suppressions`, and check that table before every send. Never retry a hard bounce.
 
-**Verify sandbox status before Phase 1.** If the account still has SES sandbox access, it can only send to verified addresses, which makes the invite flow useless for anyone new. the operator's other project being live suggests production access was already granted, but confirm rather than assume — this blocks the entire auth flow.
+**Verify sandbox status before Phase 1.** If the account still has SES sandbox access, it can only send to verified addresses, which makes the invite flow useless for anyone new. the operator’s other project being live suggests production access was already granted, but confirm rather than assume — this blocks the entire auth flow.
 
 **Notifications.** Now that email exists, use it sparingly:
 
@@ -671,7 +671,7 @@ Ship a test that serializes every API response and fails if a known secret fixtu
 
 ### 8.3 SSRF defense — critical
 
-The worker fetches arbitrary user-supplied URLs. Without controls it will happily fetch `http://169.254.169.254/`, `http://10.0.0.1/`, or anything else reachable from the operator's own host.
+The worker fetches arbitrary user-supplied URLs. Without controls it will happily fetch `http://169.254.169.254/`, `http://10.0.0.1/`, or anything else reachable from that host.
 
 Required:
 
@@ -708,7 +708,7 @@ Unprivileged LXC, Debian 13, nesting enabled. Non-root UID in every container. `
 
 ## 9. Deployment
 
-**Container:** 4 vCPU, 8 GB RAM, 40 GB disk. Separate from the the operator's other project container.
+**Container:** 4 vCPU, 8 GB RAM, 40 GB disk. Separate from the the operator’s other project container.
 
 **Backup:**
 - Nightly `pg_dump --format=custom`, compressed, age-encrypted, to the Synology mount

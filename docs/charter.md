@@ -1,6 +1,6 @@
 # FreeFamilyDisplay — Project Charter
 
-**Status:** Active · **Owner:** operator of the operator's own host · **Started:** 2026-08-29
+**Status:** Active · **Owner:** the operator · **Started:** 2026-08-29
 
 This document says why the project exists and who it is for. The build
 specification is `project-plan.md`; the two are meant to be read together, and
@@ -120,9 +120,9 @@ and it constrains the admin tooling permanently.
 **No native mobile apps.** The admin UI is a responsive PWA. Native apps mean app
 store review, signing certificates, and release cycles for a ten-person tool.
 
-## 5. Relationship to the operator's other project
+## 5. Relationship to the operator’s other project
 
-The operator also maintains **the operator's other project**. The two share a technology stack, a
+The operator also maintains **another project**. The two share a technology stack, a
 Proxmox host, and an AWS SES account. They share no code.
 
 This was decided deliberately after reviewing Tag (see plan §4.5). Tag is
@@ -165,7 +165,7 @@ dependencies require justification, and why "boring and well-maintained" beats
 | Date | Decision | Where |
 |---|---|---|
 | 2026-08-29 | Ubuntu 24.04 VM instead of unprivileged LXC | `adr/0001-vm-over-lxc.md` |
-| 2026-08-29 | Standalone app; does not merge into the operator's other project | plan §4.5 |
+| 2026-08-29 | Standalone app; does not merge into that project | plan §4.5 |
 | 2026-08-29 | Adopt Tag's stack — Next 16, Prisma 7, Tailwind v4, hand-rolled sessions | plan §4.1 |
 | 2026-08-29 | Keep Redis + BullMQ despite Tag not having a queue | plan §4.1 |
 | 2026-08-29 | npm workspaces rather than pnpm | plan §4.3 |
