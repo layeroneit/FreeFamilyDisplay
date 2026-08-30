@@ -74,3 +74,13 @@ export function createRateLimiter(maxAttempts: number, windowMs: number): RateLi
 /** 10 attempts per 15 minutes per IP; 5 per 15 minutes per target account. */
 export const loginIpLimiter = createRateLimiter(10, 15 * 60 * 1000);
 export const loginAccountLimiter = createRateLimiter(5, 15 * 60 * 1000);
+
+/**
+ * First-run claim (ADR 0004). The endpoint is live only on an instance with no
+ * accounts, and the first success closes it for good — so this is not an
+ * account-abuse control, it is a CPU control: every submission that gets past
+ * validation costs a bcrypt-cost-12 hash, and the family box is a mini-PC. It
+ * gets its own budget rather than sharing the login one, so a fumbled setup
+ * cannot rate-limit the operator out of the login form afterwards.
+ */
+export const claimIpLimiter = createRateLimiter(10, 15 * 60 * 1000);

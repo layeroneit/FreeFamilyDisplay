@@ -7,6 +7,31 @@ specification is `project-plan.md`; the two are meant to be read together, and
 when a technical decision in the plan seems arbitrary, the reason is usually
 here.
 
+> ⚠️ **Amended by `docs/adr/0004-freeware-self-hosted-per-family.md`
+> (2026-08-30).** This software is now freeware: the repository is public and
+> every household runs its own instance on its own hardware. Nobody hosts
+> anything for anybody else. Four passages below move:
+>
+> - **§2 "Not for: the public, customers, or anyone who arrives without an
+>   invite"** splits. Still true of one *instance* — ten accounts is the size of
+>   the thing. False of the *project*, which anyone may now run.
+> - **§2's acceptance test** ("your sister gets an invite email; she clicks
+>   it") is no longer the first acceptance test. A prior one comes before it:
+>   a stranger clones the repo, brings the stack up, opens the URL, and creates
+>   account #1 in a browser — no terminal, no email.
+> - **§4 "No public signup"** keeps one narrow, permanent exception: the
+>   first-run wizard, reachable only while the database holds zero users.
+> - **§5's shared Proxmox host and AWS SES account, and §6's "email is the only
+>   way in"** are operator-private facts about one deployment. They stay in the
+>   internal docs and appear in nothing a stranger reads.
+>
+> **§4's other non-goals are untouched and stronger under freeware.** No
+> billing — there is nothing to sell. No telemetry, analytics, or crash
+> reporting — that would now mean phoning the author's home from a stranger's
+> house. No operator access to user data — the operator is a family member on
+> their own hardware. §1's argument (own it rather than rent it) is the reason
+> for the change, not a casualty of it.
+
 ---
 
 ## 1. Why this exists

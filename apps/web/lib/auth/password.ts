@@ -41,7 +41,14 @@ export async function verifyPassword(
  * Minimal operator password policy: length only. Composition rules are
  * user-hostile theater; 12+ characters against a bcrypt-cost-12 hash with
  * rate limiting is the honest control.
+ *
+ * Exported as constants because the first-run form (ADR 0004) has to tell a
+ * stranger the number before they type, and a UI that says "8" while the
+ * server wants 12 is a bug report waiting to happen.
  */
+export const PASSWORD_MIN_LENGTH = 12;
+export const PASSWORD_MAX_LENGTH = 128;
+
 export function passwordMeetsPolicy(plain: string): boolean {
-  return plain.length >= 12 && plain.length <= 128;
+  return plain.length >= PASSWORD_MIN_LENGTH && plain.length <= PASSWORD_MAX_LENGTH;
 }

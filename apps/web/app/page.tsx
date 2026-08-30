@@ -1,4 +1,15 @@
-export default function Home() {
+import { redirect } from "next/navigation";
+import { instanceClaimed } from "@/lib/auth/bootstrap";
+
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  // The first visit to a fresh install lands here, on whatever address the
+  // family typed into the browser. Sending them straight to the one-time
+  // bootstrap form (ADR 0004) is the difference between "it works" and "now
+  // what?" — this page has nothing to offer an instance with no accounts.
+  if (!(await instanceClaimed())) redirect("/welcome");
+
   return (
     <main className="mx-auto flex min-h-dvh max-w-2xl flex-col justify-center gap-6 px-6">
       <div>
@@ -20,8 +31,9 @@ export default function Home() {
         }}
       >
         <p className="text-sm" style={{ color: "var(--hearth-text-muted)" }}>
-          A private dashboard for one family&apos;s wall displays. Accounts are
-          invite-only.
+          A private dashboard for one family&apos;s wall displays, running on
+          this household&apos;s own machine. Accounts are made by the person who
+          set it up.
         </p>
         <a
           href="/login"

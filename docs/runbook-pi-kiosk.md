@@ -15,10 +15,25 @@ Three machines appear below. Every fenced block is labeled with where it runs:
 
 Two honest limitations up front, so nothing below surprises you:
 
-1. **There is no device pairing today.** No 6-digit code, no device token —
-   that is a later phase (the board view is "session-gated until Phase 4 adds
-   device tokens", per the code). The Pi's browser signs in once with the
-   operator password and keeps a **90-day rolling session cookie**. Because the
+1. ~~**There is no device pairing today.**~~ **Outdated — use a display link.**
+   A board can now mint its own bearer URL: open the board in the editor, use
+   the **Wall screen link** panel, and point the Pi at the
+   `https://<host>:8443/d/<token>` URL it hands you (shown once). That page
+   needs no session at all, carries no admin UI, and refreshes itself every
+   5 minutes.
+
+   **Wherever a step below says to sign the Pi into the admin session and open
+   `/boards/<id>/view`, use the `/d/<token>` URL instead.** Doing so skips §4.2
+   entirely and removes the whole "the kiosk is showing the login page" class
+   of failure in §7.
+
+   Still true: the token belongs to the **board, not the screen**. Several
+   screens showing one board share one link, and replacing it stops all of
+   them. A 6-digit pairing code and per-device revocation are still a later
+   phase.
+
+   Original text, for reference: the Pi's browser signs in once with the
+   operator password and keeps a **90-day rolling session cookie**; because the
    board page refreshes itself every 5 minutes and the session window slides
    forward on use, a display that stays powered effectively never logs out.
 2. **Everything is LAN-only.** No internet exposure, no Cloudflare tunnel yet.

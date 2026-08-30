@@ -1,7 +1,18 @@
 /**
- * Operator bootstrap (ADR 0003). Creates the OPERATOR account or rotates its
- * password — the only way the first login can exist, since signup is
- * invite-only and invites require an operator.
+ * Operator account recovery (ADR 0003). Creates an OPERATOR account or rotates
+ * its password.
+ *
+ * This used to be the ONLY way the first login could exist — signup was
+ * invite-only and invites required an operator, so the chain had no root. ADR
+ * 0004 replaced that with a first-run web form at `/welcome`, live only while
+ * the database holds zero users, because a household standing up its own copy
+ * of this software is not going to run a docker exec command.
+ *
+ * So this is no longer the bootstrap path. What it is now is the answer to a
+ * FORGOTTEN PASSWORD, which ADR 0003 deliberately left with no email-based
+ * reset — and the escape hatch if the first-run form is ever unreachable.
+ * The hashing (bcrypt cost 12) and length policy (12-128) match
+ * `apps/web/lib/auth/password.ts` on purpose: two entrances, one account.
  *
  * Runs inside the worker container:
  *

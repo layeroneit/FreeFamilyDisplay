@@ -4,6 +4,35 @@
 Host: Proxmox VE ("the operator's own host"), Ubuntu 24.04 LTS VM
 Scale: ~10 accounts, ~15 displays, family and friends only
 
+> ⚠️ **Read `docs/adr/0004-freeware-self-hosted-per-family.md` before trusting
+> this document's hosting model.** Everything below assumes ONE operator
+> hosting ONE instance for family members he invites. That is no longer the
+> distribution model: this is freeware, one self-hosted instance per household,
+> and the operator's own host is simply the operator's own copy. The ADR lists what it
+> invalidates; the load-bearing items are:
+>
+> - **§3.2 "No public registration"** gains one narrow, permanent exception —
+>   a first-run web wizard at `/welcome`, reachable only while the database
+>   holds zero users, that creates the account owning the instance.
+> - **§6.7 (Email — AWS SES), §3.1's "the one exception is the existing AWS SES
+>   account", and §10 Phase 1's SES done-criteria are void.** Email is optional
+>   and off by default; a stranger has no AWS account and must never need one.
+>   "This blocks the entire auth flow" no longer holds — ADR 0003 gave
+>   operators a local password, ADR 0004 gave them a local way to create it.
+> - **§8.1's break-glass CLI** loses its rationale: no cloud dependency is left
+>   to break glass around. `create-operator.ts` survives as password recovery.
+> - **§8.4 "TLS via Cloudflare"** is not the default. Caddy's internal CA on
+>   the LAN is; the tunnel is opt-in (`--profile tunnel`).
+> - **§1's "your sister gets an invite email"** describes a flow that does not
+>   exist — invites are a schema model with no route and no UI. Today the first
+>   account is the only account; see the ADR's "Still open".
+> - Sizing, host, and storage guidance (§9) is now **one example deployment**,
+>   not the deployment. A stranger has no Proxmox and no Synology.
+> - **The permanent non-goals in §2 are unaffected, and stronger.** No
+>   telemetry, no analytics, no crash reporting, no operator access to another
+>   user's data. Under self-hosting, telemetry would mean phoning the author's
+>   home from a stranger's house.
+
 > **v3 changes (2026-08-29).** Three decisions were taken after review of the Tag
 > App codebase, and they supersede the v2 text wherever the two disagree:
 >

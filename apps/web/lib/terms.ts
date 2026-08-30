@@ -4,13 +4,13 @@
  * text re-prompts. Plain language on purpose — this is read by family.
  */
 
-export const TERMS_VERSION = "2026-08-30";
+export const TERMS_VERSION = "2026-08-30.3";
 
 export const TERMS_SECTIONS: Array<{ heading: string; body: string }> = [
   {
     heading: "What this is",
     body:
-      "Free Family Display is a private, self-hosted family dashboard run by the person who invited you. It is free, and it always will be. There is no company behind it, no subscription, and no support desk.",
+      "Free Family Display is free software, developed by Layer One IT Consultants and given away. One household downloads it and runs it on its own machine; this copy belongs to whoever set it up. Layer One IT Consultants does not host it, does not operate it, and has no access to it or to anything in it. There is no hosted version, no subscription, no support desk, and no account anywhere but this box. It is free, and it always will be.",
   },
   {
     heading: "Use at your own risk",
@@ -20,17 +20,22 @@ export const TERMS_SECTIONS: Array<{ heading: string; body: string }> = [
   {
     heading: "No warranty",
     body:
-      "The software is provided \"as is\" and \"as available\", without warranty of any kind — express or implied — including any warranty of merchantability, fitness for a particular purpose, accuracy, or non-infringement. Nobody involved in making or running it is liable for any loss, damage, or expense that arises from using it or being unable to use it.",
+      "The software is provided \"as is\" and \"as available\", without warranty of any kind — express or implied — including any warranty of merchantability, fitness for a particular purpose, accuracy, or non-infringement. To the fullest extent the law allows, neither Layer One IT Consultants nor anyone else involved in making, distributing, or running this software is liable for any loss, damage, or expense arising from using it or being unable to use it. Because you run your own copy, keeping it patched, backed up, and reachable is yours to do.",
   },
   {
     heading: "Your data",
     body:
-      "Calendar links, photo links, and anything you type are stored on the operator's own machine, encrypted where they are credentials. Nothing is sold, shared, or sent to third parties for analytics. The operator can create, disable, and delete accounts but cannot read your calendar contents. Third-party services you connect (a calendar provider, a photo album) have their own terms.",
+      "Calendar links, photo links, and anything you type stay on this household's own machine, encrypted where they are credentials. There is no analytics, no telemetry, and no reporting home — nothing is sold or shared, and no data reaches the people who wrote this software, because it never leaves the box. The only outbound requests are to the calendar, photo, and weather sources somebody here chose to connect, and those services have their own terms. Whoever runs this copy can create, disable, and delete accounts but cannot read your calendar contents.",
   },
   {
     heading: "Good neighbours",
     body:
       "Don't paste links that aren't yours to share, don't upload images you don't have the right to use, and don't use a display to show anything unlawful. The operator may disable an account that does.",
+  },
+  {
+    heading: "Copyright",
+    body:
+      "Free Family Display © 2026 Layer One IT Consultants. The Layer One name and mark belong to Layer One IT Consultants and are not covered by the software licence. Photographs shipped with the app stay under their own licences and are credited on screen; anything you add stays yours.",
   },
   {
     heading: "Changes",

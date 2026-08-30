@@ -8,19 +8,22 @@ mid-phase. Resolve, then strike through with the answer and the date.
 **~~SES sandbox status.~~** *(Resolved 2026-08-29)* Operator confirmed the
 account has production access. The invite/magic-link flow is unblocked.
 
-**SES credential separation — decision pending.** The operator's first
-instinct was to reuse the operator's other project's existing SES credentials. Plan §6.7 and
-CLAUDE.md forbid exactly that ("Never the operator's other project's credentials or identity") for
-blast-radius and reputation-attribution reasons; the recommendation on the
-table is ~15 minutes of console work in the *same* AWS account: a verified
-subdomain identity with its own DKIM, one IAM user scoped to
-`ses:SendEmail`/`ses:SendRawEmail` condition-locked to that `From`, and one
-configuration set with an SNS topic feeding `email_suppressions`. Awaiting the
-operator's final call — if they reaffirm credential reuse, amend §6.7 to match
-rather than leaving plan and reality disagreeing.
+**~~SES credential separation — decision pending.~~** *(Moot 2026-08-30 —
+ADR 0004.)* This is freeware that each household self-hosts, so it cannot
+require an AWS account a stranger does not have. There is no email code in the
+codebase and none is required; `SES_*` stays empty permanently, and if optional
+email is ever built it is opt-in per instance. The separation question only
+mattered while one shared sending identity was going to exist. None does.
 
-**Hearth sending identity.** A distinct subdomain with its own DKIM keys and
-SPF alignment. Not yet chosen. (Part of the decision above.)
+**~~Hearth sending identity.~~** *(Moot 2026-08-30 — same reason.)* Nothing
+sends, so nothing needs an identity.
+
+> With those struck, **nothing under "Blocks Phase 1" is outstanding**, and
+> email is off the critical path for any account to exist: ADR 0003 gave
+> operators a local password, ADR 0004 gave them a local way to create it.
+> What ADR 0004 *opened* instead: there is no in-app way to add a SECOND
+> person. Invites are a schema model with no route and no UI. That work needs
+> no email either.
 
 ## Blocks Phase 6 — needed before exposure
 

@@ -62,6 +62,17 @@ jobs:
           DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
         run: npm run db:deploy
 
+      - name: First-run bootstrap test (real Postgres, empty user table)
+        # ADR 0004: the /welcome door must close after the first account, and
+        # must close exactly once under two simultaneous submissions. The test
+        # needs a database with ZERO users, which is only true right after
+        # migrations — so it runs HERE, before the tenancy test creates any. It
+        # skips rather than failing when the table is non-empty, so it can
+        # never delete somebody's accounts to make room for itself.
+        env:
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+        run: npm run test:bootstrap
+
       - name: Cross-tenant isolation test (real Postgres)
         # CLAUDE.md: the tenancy test is not optional. It runs against the
         # migrated service database, never against anything shared.

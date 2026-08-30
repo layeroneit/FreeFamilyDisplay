@@ -60,6 +60,8 @@ const ACTION_LABELS: Record<string, string> = {
   "auth.login.password.failed": "Failed sign-in",
   "auth.login.disabled": "Sign-in on disabled account",
   "auth.logout": "Signed out",
+  "instance.claimed": "Instance claimed — first account created",
+  "terms.accepted": "Agreement accepted",
   "operator.bootstrap.created": "Operator account created",
   "operator.bootstrap.rotated": "Operator password rotated",
   "operator.bootstrap.reenabled": "Operator account re-enabled",

@@ -7,8 +7,14 @@ This is a follow-along for standing the VM up by hand, at the console. Every VM
 operation happens in the **Proxmox web UI** — no storage commands on the host,
 per CLAUDE.md. Steps are numbered so a follow-up question can point at one.
 
-There is a deliberate **STOP** marker in §8. Everything before it is safe to do
-tonight; nothing after it runs until the code audit gives a green light.
+> **This runbook is Proxmox-specific and describes the operator's own box.**
+> If you are a household standing up your own copy, start with `README.md`
+> instead — it is machine-agnostic and does not assume Proxmox, a VM, or this
+> repository being private. Read this one for the per-step detail behind it.
+
+The §8 **STOP** marker was a one-time gate for the first deployment's code
+audit. That audit is done and the stack has been running since 2026-08-29 —
+§8 is kept as a record and no longer blocks anything.
 
 ---
 
@@ -112,16 +118,17 @@ tonight; nothing after it runs until the code audit gives a green light.
 28. Verify: `docker run --rm hello-world` prints its greeting, and
     `docker compose version` reports v2.x.
 
-## 6. GitHub auth and clone (private repo)
+## 6. Clone
 
-29. `sudo apt install -y gh` — the GitHub CLI is in Ubuntu 24.04's repos.
-30. `gh auth login` → **GitHub.com** → **HTTPS** → authenticate git with your
-    GitHub credentials: **Yes** → **Login with a web browser**. Copy the
-    one-time code, open the shown URL on your phone or workstation, paste the
-    code. This gets a scoped token onto the VM without any key files to manage.
+The repository is **public** (ADR 0004), so there is no authentication step —
+no `gh auth login`, no token on the box, no key files to manage.
+
+29. *(Was: install the GitHub CLI.)* No longer needed. Step numbers are kept so
+    older notes that point at a number still land in the right place.
+30. *(Was: `gh auth login`.)* No longer needed — a public repo clones anonymously.
 31. Clone and enter:
     ```
-    gh repo clone layeroneit/FreeFamilyDisplay
+    git clone https://github.com/layeroneit/FreeFamilyDisplay.git
     cd FreeFamilyDisplay
     ```
 32. Note: the default branch is **`master`**, not `main`. `git branch
@@ -145,18 +152,19 @@ tonight; nothing after it runs until the code audit gives a green light.
     | `REDIS_URL` | `redis://redis:6379` — again the compose service name |
     | `MASTER_KEY` | output of `openssl rand -base64 32` |
     | `SESSION_SECRET` | output of `openssl rand -base64 32` — a different one |
-    | `AWS_REGION`, `SES_*` | leave empty — email is Phase 1, not Phase 0 |
+    | `AWS_REGION`, `SES_*` | leave empty — **permanently**. There is no email in this software (ADR 0004); nothing reads these and nothing breaks. |
     | `PEXELS_API_KEY`, `GOOGLE_API_KEY` | leave empty — optional, later phases |
     | `CLOUDFLARE_TUNNEL_TOKEN` | leave empty — cloudflared only runs under `--profile tunnel`, so the default stack is deliberately LAN-only. No internet exposure until that is a decision, not an accident. |
 
-## 8. ⛔ STOP HERE
+## 8. ~~⛔ STOP HERE~~ — cleared 2026-08-30
 
-35. **Do not run `docker compose up` yet.** A code audit is in progress; wait
-    for the green light before first start. Everything above — VM, patches,
-    SSH, Docker, clone, `.env` — is safe to have done in the meantime, and
-    nothing below is lost by waiting.
+35. ~~**Do not run `docker compose up` yet.** A code audit is in progress; wait
+    for the green light before first start.~~ **Cleared.** The audit that gate
+    was waiting on is finished and the stack has been running since
+    2026-08-29. Kept as a record of why the numbering skips a beat; carry
+    straight on to §9.
 
-## 9. First start and verification (after the green light)
+## 9. First start and verification
 
 36. From the repo root:
     `docker compose -f infra/compose.yaml --env-file .env up -d --build`
@@ -164,9 +172,23 @@ tonight; nothing after it runs until the code audit gives a green light.
 37. `docker compose -f infra/compose.yaml --env-file .env ps` — wait until
     `postgres`, `redis`, `web`, and `worker` all show **healthy** (there is no
     `cloudflared`; that's the tunnel profile, intentionally not running).
-38. On the VM: `curl -i http://localhost:8443/healthz` and
-    `curl -i http://localhost:8443/readyz` — both should return 200.
-39. From a phone or laptop on the LAN, browse `http://<vm-ip>:8443`.
+38. On the VM: `curl -ik https://<SITE_HOST>:8443/healthz` and
+    `curl -ik https://<SITE_HOST>:8443/readyz` — both should return 200. Use
+    the real `SITE_HOST` value, not `localhost`: Caddy selects its site block
+    by the Host header, so `localhost` reaches the server but matches no site
+    and 404s. `-k` only because the VM does not trust its own CA yet — the
+    kiosk runbook §2 fixes that properly.
+39. From a phone or laptop on the LAN, browse `https://<SITE_HOST>:8443` and
+    accept the one-time certificate warning.
+40. **Create the first account in the browser.** With no accounts in the
+    database, `/` redirects to a one-time `/welcome` form — name, email,
+    password — that creates the operator account and signs you in (ADR 0004).
+    The email is only a username; nothing is sent to it. Once that account
+    exists the route 404s and never comes back.
+
+    There is no terminal step here any more. `create-operator.js` still exists
+    but is now only for **resetting a forgotten password** — see ADR 0003 and
+    the command in its docstring.
 
 **Troubleshooting**
 
