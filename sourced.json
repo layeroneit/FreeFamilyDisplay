@@ -1,0 +1,66 @@
+{
+ "car2": [
+  {
+   "title": "File:2009 Chevrolet Camaro SS.jpg",
+   "w": 11754,
+   "h": 9014,
+   "license": "CC BY-SA 4.0",
+   "artist": "Calreyn88",
+   "term": "Chevrolet Camaro",
+   "file": ".photo-review/car2-02-2009-chevrolet-camaro-ss.jpg",
+   "slug": "2009-chevrolet-camaro-ss"
+  },
+  {
+   "title": "File:2019 Chevrolet Camaro base, front 11.9.19.jpg",
+   "w": 4631,
+   "h": 2256,
+   "license": "CC BY-SA 4.0",
+   "artist": "Kevauto",
+   "term": "Chevrolet Camaro",
+   "file": ".photo-review/car2-05-2019-chevrolet-camaro-base-f.jpg",
+   "slug": "2019-chevrolet-camaro-base-front-11-9-19"
+  },
+  {
+   "title": "File:CHEVROLET CAMARO SIXTH GENERATION China.jpg",
+   "w": 6416,
+   "h": 4095,
+   "license": "CC BY-SA 4.0",
+   "artist": "Dinkun Chen",
+   "term": "Chevrolet Camaro",
+   "file": ".photo-review/car2-06-chevrolet-camaro-sixth-gener.jpg",
+   "slug": "chevrolet-camaro-sixth-generation-china"
+  },
+  {
+   "title": "File:Chevrolet Camaro 1971 LT Kulmbach -20220626-RM-112703.jpg",
+   "w": 4761,
+   "h": 2970,
+   "license": "CC BY-SA 4.0",
+   "artist": "Ermell",
+   "term": "Chevrolet Camaro",
+   "file": ".photo-review/car2-07-chevrolet-camaro-1971-lt-kul.jpg",
+   "slug": "chevrolet-camaro-1971-lt-kulmbach-202206"
+  },
+  {
+   "title": "File:Chevrolet Camaro Hirschaid 2022-20220709-RM-112013.jpg",
+   "w": 4347,
+   "h": 2732,
+   "license": "CC BY-SA 4.0",
+   "artist": "Ermell",
+   "term": "Chevrolet Camaro",
+   "file": ".photo-review/car2-10-chevrolet-camaro-hirschaid-2.jpg",
+   "slug": "chevrolet-camaro-hirschaid-2022-20220709"
+  }
+ ],
+ "gm2": [
+  {
+   "title": "File:DFC 0847 A person stands at a claw machine in a dimly lit arcade surrounded by colorful glowing game cabinets and neon lights.jpg",
+   "w": 5568,
+   "h": 3712,
+   "license": "CC BY-SA 4.0",
+   "artist": "PattayaPatrol",
+   "term": "arcade cabinet neon",
+   "file": ".photo-review/gm2-02-dfc-0847-a-person-stands-at-.jpg",
+   "slug": "dfc-0847-a-person-stands-at-a-claw-machi"
+  }
+ ]
+}

@@ -53,6 +53,94 @@
           "photographer": "NASA/JPL-Caltech/ASU/MSSS",
           "source": "NASA Image Library",
           "license": "Public domain"
+        },
+        {
+          "file": ".photo-review/ws2-carina-cliffs-full.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:NASA%E2%80%99s_Webb_Reveals_Cosmic_Cliffs,_Glittering_Landscape_of_Star_Birth.jpg",
+          "name": "cosmic-cliffs-carina",
+          "photographer": "NASA, ESA, CSA, STScI",
+          "source": "Wikimedia Commons",
+          "license": "Public domain"
+        },
+        {
+          "file": ".photo-review/ws2-whirlpool-m51.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Messier51_sRGB.jpg",
+          "name": "whirlpool-galaxy-m51",
+          "photographer": "NASA and ESA",
+          "source": "Wikimedia Commons",
+          "license": "Public domain"
+        },
+        {
+          "file": ".photo-review/ws2-lagoon-nebula-eso.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Lagoon_Nebula_(ESO).jpg",
+          "name": "lagoon-nebula-wide-field",
+          "photographer": "ESO / S. Guisard",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 4.0"
+        },
+        {
+          "file": ".photo-review/ws2-andromeda-10k.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Andromeda_Galaxy_M31_-_Heic1502a_10k.jpg",
+          "name": "andromeda-panorama",
+          "photographer": "NASA, ESA, J. Dalcanton, B.F. Williams, L.C. Johnson (PHAT team), R. Gendler",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 4.0"
+        },
+        {
+          "file": ".photo-review/ws2-earth-limb-aurora.jpg",
+          "url": "https://images.nasa.gov/details/iss058e005282",
+          "name": "earth-limb-aurora",
+          "photographer": "NASA / ISS Expedition 58",
+          "source": "NASA Image Library",
+          "license": "Public domain"
+        },
+        {
+          "file": ".photo-review/ws2-aurora-blankets-earth.jpg",
+          "url": "https://images.nasa.gov/details/iss072e159172",
+          "name": "aurora-over-manitoba",
+          "photographer": "NASA / ISS Expedition 72",
+          "source": "NASA Image Library",
+          "license": "Public domain"
+        },
+        {
+          "file": ".photo-review/ws2-milkyway-core.jpg",
+          "url": "https://images.nasa.gov/details/PIA03654",
+          "name": "milky-way-galactic-center",
+          "photographer": "NASA/JPL-Caltech",
+          "source": "NASA Image Library",
+          "license": "Public domain"
+        },
+        {
+          "file": ".photo-review/ws2-tarantula-new-view.jpg",
+          "url": "https://images.nasa.gov/details/PIA14415",
+          "name": "tarantula-nebula-new-view",
+          "photographer": "NASA/CXC/PSU/L. Townsley et al.; NASA/STScI; NASA/JPL/PSU",
+          "source": "NASA Image Library",
+          "license": "Public domain"
+        },
+        {
+          "file": ".photo-review/ws2-dragon-lair.jpg",
+          "url": "https://images.nasa.gov/details/PIA13240",
+          "name": "dragon-lair-nebula",
+          "photographer": "NASA/JPL-Caltech/Penn State/DSS",
+          "source": "NASA Image Library",
+          "license": "Public domain"
+        },
+        {
+          "file": ".photo-review/ws2-heart-and-soul.jpg",
+          "url": "https://images.nasa.gov/details/PIA13112",
+          "name": "heart-and-soul-nebulae",
+          "photographer": "NASA/JPL-Caltech/UCLA",
+          "source": "NASA Image Library",
+          "license": "Public domain"
+        },
+        {
+          "file": ".photo-review/ws2-star-formation-everywhere.jpg",
+          "url": "https://images.nasa.gov/details/PIA14105",
+          "name": "star-formation-cluster",
+          "photographer": "NASA/JPL-Caltech/UCLA",
+          "source": "NASA Image Library",
+          "license": "Public domain"
         }
       ]
     },
@@ -84,6 +172,126 @@
           "photographer": "Kay Röllig",
           "source": "Wikimedia Commons",
           "license": "CC BY 2.0"
+        },
+        {
+          "file": ".photo-review/mt2-drei-zinnen.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Drei_Zinnen_Tre_Cime_di_Lavaredo_Dolomites.jpg",
+          "name": "tre-cime-clouds",
+          "photographer": "Wolfgang Moroder",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 3.0"
+        },
+        {
+          "file": ".photo-review/mt2-valle-rienza-tre-cime.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Valle_della_Rienza_and_Tre_Cime_di_Lavaredo_from_Alpe_Specie,_Val_Pusteria,_Trentino-Alto_Adige,_Italy,_2025_October.jpg",
+          "name": "tre-cime-valle-vista",
+          "photographer": "Ximonic (Simo Rasanen)",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/mt2-hovdanvika-fjord.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Wide_view_over_Hovdanvika,_Selfjorden_and_Torsfjorden_at_Fredvang_in_Flakstad,_Nordland,_Norway,_2022_June.jpg",
+          "name": "hovdanvika-fjord-aerial",
+          "photographer": "Ximonic (Simo Rasanen)",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/mt2-gangapurna-lake.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Morning_Reflection_at_Gangapurna_Lake.jpg",
+          "name": "gangapurna-lake-reflection",
+          "photographer": "Megaurab09",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/mt2-mountain-reflection-alpine.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Mountain_Reflection_on_Alpine_Lake.jpg",
+          "name": "alpine-lake-mirror",
+          "photographer": "Sabrina Schreiber",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/mt2-zagedan-lakes-caucasus.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Zagedan_Lakes,_Mountain_cirque,_Caucasus_Mountains.jpg",
+          "name": "zagedan-lake-cirque",
+          "photographer": "Vyacheslav Argenberg",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 4.0"
+        },
+        {
+          "file": ".photo-review/mt2-zagedan-ridge-caucasus.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Zagedan_Ridge,_Zagedan_Valley,_Caucasus_Mountains,_Karachay-Cherkessia.jpg",
+          "name": "zagedan-ridge-lakes",
+          "photographer": "Vyacheslav Argenberg",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 4.0"
+        },
+        {
+          "file": ".photo-review/mt2-zermatt-panorama.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Panorama_of_the_mountains_south_of_Zermatt.jpg",
+          "name": "gorner-glacier-panorama",
+          "photographer": "Carsten Steger",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/mt2-julian-alps-panorama.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:1_julian_alps_panorama.jpg",
+          "name": "julian-alps-lake-fog",
+          "photographer": "chensiyuan",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/mt2-julian-alps-vrsic.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Julian_Alps_from_Vrsic_Pass_(3).jpg",
+          "name": "julian-alps-vrsic-pass",
+          "photographer": "Krzysztof Golik",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/mt2-torres-del-paine-panorama.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Torres_del_Paine_Panoramica_2019.jpg",
+          "name": "torres-del-paine-panorama",
+          "photographer": "Correliebre",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/mt2-glencoe-lochan.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Glencoe_Lochan_reflections_3_20211022.jpg",
+          "name": "glencoe-lochan-reflection",
+          "photographer": "Daniel Kraft",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 3.0"
+        },
+        {
+          "file": ".photo-review/mt2-scottish-highlands-silhouette.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Mountain_silhouettes_in_the_Scottish_Highlands.jpg",
+          "name": "highlands-silhouette-mono",
+          "photographer": "Matthew Prior",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/mt2-mt-sefton-massif-nz.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Mt_Sefton_massif,_Aoraki_-_Mount_Cook_National_Park,_New_Zealand.jpg",
+          "name": "mt-sefton-massif",
+          "photographer": "Michal Klajban",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/mt2-main-divide-nz.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Main_Divide_from_Yeats_Ridge_Hut,_West_Coast_Region,_New_Zealand.jpg",
+          "name": "nz-main-divide-ridge",
+          "photographer": "Michal Klajban",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
         }
       ]
     },
@@ -113,6 +321,110 @@
           "url": "https://commons.wikimedia.org/wiki/File:1933_Ford_Model_18_5_window_Coupe_(32043397296).jpg",
           "name": "1933-five-window-coupe",
           "photographer": "Sicnag",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 2.0"
+        },
+        {
+          "file": ".photo-review/car2-2023-gmc-sierra-2500-denali-hd.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:2023_GMC_Sierra_2500_Denali_HD_Ultimate_in_Titanium_Rush_Metallic,_front_left.jpg",
+          "name": "2023-gmc-sierra-2500-denali-hd",
+          "photographer": "Ethan Llamas",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/car2-23-gmc-sierra-3500hd-slt.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:23_GMC_Sierra_3500HD_SLT.jpg",
+          "name": "23-gmc-sierra-3500hd-slt",
+          "photographer": "HJUdall",
+          "source": "Wikimedia Commons",
+          "license": "CC0"
+        },
+        {
+          "file": ".photo-review/car2-gmc-sierra-gmtk2xx-dsc-8581.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:GMC_Sierra_(GMTK2XX)_DSC_8581.jpg",
+          "name": "gmc-sierra-gmtk2xx-dsc-8581",
+          "photographer": "Alexander Migl",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/car2-gmc-sierra-1500-denali-6-2l-cr.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:GMC_Sierra_1500_Denali_6.2L_Crew_Cab_GMTT1XX_Avalon_White_Pearl_(11).jpg",
+          "name": "gmc-sierra-1500-denali-6-2l-cr",
+          "photographer": "Damian B Oh",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/car2-gmc-sierra-1500-pickup-truck-e.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:GMC_Sierra_1500_pickup_truck,_Essex,_Ontario,_2025-08-30.jpg",
+          "name": "gmc-sierra-1500-pickup-truck-e",
+          "photographer": "Chris Woodrich",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/car2-gmc-sierra-2017-pickup-truck.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:GMC_Sierra_2017_Pickup_Truck.jpg",
+          "name": "gmc-sierra-2017-pickup-truck",
+          "photographer": "MTSRider18",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 3.0"
+        },
+        {
+          "file": ".photo-review/car2-gmc-sierra-2017-pickup-truck-2.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:GMC_Sierra_2017_Pickup_Truck_2.jpg",
+          "name": "gmc-sierra-2017-pickup-truck-2",
+          "photographer": "MTSRider18",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 3.0"
+        },
+        {
+          "file": ".photo-review/car2-gmc-sierra-2017-pickup-truck-3.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:GMC_Sierra_2017_Pickup_Truck_3.jpg",
+          "name": "gmc-sierra-2017-pickup-truck-3",
+          "photographer": "MTSRider18",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 3.0"
+        },
+        {
+          "file": ".photo-review/car2-1994-gmc-sierra-bs-o24.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:1994_GMC_Sierra_BS_O24.jpg",
+          "name": "1994-gmc-sierra-bs-o24",
+          "photographer": "MrWalkr",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/car2-1999-gmc-sierra-2500-front-lef.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:1999_GMC_Sierra_2500,_Front_Left,_02-18-2021.jpg",
+          "name": "1999-gmc-sierra-2500-front-lef",
+          "photographer": "SsmIntrigue",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/car2-gmc-sierra-2017-pickup-truck-4.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:GMC_Sierra_2017_Pickup_Truck_4.jpg",
+          "name": "gmc-sierra-2017-pickup-truck-4",
+          "photographer": "MTSRider18",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 3.0"
+        },
+        {
+          "file": ".photo-review/car2-gmc-sierra-2017-pickup-truck-5.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:GMC_Sierra_2017_Pickup_Truck_5.jpg",
+          "name": "gmc-sierra-2017-pickup-truck-5",
+          "photographer": "MTSRider18",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 3.0"
+        },
+        {
+          "file": ".photo-review/car2-gmc-sierra-alberta.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:GMC_Sierra_Alberta.jpg",
+          "name": "gmc-sierra-alberta",
+          "photographer": "dave_7",
           "source": "Wikimedia Commons",
           "license": "CC BY 2.0"
         }
@@ -186,6 +498,30 @@
           "photographer": "incommunicado",
           "source": "Wikimedia Commons",
           "license": "CC BY-SA 2.0"
+        },
+        {
+          "file": ".photo-review/cf2-lagerfeuer.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:2009_Lagerfeuer.JPG",
+          "name": "riverside-lagerfeuer",
+          "photographer": "Michael Hoelzl",
+          "source": "Wikimedia Commons",
+          "license": "Public domain"
+        },
+        {
+          "file": ".photo-review/cf2-simple-campfire.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:A_simple_campfire.jpg",
+          "name": "simple-campfire",
+          "photographer": "Leon Bovenkerk",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 2.0"
+        },
+        {
+          "file": ".photo-review/cf2-feu-de-nuit.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Feu_de_nuit.jpg",
+          "name": "night-fire-sparks",
+          "photographer": "Raph.zufferey",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 3.0"
         }
       ]
     },
@@ -249,6 +585,78 @@
           "photographer": "PantheraLeo1359531",
           "source": "Wikimedia Commons",
           "license": "CC BY 4.0"
+        },
+        {
+          "file": ".photo-review/gm2-castlevania-marble-of-souls-da.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Castlevania_Marble_of_Souls_Danbury_R1.jpg",
+          "name": "castlevania-marble-of-souls-da",
+          "photographer": "Reconrabbit",
+          "source": "Wikimedia Commons",
+          "license": "CC0"
+        },
+        {
+          "file": ".photo-review/gm2-computer-space-arcade-cabinet-.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Computer_Space_arcade_cabinet_Model_and_Serial_number_badge_-_at_Billy's_Midway_Arcade_-_January_2025.jpg",
+          "name": "computer-space-arcade-cabinet-",
+          "photographer": "Logg Tandy",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 4.0"
+        },
+        {
+          "file": ".photo-review/gm2-computer-space-cabinet-backsid.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Computer_Space_cabinet_backside,_open,_wider_shot_-_at_Billy's_Midway_Arcade_-_January_2025.jpg",
+          "name": "computer-space-cabinet-backsid",
+          "photographer": "Logg Tandy",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 4.0"
+        },
+        {
+          "file": ".photo-review/gm2-gold-cabinet-ddr-world-danbury.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Gold_Cabinet_DDR_World_Danbury_R1.jpg",
+          "name": "gold-cabinet-ddr-world-danbury",
+          "photographer": "Reconrabbit",
+          "source": "Wikimedia Commons",
+          "license": "CC0"
+        },
+        {
+          "file": ".photo-review/gm2-gold-railroad-danbury-r1.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Gold_Railroad_Danbury_R1.jpg",
+          "name": "gold-railroad-danbury-r1",
+          "photographer": "Reconrabbit",
+          "source": "Wikimedia Commons",
+          "license": "CC0"
+        },
+        {
+          "file": ".photo-review/gm2-mazinger-z-arcade-cabinet-2026.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Mazinger_Z_arcade_cabinet_2026-08-14.jpg",
+          "name": "mazinger-z-arcade-cabinet-2026",
+          "photographer": "GuiltyGearFan37",
+          "source": "Wikimedia Commons",
+          "license": "CC0"
+        },
+        {
+          "file": ".photo-review/gm2-playfield-of-star-wars-themed-.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Playfield_of_Star_Wars–Themed_Pinball_Machine.jpg",
+          "name": "playfield-of-star-wars-themed-",
+          "photographer": "Tessa Bury",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 4.0"
+        },
+        {
+          "file": ".photo-review/gm2-upper-playfield-acrylic-parts-.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Upper_playfield_acrylic_parts_produced_at_Metalab_hackerspace_in_Vienna_(5220257040).jpg",
+          "name": "upper-playfield-acrylic-parts-",
+          "photographer": "Felipe Sanches from São Paulo, Brazil",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 2.0"
+        },
+        {
+          "file": ".photo-review/gm2-2018-bay-area-mechanical-keybo.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:2018_Bay_Area_Mechanical_Keyboard_Meetup_(31006275737).jpg",
+          "name": "2018-bay-area-mechanical-keybo",
+          "photographer": "Patrick Breen",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 2.0"
         }
       ]
     },
@@ -320,6 +728,38 @@
           "photographer": "Joseph Gage",
           "source": "Wikimedia Commons",
           "license": "CC BY-SA 2.0"
+        },
+        {
+          "file": ".photo-review/nw2-horsehead-lake-sunset.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:East_Horsehead_Lake_at_Sunset_-_panoramio.jpg",
+          "name": "horsehead-lake-sunset",
+          "photographer": "Corey Coyle",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 3.0"
+        },
+        {
+          "file": ".photo-review/nw2-crescent-lake-autumn.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Autumn_at_Crescent_Lake,_Wisconsin_(49113407061).jpg",
+          "name": "crescent-lake-autumn",
+          "photographer": "Tony Webster",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 2.0"
+        },
+        {
+          "file": ".photo-review/nw2-driftless-lake-wisconsin.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Driftless_Area_and_Lake_Wisconsin_-_panoramio.jpg",
+          "name": "driftless-area-lake",
+          "photographer": "Corey Coyle",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 3.0"
+        },
+        {
+          "file": ".photo-review/nw2-fall-colors-lake-wisconsin.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Fall_Colors_at_Lake_Wisconsin_-_panoramio.jpg",
+          "name": "fall-colors-lake-wisconsin",
+          "photographer": "Corey Coyle",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 3.0"
         }
       ]
     },
@@ -391,6 +831,70 @@
           "photographer": "Basile Morin",
           "source": "Wikimedia Commons",
           "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/city2-dubai-iss-aerial.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:ISS-39_Dubai,_United_Arab_Emirates.jpg",
+          "name": "dubai-lights-from-orbit",
+          "photographer": "NASA, Expedition 39 crew (ISS)",
+          "source": "NASA / Wikimedia Commons",
+          "license": "Public domain"
+        },
+        {
+          "file": ".photo-review/city2-istanbul-bosphorus.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Bosphorus_Bridge_at_night.jpg",
+          "name": "istanbul-bosphorus-bridge",
+          "photographer": "Andrey Filippov",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 2.0"
+        },
+        {
+          "file": ".photo-review/city2-sydney-harbour-bridge2.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Sydney_Harbour_Bridge_at_night.jpg",
+          "name": "sydney-harbour-bridge-moonrise",
+          "photographer": "sander88",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 2.0"
+        },
+        {
+          "file": ".photo-review/city2-rio-botafogo.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Botafogo_waterfront_skyline_reflected_at_night,_Rio_de_Janeiro,_Brazil.jpg",
+          "name": "rio-botafogo-lagoon",
+          "photographer": "Wilfredor",
+          "source": "Wikimedia Commons",
+          "license": "CC0"
+        },
+        {
+          "file": ".photo-review/city2-toronto-skyline2.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Toronto_-_ON_-_Skyline_bei_Nacht.jpg",
+          "name": "toronto-cn-tower-blue-hour",
+          "photographer": "Wladyslaw",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 3.0"
+        },
+        {
+          "file": ".photo-review/city2-prague-castle.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Prague_Castle_at_Night_viewed_from_Charles_Bridge.jpg",
+          "name": "prague-castle-blue-hour",
+          "photographer": "Lucas Garron",
+          "source": "Wikimedia Commons",
+          "license": "CC0"
+        },
+        {
+          "file": ".photo-review/city2-vancouver-harbour.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Vanouver_Harbour_(Unsplash).jpg",
+          "name": "vancouver-coal-harbour",
+          "photographer": "Ferdinand Stohr",
+          "source": "Wikimedia Commons",
+          "license": "CC0"
+        },
+        {
+          "file": ".photo-review/city2-kl-petronas2.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Petronas_Towers_at_night,_Kuala_Lumpur,_20250818_1954_1607.jpg",
+          "name": "kuala-lumpur-petronas-towers",
+          "photographer": "Jakub Halun",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 4.0"
         }
       ]
     },
@@ -462,6 +966,70 @@
           "photographer": "Marcie Hebert / USFWS",
           "source": "Wikimedia Commons",
           "license": "Public domain"
+        },
+        {
+          "file": ".photo-review/st2-supercell-kansas.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Supercell-thunderstorm-in-Kansas.jpg",
+          "name": "supercell-kansas-farmland",
+          "photographer": "NOAA National Severe Storms Laboratory",
+          "source": "NOAA / Wikimedia Commons",
+          "license": "Public domain"
+        },
+        {
+          "file": ".photo-review/st2-shelf-cloud-flickr.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Shelf_cloud_-_Flickr_-_otrow_photography.jpg",
+          "name": "shelf-cloud-adriatic-coast",
+          "photographer": "Sime Baresic",
+          "source": "Wikimedia Commons",
+          "license": "CC0"
+        },
+        {
+          "file": ".photo-review/st2-mammatus-hazy.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Hazy_mammatus_1.jpg",
+          "name": "mammatus-clouds-hazy",
+          "photographer": "Rubbish computer",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/st2-lightning-mountaintop.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Lightning_Above_the_Mountaintop_(iotw2433a).jpg",
+          "name": "lightning-above-mountaintop",
+          "photographer": "International Gemini Observatory/NOIRLab/NSF/AURA/J. Chu",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 4.0"
+        },
+        {
+          "file": ".photo-review/st2-snow-drummond-island.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Snow_storm_over_a_cove_--_Drummond_Island_during_the_winter.jpg",
+          "name": "snow-squall-drummond-island",
+          "photographer": "Corvair Owner",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 2.0"
+        },
+        {
+          "file": ".photo-review/st2-waves-december-storm.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:December_Storm_IMG_5763_(15994349851).jpg",
+          "name": "waves-in-a-gale",
+          "photographer": "Ronnie Robertson",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 2.0"
+        },
+        {
+          "file": ".photo-review/st2-storm-colombia.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:2010_wet_season_cloud_over_colombia.jpg",
+          "name": "storm-cloud-top-from-orbit",
+          "photographer": "NASA",
+          "source": "NASA / Wikimedia Commons",
+          "license": "Public domain"
+        },
+        {
+          "file": ".photo-review/st2-extremes-wetter.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:004_2018_05_14_Extremes_Wetter.jpg",
+          "name": "branching-lightning-treeline",
+          "photographer": "Friedrich Haag",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
         }
       ]
     }

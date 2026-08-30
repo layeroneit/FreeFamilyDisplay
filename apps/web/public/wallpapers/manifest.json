@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-30T12:22:26.789Z",
+  "generatedAt": "2026-08-30T14:38:18.955Z",
   "collections": [
     {
       "slug": "deep-space",
@@ -143,6 +143,259 @@
             "sourceUrl": "https://images.nasa.gov/details/PIA24264"
           },
           "sortOrder": 5
+        },
+        {
+          "basePath": "/wallpapers/deep-space/cosmic-cliffs-carina",
+          "width": 1920,
+          "height": 1112,
+          "meanLuminance": 0.3018,
+          "luminanceVariance": 0.149,
+          "dominantColors": [
+            "#333333",
+            "#996633",
+            "#336699",
+            "#cc9966",
+            "#000033"
+          ],
+          "suggestedScrimOpacity": 0.443,
+          "lqip": "data:image/webp;base64,UklGRpYAAABXRUJQVlA4IIoAAACwBACdASoYAA4APu1iqU2ppaOiMAgBMB2JbAC7MoMYJn/Ad54/sJMk6Q31vsaAAP7prZaiEeuSE121VtmoBVNz/O1amCTBeLYl1W8bQxyh7W1Rl212b4eTYXNaCJY7RPpntowbRBJ79EHdiUgeRY6liNNqgva/+aeLmqgSVP9FbWTPf7Hf13DLAAA=",
+          "attribution": {
+            "photographer": "NASA, ESA, CSA, STScI",
+            "source": "Wikimedia Commons",
+            "license": "Public domain",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:NASA%E2%80%99s_Webb_Reveals_Cosmic_Cliffs,_Glittering_Landscape_of_Star_Birth.jpg"
+          },
+          "sortOrder": 6
+        },
+        {
+          "basePath": "/wallpapers/deep-space/whirlpool-galaxy-m51",
+          "width": 1920,
+          "height": 1333,
+          "meanLuminance": 0.2389,
+          "luminanceVariance": 0.1565,
+          "dominantColors": [
+            "#333333",
+            "#000000",
+            "#666666",
+            "#999999",
+            "#cccc99"
+          ],
+          "suggestedScrimOpacity": 0.423,
+          "lqip": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAABQBACdASoYABEAPu1or1CppaSiqAqpMB2JZwDHMA366O8o44gaie555e9AAP7xEmrAMnn6XEzZtZUZFKnp3JrePG0fYtxzaR52eqTRcs8Bilosh9W6fIsee8cdcYYC4/0V95RQqvbdkIkFZyAAAA==",
+          "attribution": {
+            "photographer": "NASA and ESA",
+            "source": "Wikimedia Commons",
+            "license": "Public domain",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Messier51_sRGB.jpg"
+          },
+          "sortOrder": 7
+        },
+        {
+          "basePath": "/wallpapers/deep-space/lagoon-nebula-wide-field",
+          "width": 1920,
+          "height": 1286,
+          "meanLuminance": 0.2563,
+          "luminanceVariance": 0.1365,
+          "dominantColors": [
+            "#333333",
+            "#996666",
+            "#cc6699",
+            "#993333",
+            "#330000"
+          ],
+          "suggestedScrimOpacity": 0.424,
+          "lqip": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAAAwBACdASoYABAAPu1iqU2ppaQiMAgBMB2JaACdACB9sz4h1D9bT3iMf4AA/uwkg6S7t/QxMwo/cnGpheMQQ/VwPDbOQ1lmGsmeJAPDpta+2aqvlTGaP5Dj4J1AAA==",
+          "attribution": {
+            "photographer": "ESO / S. Guisard",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Lagoon_Nebula_(ESO).jpg"
+          },
+          "sortOrder": 8
+        },
+        {
+          "basePath": "/wallpapers/deep-space/andromeda-panorama",
+          "width": 1920,
+          "height": 614,
+          "meanLuminance": 0.3384,
+          "luminanceVariance": 0.1805,
+          "dominantColors": [
+            "#333333",
+            "#666666",
+            "#999966",
+            "#cc9999",
+            "#cccccc"
+          ],
+          "suggestedScrimOpacity": 0.464,
+          "lqip": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAACwAwCdASoYAAgAPu1kqU2ppaQiMAgBMB2JYwCsACHUqj1zcJdTAAD+o2p5r95bif7ZhNXbRQwX3W0WYNGcD24VlaILbmW5NYAAAA==",
+          "attribution": {
+            "photographer": "NASA, ESA, J. Dalcanton, B.F. Williams, L.C. Johnson (PHAT team), R. Gendler",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Andromeda_Galaxy_M31_-_Heic1502a_10k.jpg"
+          },
+          "sortOrder": 9
+        },
+        {
+          "basePath": "/wallpapers/deep-space/earth-limb-aurora",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.2039,
+          "luminanceVariance": 0.1554,
+          "dominantColors": [
+            "#000000",
+            "#666666",
+            "#333333",
+            "#999999",
+            "#663300"
+          ],
+          "suggestedScrimOpacity": 0.41,
+          "lqip": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAAAQBACdASoYABAAPu1iqU2ppaOiMAgBMB2JZwC7ACP/p6ZZ4bP2O7PbkAD+6eOm6BG7XT5jiRoKC0ur0c9r6M4hJJKwj2P3PFpYi/qwRr0rwLJol8qAAA==",
+          "attribution": {
+            "photographer": "NASA / ISS Expedition 58",
+            "source": "NASA Image Library",
+            "license": "Public domain",
+            "sourceUrl": "https://images.nasa.gov/details/iss058e005282"
+          },
+          "sortOrder": 10
+        },
+        {
+          "basePath": "/wallpapers/deep-space/aurora-over-manitoba",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.1624,
+          "luminanceVariance": 0.2104,
+          "dominantColors": [
+            "#000000",
+            "#333333",
+            "#336666",
+            "#669966",
+            "#99cc99"
+          ],
+          "suggestedScrimOpacity": 0.409,
+          "lqip": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAADwAwCdASoYABAAPu1kqk2ppaQiMAgBMB2JYwC+SCHfpPY9Dj5kjGxAAP70Gr1JShjtEe53ifNfLbOOrPFzh17j0OtXNZswc2zUxJ9a9yCU/MdgA/6QO+lAon5ZgAAA",
+          "attribution": {
+            "photographer": "NASA / ISS Expedition 72",
+            "source": "NASA Image Library",
+            "license": "Public domain",
+            "sourceUrl": "https://images.nasa.gov/details/iss072e159172"
+          },
+          "sortOrder": 11
+        },
+        {
+          "basePath": "/wallpapers/deep-space/milky-way-galactic-center",
+          "width": 1920,
+          "height": 1385,
+          "meanLuminance": 0.1962,
+          "luminanceVariance": 0.1036,
+          "dominantColors": [
+            "#663333",
+            "#330033",
+            "#cc6666",
+            "#003333",
+            "#993366"
+          ],
+          "suggestedScrimOpacity": 0.395,
+          "lqip": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAACQBACdASoYABEAPu1iqlAppSOqMBgIAUAdiWIAuwAQ6rv5td4zqYWHqCll0AAA/u5+5BsRR8+FlQxppre4XiJFDKeawdqMPZcZ2jAs8h7D7xxqBlIm8lMTbtfuGJ8jQmM2s09xmQ/kPYAA",
+          "attribution": {
+            "photographer": "NASA/JPL-Caltech",
+            "source": "NASA Image Library",
+            "license": "Public domain",
+            "sourceUrl": "https://images.nasa.gov/details/PIA03654"
+          },
+          "sortOrder": 12
+        },
+        {
+          "basePath": "/wallpapers/deep-space/tarantula-nebula-new-view",
+          "width": 1920,
+          "height": 1536,
+          "meanLuminance": 0.2798,
+          "luminanceVariance": 0.1734,
+          "dominantColors": [
+            "#333333",
+            "#663366",
+            "#996666",
+            "#333399",
+            "#666699"
+          ],
+          "suggestedScrimOpacity": 0.441,
+          "lqip": "data:image/webp;base64,UklGRrAAAABXRUJQVlA4IKQAAABQBQCdASoYABMAPu1mqk8ppaOiKA1RMB2JaACdMuiBxfzwfmODs3FrL7Tvep4Z6Nn5BcAA/sxlCcamH+yZmon3sao0RML84Xh13H0CqD0cKMRgGyfOjNNkqGBe/pf35JEi/JgYxlYU7skD7rlDwZZM7PuZia8WHvooRd8HBC6OAgX8+mn+xQiIfKkBnAFbLyECAeHEAe7xFx5FfnM1lT4IDAAAAA==",
+          "attribution": {
+            "photographer": "NASA/CXC/PSU/L. Townsley et al.; NASA/STScI; NASA/JPL/PSU",
+            "source": "NASA Image Library",
+            "license": "Public domain",
+            "sourceUrl": "https://images.nasa.gov/details/PIA14415"
+          },
+          "sortOrder": 13
+        },
+        {
+          "basePath": "/wallpapers/deep-space/dragon-lair-nebula",
+          "width": 1920,
+          "height": 935,
+          "meanLuminance": 0.155,
+          "luminanceVariance": 0.0631,
+          "dominantColors": [
+            "#333333",
+            "#330000",
+            "#993333",
+            "#003300",
+            "#cc6666"
+          ],
+          "suggestedScrimOpacity": 0.37,
+          "lqip": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAADQAwCdASoYAAwAPu1iqU2ppaQiMAgBMB2JYgCdMoADTqGKN3vUbQAA/uvfNKyMI/zbRi118ktsWeiYmKrwqY9QozyAQCe1ePQf/5NOOZUe0SFXHyoAAA==",
+          "attribution": {
+            "photographer": "NASA/JPL-Caltech/Penn State/DSS",
+            "source": "NASA Image Library",
+            "license": "Public domain",
+            "sourceUrl": "https://images.nasa.gov/details/PIA13240"
+          },
+          "sortOrder": 14
+        },
+        {
+          "basePath": "/wallpapers/deep-space/heart-and-soul-nebulae",
+          "width": 1920,
+          "height": 1361,
+          "meanLuminance": 0.2288,
+          "luminanceVariance": 0.1376,
+          "dominantColors": [
+            "#003333",
+            "#336633",
+            "#666666",
+            "#663333",
+            "#999999"
+          ],
+          "suggestedScrimOpacity": 0.414,
+          "lqip": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAACQBACdASoYABEAPu1mqk2ppaQiMAgBMB2JYwCdM6HDTMVvWywOX1y1XTkDBFwA/u5/fg8ZO021VjEGkhrv/ZGDowGMV4YgtpEmzpxbAtpRQVLmXT2XGhMLlK3sR2RVBIwhb6Gf85cZkLbiZa3tWZDTVfxLxfBGtKhQg/x6egAAAA==",
+          "attribution": {
+            "photographer": "NASA/JPL-Caltech/UCLA",
+            "source": "NASA Image Library",
+            "license": "Public domain",
+            "sourceUrl": "https://images.nasa.gov/details/PIA13112"
+          },
+          "sortOrder": 15
+        },
+        {
+          "basePath": "/wallpapers/deep-space/star-formation-cluster",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.2156,
+          "luminanceVariance": 0.174,
+          "dominantColors": [
+            "#003300",
+            "#006633",
+            "#333333",
+            "#330000",
+            "#666633"
+          ],
+          "suggestedScrimOpacity": 0.419,
+          "lqip": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAABwBACdASoYABAAPu1iqU2ppaOiMAgBMB2JagCsLwABz65kT7WmjrDzF2MYEAD+8M4lchKkOxtNTwBCgGdClRq6BFRB3/50T8El+rs21QdaCDXuZGH9apt+o8wmcScRE9tJ9VgDxhnQG93HMPsUe6PPmC4/ayJQsGoAAA==",
+          "attribution": {
+            "photographer": "NASA/JPL-Caltech/UCLA",
+            "source": "NASA Image Library",
+            "license": "Public domain",
+            "sourceUrl": "https://images.nasa.gov/details/PIA14105"
+          },
+          "sortOrder": 16
         }
       ]
     },
@@ -219,6 +472,351 @@
             "sourceUrl": "https://commons.wikimedia.org/wiki/File:Navajo_Lake_(219856203).jpeg"
           },
           "sortOrder": 2
+        },
+        {
+          "basePath": "/wallpapers/mountains/tre-cime-clouds",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.5024,
+          "luminanceVariance": 0.1091,
+          "dominantColors": [
+            "#999999",
+            "#666699",
+            "#6699cc",
+            "#cccccc",
+            "#3366cc"
+          ],
+          "suggestedScrimOpacity": 0.503,
+          "lqip": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAAAQBACdASoYABAAPu1kqk4ppaQiMAgBMB2JZACdMoAB2dLspmPchbHqSAD+IbcQqBJZAiBQbiyN/9vwD7kKd7HFak/3uwJl6IfzBOz8hgp87e0d7Z9JevzQN3qvYDQZP35gnfi2NPDPqtN6dwAAAA==",
+          "attribution": {
+            "photographer": "Wolfgang Moroder",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 3.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Drei_Zinnen_Tre_Cime_di_Lavaredo_Dolomites.jpg"
+          },
+          "sortOrder": 3
+        },
+        {
+          "basePath": "/wallpapers/mountains/tre-cime-valle-vista",
+          "width": 1920,
+          "height": 1066,
+          "meanLuminance": 0.4358,
+          "luminanceVariance": 0.1834,
+          "dominantColors": [
+            "#666666",
+            "#999999",
+            "#333333",
+            "#cccccc",
+            "#006699"
+          ],
+          "suggestedScrimOpacity": 0.498,
+          "lqip": "data:image/webp;base64,UklGRqwAAABXRUJQVlA4IKAAAABwBACdASoYAA0APu1iqU2ppaOiMAgBMB2JYgCdACPytJfNuX9SPc7BLWhxSAD8s8FWr4f7B1Bs+neKG9z/ZLgXh/WeOMMCTUtSnbhr5UooJmOR8b8jfbihLCnBPgu9Z9mBP1NopBxFda80d8Ndl++pnJPyXk8KhHKtsTIXxOPw5KkjU55IApL6XnFcsdt1iP7s3PCuqk53zd+x7dQP+UAA",
+          "attribution": {
+            "photographer": "Ximonic (Simo Rasanen)",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Valle_della_Rienza_and_Tre_Cime_di_Lavaredo_from_Alpe_Specie,_Val_Pusteria,_Trentino-Alto_Adige,_Italy,_2025_October.jpg"
+          },
+          "sortOrder": 4
+        },
+        {
+          "basePath": "/wallpapers/mountains/hovdanvika-fjord-aerial",
+          "width": 1920,
+          "height": 587,
+          "meanLuminance": 0.4007,
+          "luminanceVariance": 0.1747,
+          "dominantColors": [
+            "#996633",
+            "#333333",
+            "#336666",
+            "#669999",
+            "#99cccc"
+          ],
+          "suggestedScrimOpacity": 0.484,
+          "lqip": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAABQBACdASoYAAcAPu1iqU2ppaOiMAgBMB2JZACdMoHgAAZtM1GCSQj+RHTIAP4+Ge+mhh7JDefVaCppsrZnP2ZLiBKc1RFF3Y6nv/vK3d9Ho3HW1GuE8vQokXRUCfCaxsMJrf9LFb1/UPtzdWZAyjMAAAA=",
+          "attribution": {
+            "photographer": "Ximonic (Simo Rasanen)",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Wide_view_over_Hovdanvika,_Selfjorden_and_Torsfjorden_at_Fredvang_in_Flakstad,_Nordland,_Norway,_2022_June.jpg"
+          },
+          "sortOrder": 5
+        },
+        {
+          "basePath": "/wallpapers/mountains/gangapurna-lake-reflection",
+          "width": 1920,
+          "height": 1080,
+          "meanLuminance": 0.2493,
+          "luminanceVariance": 0.0966,
+          "dominantColors": [
+            "#333333",
+            "#003366",
+            "#006699",
+            "#336666",
+            "#000033"
+          ],
+          "suggestedScrimOpacity": 0.411,
+          "lqip": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAACwBACdASoYAA4APu1iqU2ppaOiMAgBMB2JbACdMoRwGQz5/8CAvbKWuRDNwgpsAP7j3euerDHHaGM1vlqlJ7xWH4dtpTj1bFXWjgRRFpUT/j86SYyxLjTkA75dIu8hdKUgBfiaMt4ox/UbKRJAwxlqyVWemjGYYWuupbPghzgAAA==",
+          "attribution": {
+            "photographer": "Megaurab09",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Morning_Reflection_at_Gangapurna_Lake.jpg"
+          },
+          "sortOrder": 6
+        },
+        {
+          "basePath": "/wallpapers/mountains/alpine-lake-mirror",
+          "width": 1920,
+          "height": 1440,
+          "meanLuminance": 0.4168,
+          "luminanceVariance": 0.2152,
+          "dominantColors": [
+            "#333333",
+            "#666666",
+            "#cccccc",
+            "#999999",
+            "#6699cc"
+          ],
+          "suggestedScrimOpacity": 0.5,
+          "lqip": "data:image/webp;base64,UklGRrYAAABXRUJQVlA4IKoAAABQBQCdASoYABIAPu1qrVEppaQiqAqpMB2JZQC1GuDgzAIiK11rhI7QPnCWmi/RcV16WNgA9roJ+BAWJQ8OK4yd4eqK42QYzIFaGgmEGO2xVcT40pYJ01iWF4UAqW8YWpfXaaY7giWle/dxlIzk3y23qphKT9U3zIem8FKHzZPuQb1CRVxy7rDnOoF1l0r3V4YxLVXG5MjjbAkozikBruuaIBDsfl7u2L4AAA==",
+          "attribution": {
+            "photographer": "Sabrina Schreiber",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mountain_Reflection_on_Alpine_Lake.jpg"
+          },
+          "sortOrder": 7
+        },
+        {
+          "basePath": "/wallpapers/mountains/zagedan-lake-cirque",
+          "width": 1920,
+          "height": 1276,
+          "meanLuminance": 0.5387,
+          "luminanceVariance": 0.1936,
+          "dominantColors": [
+            "#666633",
+            "#999933",
+            "#999999",
+            "#ccccff",
+            "#ffffff"
+          ],
+          "suggestedScrimOpacity": 0.537,
+          "lqip": "data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAADwAwCdASoYABAAPu1iqU2ppaOiMAgBMB2JbAC7H8ACpGPsw0We7qWAAP39HLhmKNs3PyGFAI8xdsA0Vd9W0L06uT9r87uQtSaSbykdyO9kw4pWJ8AqwXsm/ic5X/jljqfjFyq+Kbv38V+dpXkHP9SO/OOH+rXtXsmyNhdehMQLM0vsa8tvlzluBQ91AWebA6KEX9+AAAA=",
+          "attribution": {
+            "photographer": "Vyacheslav Argenberg",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Zagedan_Lakes,_Mountain_cirque,_Caucasus_Mountains.jpg"
+          },
+          "sortOrder": 8
+        },
+        {
+          "basePath": "/wallpapers/mountains/zagedan-ridge-lakes",
+          "width": 1920,
+          "height": 1276,
+          "meanLuminance": 0.557,
+          "luminanceVariance": 0.1697,
+          "dominantColors": [
+            "#999966",
+            "#666633",
+            "#cccc99",
+            "#333333",
+            "#ccccff"
+          ],
+          "suggestedScrimOpacity": 0.537,
+          "lqip": "data:image/webp;base64,UklGRpwAAABXRUJQVlA4IJAAAADQAwCdASoYABAAPu1iqU2ppaOiMAgBMB2JZACdAB40wo541g9+nRgA4gL/K27ltiIEZo2Usjs92/7BYgP5XdzA6xej68YJbHLAQ8A0X78qqSYzhvxxROeNVJeIaCpuzFX6QmqmgT11eYN4wz09mYczhIT9TRLIHi/XMCnAEGwi8rklFUtT942be7UXNWFAAAA=",
+          "attribution": {
+            "photographer": "Vyacheslav Argenberg",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Zagedan_Ridge,_Zagedan_Valley,_Caucasus_Mountains,_Karachay-Cherkessia.jpg"
+          },
+          "sortOrder": 9
+        },
+        {
+          "basePath": "/wallpapers/mountains/gorner-glacier-panorama",
+          "width": 1920,
+          "height": 476,
+          "meanLuminance": 0.5084,
+          "luminanceVariance": 0.1908,
+          "dominantColors": [
+            "#666666",
+            "#cccccc",
+            "#6699cc",
+            "#333333",
+            "#999999"
+          ],
+          "suggestedScrimOpacity": 0.526,
+          "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAADwAwCdASoYAAYAPu1mqk4ppaOiMAgBMB2JYwCdAB9ONyGUkfNL8oeAAM44Pyh61aPEFf5xCFe1psF3xQ+J+j1B7m4zoN/5tN/EaD8uxrs7GQeC9VNHWRXsPjMPpOrbioPkfURRXjgtLul9IaFHJAAA",
+          "attribution": {
+            "photographer": "Carsten Steger",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Panorama_of_the_mountains_south_of_Zermatt.jpg"
+          },
+          "sortOrder": 10
+        },
+        {
+          "basePath": "/wallpapers/mountains/julian-alps-lake-fog",
+          "width": 1920,
+          "height": 933,
+          "meanLuminance": 0.4764,
+          "luminanceVariance": 0.2267,
+          "dominantColors": [
+            "#cccccc",
+            "#336666",
+            "#333333",
+            "#999999",
+            "#666633"
+          ],
+          "suggestedScrimOpacity": 0.523,
+          "lqip": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAADQAwCdASoYAAwAPu1kqU2ppaOiMAgBMB2JYgCdACIAuQFDvOgXuAAA/eNfnO2VMw53ILeFuN4g31kOlGYhWecy3cbqjt+U+eLDYXDLenDmiRr65e2KxG6j0bDg6326e+y6qLc+OHSNcqDJHei509Qf7WLUXOPb8fQXQjjgZeK9bAHOojgJrnAA",
+          "attribution": {
+            "photographer": "chensiyuan",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:1_julian_alps_panorama.jpg"
+          },
+          "sortOrder": 11
+        },
+        {
+          "basePath": "/wallpapers/mountains/julian-alps-vrsic-pass",
+          "width": 1920,
+          "height": 632,
+          "meanLuminance": 0.4919,
+          "luminanceVariance": 0.2131,
+          "dominantColors": [
+            "#cccccc",
+            "#666666",
+            "#333300",
+            "#3399cc",
+            "#999999"
+          ],
+          "suggestedScrimOpacity": 0.525,
+          "lqip": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAABQBACdASoYAAgAPu1iqU2ppaOiMAgBMB2JZgCdBagBt0QzyhnB5t4AeIuAAP5bwUVF69SUpkXEyLw1B2qqV6ssyrD7NwJtXzlTghocdcM8vE+1+oOQplu0dWXR5PXdQzVBwewxck2fde8FWXwQuSq52LxeskPyi3gAAA==",
+          "attribution": {
+            "photographer": "Krzysztof Golik",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Julian_Alps_from_Vrsic_Pass_(3).jpg"
+          },
+          "sortOrder": 12
+        },
+        {
+          "basePath": "/wallpapers/mountains/torres-del-paine-panorama",
+          "width": 1920,
+          "height": 452,
+          "meanLuminance": 0.5951,
+          "luminanceVariance": 0.2723,
+          "dominantColors": [
+            "#ccccff",
+            "#333333",
+            "#99cccc",
+            "#ffffff",
+            "#666666"
+          ],
+          "suggestedScrimOpacity": 0.576,
+          "lqip": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAADwAwCdASoYAAYAPu1iqk2ppaQiMAgBMB2JQBdiP/wGy399v62DELHwAP7oTMDfu8OexriMHsM6KKqasdfcg2RkLAzGSCSmh5MO0IZJmVNZwDtaHjccOiq4OMp3WzTfgAA=",
+          "attribution": {
+            "photographer": "Correliebre",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Torres_del_Paine_Panoramica_2019.jpg"
+          },
+          "sortOrder": 13
+        },
+        {
+          "basePath": "/wallpapers/mountains/glencoe-lochan-reflection",
+          "width": 1920,
+          "height": 775,
+          "meanLuminance": 0.4964,
+          "luminanceVariance": 0.224,
+          "dominantColors": [
+            "#cccccc",
+            "#333333",
+            "#666633",
+            "#999999",
+            "#999933"
+          ],
+          "suggestedScrimOpacity": 0.53,
+          "lqip": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAABwAwCdASoYAAoAPu1iqU2ppaQiMAgBMB2JQAAJI/q5WTm9RwAA/saJyTW8o/B+laGCuvSring4+v4fN7HpHs8Sz4WkXj8ovwEzoLxLpuekcvNR9/DMdD1meofP2zvY6zxmxCQsGb+CT1cxTAtrD8QfuYoAAA==",
+          "attribution": {
+            "photographer": "Daniel Kraft",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 3.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Glencoe_Lochan_reflections_3_20211022.jpg"
+          },
+          "sortOrder": 14
+        },
+        {
+          "basePath": "/wallpapers/mountains/highlands-silhouette-mono",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.4796,
+          "luminanceVariance": 0.2992,
+          "dominantColors": [
+            "#cccccc",
+            "#000000",
+            "#999999",
+            "#666666",
+            "#333333"
+          ],
+          "suggestedScrimOpacity": 0.543,
+          "lqip": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADQAwCdASoYABAAPu1krU2ppaSiMAgBMB2JaQAAYf53AZkDAXPegAAA/mXCPdBtwt8Y/diVSwhGjhe6ozYNaiG+WS33hhmbBvjwsnMdkbOXvLopJuvCLEAA",
+          "attribution": {
+            "photographer": "Matthew Prior",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mountain_silhouettes_in_the_Scottish_Highlands.jpg"
+          },
+          "sortOrder": 15
+        },
+        {
+          "basePath": "/wallpapers/mountains/mt-sefton-massif",
+          "width": 1920,
+          "height": 670,
+          "meanLuminance": 0.4681,
+          "luminanceVariance": 0.2254,
+          "dominantColors": [
+            "#cccccc",
+            "#663333",
+            "#6699cc",
+            "#666666",
+            "#999999"
+          ],
+          "suggestedScrimOpacity": 0.52,
+          "lqip": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAADQAwCdASoYAAgAPu1iqU2ppaOiMAgBMB2JQBOmUAA7/NWhNz8T0yAA/peY/GidK11pH2V6/zM3FHf9xU1uUJuRKI69SY4b+IpNgcY71lMKGJ6cn+TC6osf+Msta0rfhf4Qvk5izGacI9QNqfwJXSPSRreE9gAA",
+          "attribution": {
+            "photographer": "Michal Klajban",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mt_Sefton_massif,_Aoraki_-_Mount_Cook_National_Park,_New_Zealand.jpg"
+          },
+          "sortOrder": 16
+        },
+        {
+          "basePath": "/wallpapers/mountains/nz-main-divide-ridge",
+          "width": 1920,
+          "height": 755,
+          "meanLuminance": 0.469,
+          "luminanceVariance": 0.1849,
+          "dominantColors": [
+            "#666633",
+            "#333333",
+            "#6699cc",
+            "#66ccff",
+            "#999999"
+          ],
+          "suggestedScrimOpacity": 0.51,
+          "lqip": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAADwAwCdASoYAAkAPu1iqk4ppaQiMAgBMB2JZgCdMoADTJnKXsHIEsKgAPx5EDpC2awmlwSalAUmtVI/IN+bxuQWtUYYk2MXvAlQHOq/rrBvbi5+K0ZayO/VQXBKDMz7icgNTDHc8cyAAA==",
+          "attribution": {
+            "photographer": "Michal Klajban",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Main_Divide_from_Yeats_Ridge_Hut,_West_Coast_Region,_New_Zealand.jpg"
+          },
+          "sortOrder": 17
         }
       ]
     },
@@ -295,6 +893,305 @@
             "sourceUrl": "https://commons.wikimedia.org/wiki/File:1933_Ford_Model_18_5_window_Coupe_(32043397296).jpg"
           },
           "sortOrder": 2
+        },
+        {
+          "basePath": "/wallpapers/muscle-and-machines/2023-gmc-sierra-2500-denali-hd",
+          "width": 1920,
+          "height": 1235,
+          "meanLuminance": 0.3759,
+          "luminanceVariance": 0.2265,
+          "dominantColors": [
+            "#333333",
+            "#666666",
+            "#cccccc",
+            "#999999",
+            "#000033"
+          ],
+          "suggestedScrimOpacity": 0.488,
+          "lqip": "data:image/webp;base64,UklGRqwAAABXRUJQVlA4IKAAAACQBACdASoYAA8APu1iqU2ppaOiMAgBMB2JZQC2yYvWyYOmfSXMJsZf5jNCqwAA/rwxtbiyCYXWni7WKKQAOzSvkSFWAnSH8hwFvzA2i5OP9iEg28fBosOzOPBa5QEZsRR8OSSRtkkbnwb1TfRFzFN1XPtGvAWJSR9CIxrr3ug9NCZvuyh89jnI7rsf+D9HuNHltRz5j88vAOrzWiWGGagA",
+          "attribution": {
+            "photographer": "Ethan Llamas",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:2023_GMC_Sierra_2500_Denali_HD_Ultimate_in_Titanium_Rush_Metallic,_front_left.jpg"
+          },
+          "sortOrder": 3
+        },
+        {
+          "basePath": "/wallpapers/muscle-and-machines/23-gmc-sierra-3500hd-slt",
+          "width": 1920,
+          "height": 1440,
+          "meanLuminance": 0.5568,
+          "luminanceVariance": 0.3024,
+          "dominantColors": [
+            "#cccccc",
+            "#333333",
+            "#666666",
+            "#ffffff",
+            "#999999"
+          ],
+          "suggestedScrimOpacity": 0.57,
+          "lqip": "data:image/webp;base64,UklGRrgAAABXRUJQVlA4IKwAAAAwBQCdASoYABIAPu1qrFEppaQiqAqpMB2JZwC/OBEgxG86nNdvThU95NCKisU5TlXAAAD+7VmbXahAceHhGp5MjP93Rb6MvCIp34rvIhjveNAPkYEl/XveX5PB9ewumvOHNljc5IvZ3ZJT1QNOgiwAzGn+as1fy4eKA3NhQdnkXOzHwPMwHEjORwfqmXytbD5/jnNaSDGpbwiCfxXzKbFL/O6Rdrr1iIFSIAAA",
+          "attribution": {
+            "photographer": "HJUdall",
+            "source": "Wikimedia Commons",
+            "license": "CC0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:23_GMC_Sierra_3500HD_SLT.jpg"
+          },
+          "sortOrder": 4
+        },
+        {
+          "basePath": "/wallpapers/muscle-and-machines/gmc-sierra-gmtk2xx-dsc-8581",
+          "width": 1920,
+          "height": 1035,
+          "meanLuminance": 0.5206,
+          "luminanceVariance": 0.221,
+          "dominantColors": [
+            "#666666",
+            "#333333",
+            "#cccccc",
+            "#999999",
+            "#ccffff"
+          ],
+          "suggestedScrimOpacity": 0.537,
+          "lqip": "data:image/webp;base64,UklGRpYAAABXRUJQVlA4IIoAAADQAwCdASoYAA0APu1iqU2ppaQiMAgBMB2JYwCzgCIedxMeghsseAAA/I2cLkB9t+OA4U/DsSIGBldSR3fueKCUE0/pOi5J1boRagXFUVPLVlVIAol1Kd6XT4zTze1Sv29Mtb2wQSsxLgz8/Yg0cxOdig5SMTyAsW298Xdw5BXYSQPM8LIAHGsAAAA=",
+          "attribution": {
+            "photographer": "Alexander Migl",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:GMC_Sierra_(GMTK2XX)_DSC_8581.jpg"
+          },
+          "sortOrder": 5
+        },
+        {
+          "basePath": "/wallpapers/muscle-and-machines/gmc-sierra-1500-denali-6-2l-cr",
+          "width": 1920,
+          "height": 1440,
+          "meanLuminance": 0.4494,
+          "luminanceVariance": 0.2238,
+          "dominantColors": [
+            "#999999",
+            "#333333",
+            "#666666",
+            "#000000",
+            "#cccccc"
+          ],
+          "suggestedScrimOpacity": 0.513,
+          "lqip": "data:image/webp;base64,UklGRsYAAABXRUJQVlA4ILoAAADQBACdASoYABIAPu1orVCppaQiqAqpMB2JZQC06ywAkm/mGV0wfDLctixeTN6tCAD6RmatCxWQSX7GAjxkq3rkHUd62qUA+Oq7icRcTxuvGf/VCWkK7fK67YN+94vczqqsLoNhCsDlVUH1X6Aq4kcg8rcVpaMJIMtkUZEW2Ygh8zFAifX7ZrShoB420dJrvDWw1wnSYaVvAElgCPwbzQKhKO17ymAFA2MuQ6PUPk7igNC3U2eeW/3AAAA=",
+          "attribution": {
+            "photographer": "Damian B Oh",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:GMC_Sierra_1500_Denali_6.2L_Crew_Cab_GMTT1XX_Avalon_White_Pearl_(11).jpg"
+          },
+          "sortOrder": 6
+        },
+        {
+          "basePath": "/wallpapers/muscle-and-machines/gmc-sierra-1500-pickup-truck-e",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.3833,
+          "luminanceVariance": 0.1999,
+          "dominantColors": [
+            "#666633",
+            "#333333",
+            "#6699cc",
+            "#000000",
+            "#999966"
+          ],
+          "suggestedScrimOpacity": 0.484,
+          "lqip": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAAAQBACdASoYABAAPu1iqU2ppaOiMAgBMB2JaACdABcBAotLZPenT5fTsAD+rO6CulX7RGUQX8TuE8qG95FEhVUJzlJWlukBX4zNx3ISDTD0zp2hOJmHxpRNGFq9lrai1qWJOjGcm01FXHbNyLvuIF4vQ5+D1ZMJQE7E5zEAgpAKR7PL0h/7HG/j/WnAXk+nJEz1YW+951lyKF4C9ziAAA==",
+          "attribution": {
+            "photographer": "Chris Woodrich",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:GMC_Sierra_1500_pickup_truck,_Essex,_Ontario,_2025-08-30.jpg"
+          },
+          "sortOrder": 7
+        },
+        {
+          "basePath": "/wallpapers/muscle-and-machines/gmc-sierra-2017-pickup-truck",
+          "width": 1920,
+          "height": 1440,
+          "meanLuminance": 0.5952,
+          "luminanceVariance": 0.249,
+          "dominantColors": [
+            "#cccccc",
+            "#666666",
+            "#999999",
+            "#333333",
+            "#ffffff"
+          ],
+          "suggestedScrimOpacity": 0.571,
+          "lqip": "data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAADQBACdASoYABIAPu1srFEppaQiqAqpMB2JZwDLpBI/uVcaDpz9ESPNlOv/dPGfgAD+7XFtr/Gtj4sXSnJFWaeE453Kq0ZaUXDkAu5nA5vVCuzmhFLEhtxUjeAFfdOlFo8Px/y82i/z51xg4nHvp21kgWVIRoSJGZRElElcrt52eJj8Ebr9uFScLt1hVq0+6FL82h+AAAA=",
+          "attribution": {
+            "photographer": "MTSRider18",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 3.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:GMC_Sierra_2017_Pickup_Truck.jpg"
+          },
+          "sortOrder": 8
+        },
+        {
+          "basePath": "/wallpapers/muscle-and-machines/gmc-sierra-2017-pickup-truck-2",
+          "width": 1920,
+          "height": 1440,
+          "meanLuminance": 0.4931,
+          "luminanceVariance": 0.245,
+          "dominantColors": [
+            "#cccccc",
+            "#333333",
+            "#666666",
+            "#999999",
+            "#ffffff"
+          ],
+          "suggestedScrimOpacity": 0.534,
+          "lqip": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAACwBACdASoYABIAPu1qrVEppaQiqAqpMB2JZwDB51/AKTtMOXhGOa1EWsK/B4ZwAP7MEq2wC9J5ghuBdNfQVe3M/bnt5GwlP7dy2vD/FOmgy1fqKhQVChbNepRXv6WODzlhEuFkKqPKfBgtCeop1+aTcmnqqdiV62VAi+cKb20lqxDhf0vfXGsAxPAueUJSUWpZPnOQjaVSrZCic5QAAA==",
+          "attribution": {
+            "photographer": "MTSRider18",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 3.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:GMC_Sierra_2017_Pickup_Truck_2.jpg"
+          },
+          "sortOrder": 9
+        },
+        {
+          "basePath": "/wallpapers/muscle-and-machines/gmc-sierra-2017-pickup-truck-3",
+          "width": 1920,
+          "height": 1440,
+          "meanLuminance": 0.4674,
+          "luminanceVariance": 0.2449,
+          "dominantColors": [
+            "#333333",
+            "#999999",
+            "#666666",
+            "#cccccc",
+            "#ffffff"
+          ],
+          "suggestedScrimOpacity": 0.525,
+          "lqip": "data:image/webp;base64,UklGRrIAAABXRUJQVlA4IKYAAAAQBQCdASoYABIAPu1sqlEppaOiqAqpMB2JZQC+SywAntqykDPmZnzq/rMIVuKcAv8AAP5O6U3kffLPDfhU9Ql7bK3hWtSngOG1lEqanaJgyMbuQF/NV0jZhZKZ4gpT/nTBCijZh43GWTTjfQIRYBInneoWHozyQesSsVWsNzZaG6dPQFhnI4OCkKuyxBsJM/CaZU9hk2xqfQQh0OMP7rDyATHkAAAA",
+          "attribution": {
+            "photographer": "MTSRider18",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 3.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:GMC_Sierra_2017_Pickup_Truck_3.jpg"
+          },
+          "sortOrder": 10
+        },
+        {
+          "basePath": "/wallpapers/muscle-and-machines/1994-gmc-sierra-bs-o24",
+          "width": 1920,
+          "height": 1146,
+          "meanLuminance": 0.4334,
+          "luminanceVariance": 0.1921,
+          "dominantColors": [
+            "#333333",
+            "#999999",
+            "#666633",
+            "#666699",
+            "#cccccc"
+          ],
+          "suggestedScrimOpacity": 0.5,
+          "lqip": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAAAwBACdASoYAA4APu1iqU2ppaQiMAgBMB2JZgDE2CFsq/Mi9YxhINk5dMAAyzk0AsQrkNUX2NvS8tlcpr2riiR3UDz/quL+AbRs3Wzvs9SXC+ejBmzt3xRb/iBneEcKGv8PMzvXLGHA5wOnnXLvGZEsqqn4YR2EJqOQHBUEzR2/3RB82UL6BTXUugiX/FgA",
+          "attribution": {
+            "photographer": "MrWalkr",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:1994_GMC_Sierra_BS_O24.jpg"
+          },
+          "sortOrder": 11
+        },
+        {
+          "basePath": "/wallpapers/muscle-and-machines/1999-gmc-sierra-2500-front-lef",
+          "width": 1920,
+          "height": 1166,
+          "meanLuminance": 0.4492,
+          "luminanceVariance": 0.2186,
+          "dominantColors": [
+            "#666666",
+            "#333333",
+            "#999999",
+            "#cccccc",
+            "#ffffff"
+          ],
+          "suggestedScrimOpacity": 0.512,
+          "lqip": "data:image/webp;base64,UklGRpwAAABXRUJQVlA4IJAAAAAwBACdASoYAA8APu1iqU2ppaOiMAgBMB2JZwAD5pGp1yWdjyChMA92yAAA+bxtOJuyDVHh3oiiFEDQu4DIs1bbMiX5HrqO5du8IZI0EV1NXyce7hlk/l8VVk1h1lkpFksMRMQx9O/OZZpQOIupUBfigPo032IgjTK5M41x9yCTh5H/FNm46PGpk3fBExr4DgA=",
+          "attribution": {
+            "photographer": "SsmIntrigue",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:1999_GMC_Sierra_2500,_Front_Left,_02-18-2021.jpg"
+          },
+          "sortOrder": 12
+        },
+        {
+          "basePath": "/wallpapers/muscle-and-machines/gmc-sierra-2017-pickup-truck-4",
+          "width": 1920,
+          "height": 1440,
+          "meanLuminance": 0.6102,
+          "luminanceVariance": 0.2257,
+          "dominantColors": [
+            "#cccccc",
+            "#666666",
+            "#999999",
+            "#333333",
+            "#ffffff"
+          ],
+          "suggestedScrimOpacity": 0.57,
+          "lqip": "data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAAAwBQCdASoYABIAPu1gq1AppKOqMBgIAUAdiWUAuwARRUS2DgOtroCrsWXo1YeXFnbuAAD+6yOZG4kYb58XONRC02wV2g5Ea7jwI8og6TcC/ku0InbH8rQ9wGabsu8LwIRe0IK1KhRCsWYwQQ+mBAWeA3C5pxnzUbuQiQjiNkhw/OFwxuucVzgoH0jDHNuPzQikin8AAAA=",
+          "attribution": {
+            "photographer": "MTSRider18",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 3.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:GMC_Sierra_2017_Pickup_Truck_4.jpg"
+          },
+          "sortOrder": 13
+        },
+        {
+          "basePath": "/wallpapers/muscle-and-machines/gmc-sierra-2017-pickup-truck-5",
+          "width": 1920,
+          "height": 1440,
+          "meanLuminance": 0.3383,
+          "luminanceVariance": 0.2105,
+          "dominantColors": [
+            "#333333",
+            "#666666",
+            "#999999",
+            "#cccccc",
+            "#000000"
+          ],
+          "suggestedScrimOpacity": 0.471,
+          "lqip": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAADQBACdASoYABIAPu1sq1EppaOiqAqpMB2JZwDM0A9IFvrcxu/eXSNf3hZGkIkPAAD+x2KCmUUb6TeUDlu+lS2Ym4v+FH4I9NFAOM7kh+rC1ikd5wSsCkdU8P7canr9vE/yFrx+R94XUB63rxuKDoknevkXXNZ0yEv342Mu/MuiusABluzB1sldTUfDaqdnCwwAAA==",
+          "attribution": {
+            "photographer": "MTSRider18",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 3.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:GMC_Sierra_2017_Pickup_Truck_5.jpg"
+          },
+          "sortOrder": 14
+        },
+        {
+          "basePath": "/wallpapers/muscle-and-machines/gmc-sierra-alberta",
+          "width": 1920,
+          "height": 1440,
+          "meanLuminance": 0.4912,
+          "luminanceVariance": 0.2108,
+          "dominantColors": [
+            "#666666",
+            "#99cccc",
+            "#333333",
+            "#999999",
+            "#000000"
+          ],
+          "suggestedScrimOpacity": 0.525,
+          "lqip": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAACwBACdASoYABIAPu1srFEppiQiqAqpMB2JZQCw7BBQ5pB6fx6rpKfAaY2B8Z2AAP6X93mNJjMKR0+K2IokUbahTNI2nzrSjbmm5eSOU7ubE8WpfMkRTLpVCRZpuMk6qlS7tmQmSpqsIyaTrSCCxEKKsGCtQyNQCOHlputtuDqheK3KFibxZniIeE53zHchqLwCGu96q2BcYQWBFAAAAA==",
+          "attribution": {
+            "photographer": "dave_7",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 2.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:GMC_Sierra_Alberta.jpg"
+          },
+          "sortOrder": 15
         }
       ]
     },
@@ -486,6 +1383,75 @@
             "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bonfire,_Great_Slave_Lake_(52771697844).jpg"
           },
           "sortOrder": 7
+        },
+        {
+          "basePath": "/wallpapers/campfire/riverside-lagerfeuer",
+          "width": 1920,
+          "height": 1440,
+          "meanLuminance": 0.0765,
+          "luminanceVariance": 0.1619,
+          "dominantColors": [
+            "#000000",
+            "#663300",
+            "#cc6633",
+            "#ff9933",
+            "#993333"
+          ],
+          "suggestedScrimOpacity": 0.367,
+          "lqip": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAABwBACdASoYABIAPu1ep06ppKgiMBgMATAdiWIAyrQQ3g/rOBE/SDgw13+sQAD+9CJoYIPFQOKQJjfQ2/kNVyFiVroQ8WaQFMft1vDCdfU5gSo7SqWPv5KZph1ZoSzCH40Yb4rVTi94Hj3W7uyAmdwlHptAAAAA",
+          "attribution": {
+            "photographer": "Michael Hoelzl",
+            "source": "Wikimedia Commons",
+            "license": "Public domain",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:2009_Lagerfeuer.JPG"
+          },
+          "sortOrder": 8
+        },
+        {
+          "basePath": "/wallpapers/campfire/simple-campfire",
+          "width": 1920,
+          "height": 1272,
+          "meanLuminance": 0.0606,
+          "luminanceVariance": 0.148,
+          "dominantColors": [
+            "#000000",
+            "#663300",
+            "#cc6600",
+            "#ff9933",
+            "#ffcc66"
+          ],
+          "suggestedScrimOpacity": 0.358,
+          "lqip": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAQBACdASoYABAAPu1iqU2ppaOiMAgBMB2JaAC+aExDA1WUkWpz+3WqcAD+9Bsmy9KW2QWtrfFXaywMbmntgBkc3suSK/XZ72Nte6n6rZcQIKpuze7JJYHABQqAuIAA",
+          "attribution": {
+            "photographer": "Leon Bovenkerk",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 2.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:A_simple_campfire.jpg"
+          },
+          "sortOrder": 9
+        },
+        {
+          "basePath": "/wallpapers/campfire/night-fire-sparks",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.1129,
+          "luminanceVariance": 0.1911,
+          "dominantColors": [
+            "#000000",
+            "#663300",
+            "#996633",
+            "#cc9966",
+            "#ffcc99"
+          ],
+          "suggestedScrimOpacity": 0.387,
+          "lqip": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAAAwBACdASoYABAAPu1iqk4ppaQiMAgBMB2JagC7ACFSzOSmsbov+7uI8QAA/vQlLll1/zduBjpg1+23P2P7YuLWfxcqjPEeveZEHnX3uFMnxU+s+9mlFrz4vxJqhWz49zdkm5CLJDr5e1C7yWOZvClIBoAAAA==",
+          "attribution": {
+            "photographer": "Raph.zufferey",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 3.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Feu_de_nuit.jpg"
+          },
+          "sortOrder": 10
         }
       ]
     },
@@ -654,6 +1620,213 @@
             "sourceUrl": "https://commons.wikimedia.org/wiki/File:Gaming-PC_20240426_HOF2496-HDR_RAW-Export.png"
           },
           "sortOrder": 6
+        },
+        {
+          "basePath": "/wallpapers/gaming/castlevania-marble-of-souls-da",
+          "width": 1920,
+          "height": 1446,
+          "meanLuminance": 0.2855,
+          "luminanceVariance": 0.1497,
+          "dominantColors": [
+            "#333333",
+            "#666666",
+            "#000033",
+            "#999999",
+            "#333399"
+          ],
+          "suggestedScrimOpacity": 0.437,
+          "lqip": "data:image/webp;base64,UklGRqgAAABXRUJQVlA4IJwAAACwBACdASoYABIAPu1srFEppaQiqAqpMB2JQBadAXsATlUXhuhC/AFBg+IbjEoAAP7PSyv9Yx9u71S+Ovc1S7SwnlfucK4XqfTh4965bgr5qhvJQ8gvcO+gkEOKLyrQTW3KaZqY8QktI6vNeQ45zYmBN+D5Mo1vTlB0lwE3IfQ82qQE6YELYqbcn8QbhxCbGfNXxxWDNRTRCTDSAAA=",
+          "attribution": {
+            "photographer": "Reconrabbit",
+            "source": "Wikimedia Commons",
+            "license": "CC0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Castlevania_Marble_of_Souls_Danbury_R1.jpg"
+          },
+          "sortOrder": 7
+        },
+        {
+          "basePath": "/wallpapers/gaming/computer-space-arcade-cabinet-",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.0989,
+          "luminanceVariance": 0.1099,
+          "dominantColors": [
+            "#000000",
+            "#333333",
+            "#666666",
+            "#999999",
+            "#993333"
+          ],
+          "suggestedScrimOpacity": 0.362,
+          "lqip": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAACwAwCdASoYABAAPu1kqU2ppaOiMAgBMB2JZwAAXBuuP9IEz9oEgAD+7ofl3UiFgAMNyOrb6+MBxHIJ9reThYuE4bmYXLJdNHY+6c55bFcBLDakB4AAAA==",
+          "attribution": {
+            "photographer": "Logg Tandy",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Computer_Space_arcade_cabinet_Model_and_Serial_number_badge_-_at_Billy's_Midway_Arcade_-_January_2025.jpg"
+          },
+          "sortOrder": 8
+        },
+        {
+          "basePath": "/wallpapers/gaming/computer-space-cabinet-backsid",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.2552,
+          "luminanceVariance": 0.2427,
+          "dominantColors": [
+            "#000000",
+            "#663333",
+            "#666666",
+            "#333300",
+            "#999999"
+          ],
+          "suggestedScrimOpacity": 0.45,
+          "lqip": "data:image/webp;base64,UklGRrAAAABXRUJQVlA4IKQAAABQBACdASoYABAAPu1iqU2ppaOiMAgBMB2JYgCsOUANEEz+FUsjBIIKvqzAAPwz0/ttjSBlk/PO2Q3XdiW6Y8WKjSTyKWN8AITRccCLrFFzS7kVvgvkHbwLwuVL4XzOX6VcYsooWBJnbV4WevNGxAPtTf44bMJ3WXkGaF+sSNdYLzqPh0h7T6tX9BB2PQxPwXWIYlbbcL4+yh+TtaL2etWc1nyAAA==",
+          "attribution": {
+            "photographer": "Logg Tandy",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Computer_Space_cabinet_backside,_open,_wider_shot_-_at_Billy's_Midway_Arcade_-_January_2025.jpg"
+          },
+          "sortOrder": 9
+        },
+        {
+          "basePath": "/wallpapers/gaming/gold-cabinet-ddr-world-danbury",
+          "width": 1920,
+          "height": 1446,
+          "meanLuminance": 0.2772,
+          "luminanceVariance": 0.1855,
+          "dominantColors": [
+            "#333333",
+            "#666666",
+            "#000033",
+            "#999966",
+            "#003399"
+          ],
+          "suggestedScrimOpacity": 0.443,
+          "lqip": "data:image/webp;base64,UklGRtQAAABXRUJQVlA4IMgAAACQBQCdASoYABIAPu1oqU+ppiOiKA1RMB2JbACdM2h/UBLqyrKHqcINfR7wLM/YTSL3yOLaAAD+6/rejJJoWKqt7oWkS3Zq+iCfx9BRijPR1bFwWXyOM0IZvNxcVziInShMQf+c9HWedd5EwCpKyNqd22LLVS12Tc8GFdPFQQbxf/nLurNSpGvoGUyhsjCJAsRhhDsBa5gmX++12lnXcdebfY5jVyW4sJG9ZRMjkwpxrtLyYYMgzteJZI8crL9lvHxXgE8tAb4wAA==",
+          "attribution": {
+            "photographer": "Reconrabbit",
+            "source": "Wikimedia Commons",
+            "license": "CC0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Gold_Cabinet_DDR_World_Danbury_R1.jpg"
+          },
+          "sortOrder": 10
+        },
+        {
+          "basePath": "/wallpapers/gaming/gold-railroad-danbury-r1",
+          "width": 1920,
+          "height": 1446,
+          "meanLuminance": 0.3106,
+          "luminanceVariance": 0.1381,
+          "dominantColors": [
+            "#333333",
+            "#666633",
+            "#336666",
+            "#666699",
+            "#999966"
+          ],
+          "suggestedScrimOpacity": 0.443,
+          "lqip": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAACQBQCdASoYABIAPu1qrVCppaQiqAqpMB2JYgCdMs8zGCdmAnEzOnL54ALYhVwgwf9jStIywAD+vb9dmGdNSq/LGQKP8R9YG6Ev6d4CqBgFbVw1tIph8KHrk5LgXkT6GrLx0yVVNdhSQG28/Y3gs2mwNPQCdPnV1ZJkiJQE35flE+wvUUHWLp9/uLkq/TC92v0p+F2XKE+kwSH1GzgAAA==",
+          "attribution": {
+            "photographer": "Reconrabbit",
+            "source": "Wikimedia Commons",
+            "license": "CC0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Gold_Railroad_Danbury_R1.jpg"
+          },
+          "sortOrder": 11
+        },
+        {
+          "basePath": "/wallpapers/gaming/mazinger-z-arcade-cabinet-2026",
+          "width": 1920,
+          "height": 1440,
+          "meanLuminance": 0.2936,
+          "luminanceVariance": 0.3111,
+          "dominantColors": [
+            "#000000",
+            "#333333",
+            "#ffffff",
+            "#666666",
+            "#cccc99"
+          ],
+          "suggestedScrimOpacity": 0.481,
+          "lqip": "data:image/webp;base64,UklGRuAAAABXRUJQVlA4INQAAACwBQCdASoYABIAPu1qq1EppaOiqAqpMB2JQBZ0J38MtwFw5ERNTpMq2C+Dgv5UyIoqSivKxAAA/urzS5avXo341MhHnI2fQnJ7zW7hFx2UfAFlZgeId9ki17PCIT2RDrt6b0xuo3J3/yoYSaPjJJbKL4ihNiKAJQvAmOqpxRhEdycFP2G7h6InuNax56dvHvC/WPOTFIN8KRAzaq+S8T9myDvcqCigiOLxZDBnUTXzKWfWCtxEW2Af9mGNVqkLx64HGdz7McJkI0H+rk4gljLvsTigAA==",
+          "attribution": {
+            "photographer": "GuiltyGearFan37",
+            "source": "Wikimedia Commons",
+            "license": "CC0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mazinger_Z_arcade_cabinet_2026-08-14.jpg"
+          },
+          "sortOrder": 12
+        },
+        {
+          "basePath": "/wallpapers/gaming/playfield-of-star-wars-themed-",
+          "width": 1920,
+          "height": 1536,
+          "meanLuminance": 0.3661,
+          "luminanceVariance": 0.2501,
+          "dominantColors": [
+            "#333333",
+            "#666666",
+            "#000000",
+            "#999999",
+            "#cccccc"
+          ],
+          "suggestedScrimOpacity": 0.491,
+          "lqip": "data:image/webp;base64,UklGRgoBAABXRUJQVlA4IP4AAACwBQCdASoYABMAPu1srVIppaQiqAgBMB2JagCzoSG7GSbnPHTgc6Ki9FGstrNa78HWaUqis8AA/u9hmRrZY2iiVzHw/8QPiAXH2Cp+XC8B94bt57bx5Q6BMFfsMwmfhnTf7N04ex41Wnqj1VfV6kT2IwUcK+zWY0+X20eb5swcrVEIFHJ8ATNc+UptBkxiebY50wFnz45quTYqy7pcbXVYa3rvmMc0g3Daj4MUHyj5YNU741Pu+UZ0MjV45nb7GpexE6wvtRerVxAyKnHY+gXZKSxtNoLwtLaIM/BQkByZheSzXhcnj96Gc9YX8fRz2oq8vkNyFA4A7Q5YTn+AAA==",
+          "attribution": {
+            "photographer": "Tessa Bury",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Playfield_of_Star_Wars–Themed_Pinball_Machine.jpg"
+          },
+          "sortOrder": 13
+        },
+        {
+          "basePath": "/wallpapers/gaming/upper-playfield-acrylic-parts-",
+          "width": 1920,
+          "height": 1440,
+          "meanLuminance": 0.531,
+          "luminanceVariance": 0.1497,
+          "dominantColors": [
+            "#999999",
+            "#666666",
+            "#cccccc",
+            "#333333",
+            "#000000"
+          ],
+          "suggestedScrimOpacity": 0.523,
+          "lqip": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAACwBACdASoYABIAPu1irFAppSQisBgIATAdiWUAzcAM0vzyJ+D6lIPtt/iRVcwAAP6sFpV3gv1K7dSBNeZjYDdbUN7SITmnA2nU9CgvAq+VqwA82FEfjLSinztpb3o/OebseTIBm1RhPEKRpgtE3brt4rMZlxB+rdJ3qzs9nTVqZFTLG7pcgAAA",
+          "attribution": {
+            "photographer": "Felipe Sanches from São Paulo, Brazil",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 2.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Upper_playfield_acrylic_parts_produced_at_Metalab_hackerspace_in_Vienna_(5220257040).jpg"
+          },
+          "sortOrder": 14
+        },
+        {
+          "basePath": "/wallpapers/gaming/2018-bay-area-mechanical-keybo",
+          "width": 1920,
+          "height": 1519,
+          "meanLuminance": 0.2968,
+          "luminanceVariance": 0.2551,
+          "dominantColors": [
+            "#000000",
+            "#333333",
+            "#666666",
+            "#cccccc",
+            "#999999"
+          ],
+          "suggestedScrimOpacity": 0.468,
+          "lqip": "data:image/webp;base64,UklGRsAAAABXRUJQVlA4ILQAAAAwBQCdASoYABMAPu1srVEppaQiqAqpMB2JYwDHMYyeRs1u7El0ihm++42jSVNwZxGRlAD+5CIAgqRdkgTlT/rEJXEIZckPQ9yLpIzO+092AcE+uRzdWEpRc2E+MAAg7B65l3rGEM8s4VZpbQaClagEAlW4noqMc5gVk++ej2yEJAkEIzhL90lvClXvD1MsVvuJHyYW4fJNuYVpufPYqplvnczTf2YGMHlP2RXFmOQ/RqKQAAA=",
+          "attribution": {
+            "photographer": "Patrick Breen",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 2.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:2018_Bay_Area_Mechanical_Keyboard_Meetup_(31006275737).jpg"
+          },
+          "sortOrder": 15
         }
       ]
     },
@@ -845,6 +2018,98 @@
             "sourceUrl": "https://commons.wikimedia.org/wiki/File:Thin_blanket_of_snow_covering_the_farm_-_Flickr_-_Joe_K_Gage.jpg"
           },
           "sortOrder": 7
+        },
+        {
+          "basePath": "/wallpapers/northwoods/horsehead-lake-sunset",
+          "width": 1920,
+          "height": 1440,
+          "meanLuminance": 0.3033,
+          "luminanceVariance": 0.2094,
+          "dominantColors": [
+            "#000000",
+            "#003399",
+            "#666666",
+            "#6699cc",
+            "#333366"
+          ],
+          "suggestedScrimOpacity": 0.459,
+          "lqip": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAwBACdASoYABIAPu1qq08ppiOiMBgIATAdiWIApawQ68JhgPmqpffc6QAA/uQOmgO11Mvrb+mTa25Q9SG7qtDyeLvVu/bW8rB/K7ClOFqLJKAmlxW59MdVj6Jv8mS93W4knOGF9LEQAA==",
+          "attribution": {
+            "photographer": "Corey Coyle",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 3.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:East_Horsehead_Lake_at_Sunset_-_panoramio.jpg"
+          },
+          "sortOrder": 8
+        },
+        {
+          "basePath": "/wallpapers/northwoods/crescent-lake-autumn",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.4936,
+          "luminanceVariance": 0.2658,
+          "dominantColors": [
+            "#cccccc",
+            "#333300",
+            "#999999",
+            "#666666",
+            "#000000"
+          ],
+          "suggestedScrimOpacity": 0.539,
+          "lqip": "data:image/webp;base64,UklGRrQAAABXRUJQVlA4IKgAAAAwBACdASoYABAAPu1iqU2ppaOiMAgBMB2JYwC06Yv+YJbyuuAm/+HcugAA9HBeAjacfwgYNHO0m+TWQ+CDgH4hDrCWrp5OSYIMx4+CrizlerbzIrs98gATYG4s1SY9zro0vdW+M12U2HTRB+d//VWBKB5kPPGjdTY+76Qm3KAfH6KqibrVCnl/nzpI/AwWXvE/GUiPEHBx+O7Rn9uFcArimMqoISAgAAA=",
+          "attribution": {
+            "photographer": "Tony Webster",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 2.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Autumn_at_Crescent_Lake,_Wisconsin_(49113407061).jpg"
+          },
+          "sortOrder": 9
+        },
+        {
+          "basePath": "/wallpapers/northwoods/driftless-area-lake",
+          "width": 1920,
+          "height": 1440,
+          "meanLuminance": 0.4303,
+          "luminanceVariance": 0.1906,
+          "dominantColors": [
+            "#00ccff",
+            "#333300",
+            "#666600",
+            "#66cccc",
+            "#336633"
+          ],
+          "suggestedScrimOpacity": 0.498,
+          "lqip": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAADQBACdASoYABIAPu1qqU8ppiOiMBgIATAdiWwAsR9kARfDZGAm0PlB/MrzsInsAABet3V5V+39glw6zQ1/tjvZa4tWA+P/xcm+/bd/fG5xMh0Vxi9DHTI3vFEPg9Nuvrak3MbLrEkqAfWdrMvZdJdN3tvH7R1bXV738GGzCsgAAA==",
+          "attribution": {
+            "photographer": "Corey Coyle",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 3.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Driftless_Area_and_Lake_Wisconsin_-_panoramio.jpg"
+          },
+          "sortOrder": 10
+        },
+        {
+          "basePath": "/wallpapers/northwoods/fall-colors-lake-wisconsin",
+          "width": 1920,
+          "height": 1440,
+          "meanLuminance": 0.4736,
+          "luminanceVariance": 0.2057,
+          "dominantColors": [
+            "#0099ff",
+            "#66ccff",
+            "#003399",
+            "#0066cc",
+            "#663333"
+          ],
+          "suggestedScrimOpacity": 0.517,
+          "lqip": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAABwBACdASoYABIAPu1kqE2ppaOmMAgBMB2JZAC06BQW/axjkJPNyRdrUYxkgAB891sqgFTajLV30wriJ+F9tqnEC3zWfnzYz+2O+jBp8cWj77o//I2+/i2t3YLyW+DKvzy0s+6uuWZt31EewX7qFu/kHOqfRKjqsySxgAAA",
+          "attribution": {
+            "photographer": "Corey Coyle",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 3.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Fall_Colors_at_Lake_Wisconsin_-_panoramio.jpg"
+          },
+          "sortOrder": 11
         }
       ]
     },
@@ -1036,6 +2301,190 @@
             "sourceUrl": "https://commons.wikimedia.org/wiki/File:Illuminated_Woljeonggyo_Bridge_at_blue_hour_in_Gyeongju_South_Korea.jpg"
           },
           "sortOrder": 7
+        },
+        {
+          "basePath": "/wallpapers/cities-at-night/dubai-lights-from-orbit",
+          "width": 1920,
+          "height": 1278,
+          "meanLuminance": 0.0828,
+          "luminanceVariance": 0.1083,
+          "dominantColors": [
+            "#000000",
+            "#333333",
+            "#666666",
+            "#999966",
+            "#cc9999"
+          ],
+          "suggestedScrimOpacity": 0.356,
+          "lqip": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADwAwCdASoYABAAPu1iqk2ppaQiMAgBMB2JZwDG9CHhzwyJNeIBvL/oAP7yrPC8oQuwBRdU7U4Eqyrb6U35Mh+d0XjDauCFIRhW7ICY2tTAAA==",
+          "attribution": {
+            "photographer": "NASA, Expedition 39 crew (ISS)",
+            "source": "NASA / Wikimedia Commons",
+            "license": "Public domain",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:ISS-39_Dubai,_United_Arab_Emirates.jpg"
+          },
+          "sortOrder": 8
+        },
+        {
+          "basePath": "/wallpapers/cities-at-night/istanbul-bosphorus-bridge",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.1704,
+          "luminanceVariance": 0.0989,
+          "dominantColors": [
+            "#333333",
+            "#000000",
+            "#666666",
+            "#993333",
+            "#999966"
+          ],
+          "suggestedScrimOpacity": 0.384,
+          "lqip": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAADwAwCdASoYABAAPu1krU6ppaSiMAgBMB2JQBdgA9JB43RpcdGcmmVQAP7uoYcgiTumSfjA9K3WOu7YJ4OZsjl3qVjvqXjLkFpy6zp8IFDPU/xulmxcM4TTZwAAAA==",
+          "attribution": {
+            "photographer": "Andrey Filippov",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 2.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bosphorus_Bridge_at_night.jpg"
+          },
+          "sortOrder": 9
+        },
+        {
+          "basePath": "/wallpapers/cities-at-night/sydney-harbour-bridge-moonrise",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.1734,
+          "luminanceVariance": 0.1711,
+          "dominantColors": [
+            "#000000",
+            "#333333",
+            "#666666",
+            "#996633",
+            "#999999"
+          ],
+          "suggestedScrimOpacity": 0.403,
+          "lqip": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAAAQBACdASoYABAAPu1iqU2ppaOiMAgBMB2JZQC+SCFaw8lFx5L3k9jAAAD+9CKzpeBM8s3WfsWMEmlpaChBL22ovbyGop2veguiz+ib/OpNm8U6e+UGV1TQ2tHDyPaVemkgRgL6rAAueQJoLPsKJoIIB4f75nKAMwAAAA==",
+          "attribution": {
+            "photographer": "sander88",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 2.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Sydney_Harbour_Bridge_at_night.jpg"
+          },
+          "sortOrder": 10
+        },
+        {
+          "basePath": "/wallpapers/cities-at-night/rio-botafogo-lagoon",
+          "width": 1920,
+          "height": 1286,
+          "meanLuminance": 0.3282,
+          "luminanceVariance": 0.19,
+          "dominantColors": [
+            "#666666",
+            "#333366",
+            "#999999",
+            "#003333",
+            "#cccccc"
+          ],
+          "suggestedScrimOpacity": 0.462,
+          "lqip": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAAAQBACdASoYABAAPu1iqU2ppaOiMAgBMB2JQBOgBD4UbuatARVY9+NxKAD+7L+JTopfJebItftlecHLnW30aK3KAYrHYnpwhydH06TKZ3ARfO0U+VXHwoj3h1ixnD/rWXkOFZHf+jE+r+ZUfvJbbdtgaGz7QtZXl1tyiDd1LDRoe2DvgAA=",
+          "attribution": {
+            "photographer": "Wilfredor",
+            "source": "Wikimedia Commons",
+            "license": "CC0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Botafogo_waterfront_skyline_reflected_at_night,_Rio_de_Janeiro,_Brazil.jpg"
+          },
+          "sortOrder": 11
+        },
+        {
+          "basePath": "/wallpapers/cities-at-night/toronto-cn-tower-blue-hour",
+          "width": 1920,
+          "height": 1346,
+          "meanLuminance": 0.3172,
+          "luminanceVariance": 0.0743,
+          "dominantColors": [
+            "#336699",
+            "#333333",
+            "#666633",
+            "#000000",
+            "#663366"
+          ],
+          "suggestedScrimOpacity": 0.43,
+          "lqip": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAABQBACdASoYABEAPu1gq1ApryOisBgIAeAdiWQAnTLfAan6zP3dKXYp5VEAAP4QoedkYT6GTm56tX5HHxoP3qgpHuejIuretyOYMmlBfm4tBJKIEPam8C1RQAXi/c1fkAA=",
+          "attribution": {
+            "photographer": "Wladyslaw",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 3.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Toronto_-_ON_-_Skyline_bei_Nacht.jpg"
+          },
+          "sortOrder": 12
+        },
+        {
+          "basePath": "/wallpapers/cities-at-night/prague-castle-blue-hour",
+          "width": 1920,
+          "height": 1201,
+          "meanLuminance": 0.3535,
+          "luminanceVariance": 0.1716,
+          "dominantColors": [
+            "#333333",
+            "#666699",
+            "#999999",
+            "#666633",
+            "#996666"
+          ],
+          "suggestedScrimOpacity": 0.467,
+          "lqip": "data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAAAQBACdASoYAA8APu1iqU2ppaQiMAgBMB2JZACdABerO72M4FQ+3iqZCADLJm126iSZgYujSjh7wxMUoyB7085ekbNoEznR4Q4rfRApKiilghnZLBDPWOLsBprydzD2kWr4npeWZgxDcB0SwxeGniONapixtoDiHt9KtOCcdGVLtkbrgYMP6CC74DSHDwa/RREaqGzGwlEAAA==",
+          "attribution": {
+            "photographer": "Lucas Garron",
+            "source": "Wikimedia Commons",
+            "license": "CC0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Prague_Castle_at_Night_viewed_from_Charles_Bridge.jpg"
+          },
+          "sortOrder": 13
+        },
+        {
+          "basePath": "/wallpapers/cities-at-night/vancouver-coal-harbour",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.2672,
+          "luminanceVariance": 0.1519,
+          "dominantColors": [
+            "#003333",
+            "#996666",
+            "#663333",
+            "#cc9999",
+            "#cc6633"
+          ],
+          "suggestedScrimOpacity": 0.431,
+          "lqip": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAADQAwCdASoYABAAPu1mqk4ppaOiMAgBMB2JQBadAxnYLxEiUuDeekAA/r/mMV5zOOFCWSvDAzSiKFZwEZhCxN7cKbdBD9k+bKnf3o8viFNtYELzQZG/ysrCcoCbMh7XgAxfP6yALpABqAAA",
+          "attribution": {
+            "photographer": "Ferdinand Stohr",
+            "source": "Wikimedia Commons",
+            "license": "CC0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Vanouver_Harbour_(Unsplash).jpg"
+          },
+          "sortOrder": 14
+        },
+        {
+          "basePath": "/wallpapers/cities-at-night/kuala-lumpur-petronas-towers",
+          "width": 1920,
+          "height": 1273,
+          "meanLuminance": 0.2362,
+          "luminanceVariance": 0.1849,
+          "dominantColors": [
+            "#666666",
+            "#000000",
+            "#333333",
+            "#999999",
+            "#cccccc"
+          ],
+          "suggestedScrimOpacity": 0.429,
+          "lqip": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAABQBACdASoYABAAPu1iqU2ppaOiMAgBMB2JZQDKACFqSFjzNn2noSWZvYhAAP70Nvl5rYFK6/Vez1f68I0HBFFG/R6GwQsgaqG/YLG/V0oin3YDvH8xuJ4q9cjwFP14Tu6i8LxAh7KbiYC70L33LsQPZrVD+XgxFTyZaQ60JcOL75+tU0AAAA==",
+          "attribution": {
+            "photographer": "Jakub Halun",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Petronas_Towers_at_night,_Kuala_Lumpur,_20250818_1954_1607.jpg"
+          },
+          "sortOrder": 15
         }
       ]
     },
@@ -1225,6 +2674,186 @@
             "sourceUrl": "https://commons.wikimedia.org/wiki/File:Storms_over_Althen_WPA_Lake_Andes_Wetland_Management_District_South_Dakota_(52388583566).jpg"
           },
           "sortOrder": 7
+        },
+        {
+          "basePath": "/wallpapers/storms/supercell-kansas-farmland",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.2193,
+          "luminanceVariance": 0.1483,
+          "dominantColors": [
+            "#333333",
+            "#666666",
+            "#000000",
+            "#999999"
+          ],
+          "suggestedScrimOpacity": 0.414,
+          "lqip": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAADwAwCdASoYABAAPu1qrU8ppiQiMAgBMB2JZwDCgCG6yU1Z4ULxt04wAP7wyOFlW/MZgDa0tVzrGKJGMHI3MY/er6BtuwTh/fHL3n+ZdDpfM4T2lqDrCsIrrAAAAA==",
+          "attribution": {
+            "photographer": "NOAA National Severe Storms Laboratory",
+            "source": "NOAA / Wikimedia Commons",
+            "license": "Public domain",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Supercell-thunderstorm-in-Kansas.jpg"
+          },
+          "sortOrder": 8
+        },
+        {
+          "basePath": "/wallpapers/storms/shelf-cloud-adriatic-coast",
+          "width": 1920,
+          "height": 1039,
+          "meanLuminance": 0.4461,
+          "luminanceVariance": 0.1732,
+          "dominantColors": [
+            "#666666",
+            "#999999",
+            "#333333",
+            "#cccccc",
+            "#330000"
+          ],
+          "suggestedScrimOpacity": 0.499,
+          "lqip": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAADQAwCdASoYAA0APu1kq04ppaQiMAgBMB2JZQCsABtiy2wrGb6coeAAziQA9wbw7Uj6E9vL0mNvl5lByextr6wqJZIgHS2hhBBXoiXliyyl4ktkkFBk7wbqCInrkOhzlkwdjVOcwVBU7PofSypqOqV3QAA=",
+          "attribution": {
+            "photographer": "Sime Baresic",
+            "source": "Wikimedia Commons",
+            "license": "CC0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Shelf_cloud_-_Flickr_-_otrow_photography.jpg"
+          },
+          "sortOrder": 9
+        },
+        {
+          "basePath": "/wallpapers/storms/mammatus-clouds-hazy",
+          "width": 1920,
+          "height": 923,
+          "meanLuminance": 0.5165,
+          "luminanceVariance": 0.0817,
+          "dominantColors": [
+            "#999999",
+            "#666666",
+            "#cc99cc"
+          ],
+          "suggestedScrimOpacity": 0.501,
+          "lqip": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAABwAwCdASoYAAwAPu1iqk2ppaQiMAgBMB2JZwDG9Aao1Yrm/gAA/Fpp2NP4DuwUKXx7/SI6r3oPvS15Z9QiVzywAAA=",
+          "attribution": {
+            "photographer": "Rubbish computer",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hazy_mammatus_1.jpg"
+          },
+          "sortOrder": 10
+        },
+        {
+          "basePath": "/wallpapers/storms/lightning-above-mountaintop",
+          "width": 1920,
+          "height": 1272,
+          "meanLuminance": 0.2035,
+          "luminanceVariance": 0.1619,
+          "dominantColors": [
+            "#333366",
+            "#000000",
+            "#003333",
+            "#996666",
+            "#666699"
+          ],
+          "suggestedScrimOpacity": 0.412,
+          "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAAAQBACdASoYABAAPu1kqU2ppaQiMAgBMB2JQBOmUDX/wHkfweXXj1foAAD+7oAo3QpjFQ7CqZsIHflAGYyS6KHOJPgpxBNFQlHHSJ3W/pQU/DWowSAGZ/GIRrXaiTkWr+0+SQfB/iPqjGzmWHCfwAAA",
+          "attribution": {
+            "photographer": "International Gemini Observatory/NOIRLab/NSF/AURA/J. Chu",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Lightning_Above_the_Mountaintop_(iotw2433a).jpg"
+          },
+          "sortOrder": 11
+        },
+        {
+          "basePath": "/wallpapers/storms/snow-squall-drummond-island",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.5413,
+          "luminanceVariance": 0.1063,
+          "dominantColors": [
+            "#669999",
+            "#666666",
+            "#9999cc",
+            "#333333",
+            "#000000"
+          ],
+          "suggestedScrimOpacity": 0.516,
+          "lqip": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAACwAwCdASoYABAAPu1iqU2ppaOiMAgBMB2JYwCdAA05l24E/KCYAAD8UvTOdEWfqrpuEsfM1LQvh5wUcuvPmrg2xCeQtKVMrErqP40/XHez4Z/WdgAAAA==",
+          "attribution": {
+            "photographer": "Corvair Owner",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 2.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Snow_storm_over_a_cove_--_Drummond_Island_during_the_winter.jpg"
+          },
+          "sortOrder": 12
+        },
+        {
+          "basePath": "/wallpapers/storms/waves-in-a-gale",
+          "width": 1920,
+          "height": 1100,
+          "meanLuminance": 0.436,
+          "luminanceVariance": 0.1521,
+          "dominantColors": [
+            "#666666",
+            "#999999",
+            "#cccccc",
+            "#333300",
+            "#336633"
+          ],
+          "suggestedScrimOpacity": 0.491,
+          "lqip": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAADQAwCdASoYAA4APu1kqU2ppaQiMAgBMB2JZQCdIA/BlEjkiKy6ywAA+dLi3olf372Enr4k8MCOI99GpMGk6BZTS9RWDSNIs11mX2gff4fwxTuTvYGwm2tg9Y+i8Tp6D8EQdGDwS0DWLMZWhcqZ3CnYiiAAAA==",
+          "attribution": {
+            "photographer": "Ronnie Robertson",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 2.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:December_Storm_IMG_5763_(15994349851).jpg"
+          },
+          "sortOrder": 13
+        },
+        {
+          "basePath": "/wallpapers/storms/storm-cloud-top-from-orbit",
+          "width": 1920,
+          "height": 1278,
+          "meanLuminance": 0.4947,
+          "luminanceVariance": 0.1776,
+          "dominantColors": [
+            "#999999",
+            "#666666",
+            "#cccccc",
+            "#333366",
+            "#ffffff"
+          ],
+          "suggestedScrimOpacity": 0.518,
+          "lqip": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAwBACdASoYABAAPu1iqU2ppaOiMAgBMB2JZwDE3rAApOxih5/r9fQLHUAA+e3dYBERPGdORkY/a1p0Cp9vE2gwBMRsNrtxlvzSjlAPd149demS4onhI8tP68V06fhupiQpxRoCECCB5Oci4PEBzPYysldzqdUMn0yinPPr9z9S3G7I9HroK0csypnAncog/IAAAA==",
+          "attribution": {
+            "photographer": "NASA",
+            "source": "NASA / Wikimedia Commons",
+            "license": "Public domain",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:2010_wet_season_cloud_over_colombia.jpg"
+          },
+          "sortOrder": 14
+        },
+        {
+          "basePath": "/wallpapers/storms/branching-lightning-treeline",
+          "width": 1920,
+          "height": 1390,
+          "meanLuminance": 0.2284,
+          "luminanceVariance": 0.0897,
+          "dominantColors": [
+            "#333333",
+            "#663366",
+            "#996699",
+            "#000000"
+          ],
+          "suggestedScrimOpacity": 0.402,
+          "lqip": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAABwBACdASoYABEAPu1kq0+ppSOiMBgIATAdiWcAsOwRToafMB/COGeOUk5hoAD+F+TfsZa26aKzxNp07A/fGTvT7z23ACoABa/rEOhlhCoNozVYhQwAAA==",
+          "attribution": {
+            "photographer": "Friedrich Haag",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:004_2018_05_14_Extremes_Wetter.jpg"
+          },
+          "sortOrder": 15
         }
       ]
     }

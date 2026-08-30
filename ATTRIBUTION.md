@@ -22,6 +22,17 @@ Nebulae, deep fields, Mars, and Earth from orbit. NASA and ESA imagery — publi
 | `webb-dark-matter` | NASA/JPL-Caltech | [NASA Image Library](https://images.nasa.gov/details/PIA26702) | Public domain |
 | `aurora-from-iss` | NASA / ISS Expedition 40 | [NASA Image Library](https://images.nasa.gov/details/iss040e117958) | Public domain |
 | `mars-jezero-panorama` | NASA/JPL-Caltech/ASU/MSSS | [NASA Image Library](https://images.nasa.gov/details/PIA24264) | Public domain |
+| `cosmic-cliffs-carina` | NASA, ESA, CSA, STScI | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:NASA%E2%80%99s_Webb_Reveals_Cosmic_Cliffs,_Glittering_Landscape_of_Star_Birth.jpg) | Public domain |
+| `whirlpool-galaxy-m51` | NASA and ESA | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Messier51_sRGB.jpg) | Public domain |
+| `lagoon-nebula-wide-field` | ESO / S. Guisard | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Lagoon_Nebula_(ESO).jpg) | CC BY 4.0 |
+| `andromeda-panorama` | NASA, ESA, J. Dalcanton, B.F. Williams, L.C. Johnson (PHAT team), R. Gendler | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Andromeda_Galaxy_M31_-_Heic1502a_10k.jpg) | CC BY 4.0 |
+| `earth-limb-aurora` | NASA / ISS Expedition 58 | [NASA Image Library](https://images.nasa.gov/details/iss058e005282) | Public domain |
+| `aurora-over-manitoba` | NASA / ISS Expedition 72 | [NASA Image Library](https://images.nasa.gov/details/iss072e159172) | Public domain |
+| `milky-way-galactic-center` | NASA/JPL-Caltech | [NASA Image Library](https://images.nasa.gov/details/PIA03654) | Public domain |
+| `tarantula-nebula-new-view` | NASA/CXC/PSU/L. Townsley et al.; NASA/STScI; NASA/JPL/PSU | [NASA Image Library](https://images.nasa.gov/details/PIA14415) | Public domain |
+| `dragon-lair-nebula` | NASA/JPL-Caltech/Penn State/DSS | [NASA Image Library](https://images.nasa.gov/details/PIA13240) | Public domain |
+| `heart-and-soul-nebulae` | NASA/JPL-Caltech/UCLA | [NASA Image Library](https://images.nasa.gov/details/PIA13112) | Public domain |
+| `star-formation-cluster` | NASA/JPL-Caltech/UCLA | [NASA Image Library](https://images.nasa.gov/details/PIA14105) | Public domain |
 
 ### Mountains
 
@@ -32,6 +43,21 @@ Ridgelines, glacial valleys, and high lakes.
 | `sayan-glacial-valley` | Vyacheslav Argenberg | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Mountain_landscape,_Weathering_and_erosion_in_glacial_valley,_Ergaki,_Sayan_Mountains,_Siberia.jpg) | CC BY 4.0 |
 | `sayan-balancing-rock` | Vyacheslav Argenberg | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Mountain_landscape,_Rock_formations_in_otherworldly_glacial_valley,_Ergaki,_Sayan_Mountains,_Siberia.jpg) | CC BY 4.0 |
 | `navajo-lake` | Kay Röllig | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Navajo_Lake_(219856203).jpeg) | CC BY 2.0 |
+| `tre-cime-clouds` | Wolfgang Moroder | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Drei_Zinnen_Tre_Cime_di_Lavaredo_Dolomites.jpg) | CC BY-SA 3.0 |
+| `tre-cime-valle-vista` | Ximonic (Simo Rasanen) | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Valle_della_Rienza_and_Tre_Cime_di_Lavaredo_from_Alpe_Specie,_Val_Pusteria,_Trentino-Alto_Adige,_Italy,_2025_October.jpg) | CC BY-SA 4.0 |
+| `hovdanvika-fjord-aerial` | Ximonic (Simo Rasanen) | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Wide_view_over_Hovdanvika,_Selfjorden_and_Torsfjorden_at_Fredvang_in_Flakstad,_Nordland,_Norway,_2022_June.jpg) | CC BY-SA 4.0 |
+| `gangapurna-lake-reflection` | Megaurab09 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Morning_Reflection_at_Gangapurna_Lake.jpg) | CC BY-SA 4.0 |
+| `alpine-lake-mirror` | Sabrina Schreiber | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Mountain_Reflection_on_Alpine_Lake.jpg) | CC BY-SA 4.0 |
+| `zagedan-lake-cirque` | Vyacheslav Argenberg | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Zagedan_Lakes,_Mountain_cirque,_Caucasus_Mountains.jpg) | CC BY 4.0 |
+| `zagedan-ridge-lakes` | Vyacheslav Argenberg | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Zagedan_Ridge,_Zagedan_Valley,_Caucasus_Mountains,_Karachay-Cherkessia.jpg) | CC BY 4.0 |
+| `gorner-glacier-panorama` | Carsten Steger | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Panorama_of_the_mountains_south_of_Zermatt.jpg) | CC BY-SA 4.0 |
+| `julian-alps-lake-fog` | chensiyuan | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:1_julian_alps_panorama.jpg) | CC BY-SA 4.0 |
+| `julian-alps-vrsic-pass` | Krzysztof Golik | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Julian_Alps_from_Vrsic_Pass_(3).jpg) | CC BY-SA 4.0 |
+| `torres-del-paine-panorama` | Correliebre | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Torres_del_Paine_Panoramica_2019.jpg) | CC BY-SA 4.0 |
+| `glencoe-lochan-reflection` | Daniel Kraft | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Glencoe_Lochan_reflections_3_20211022.jpg) | CC BY-SA 3.0 |
+| `highlands-silhouette-mono` | Matthew Prior | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Mountain_silhouettes_in_the_Scottish_Highlands.jpg) | CC BY-SA 4.0 |
+| `mt-sefton-massif` | Michal Klajban | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Mt_Sefton_massif,_Aoraki_-_Mount_Cook_National_Park,_New_Zealand.jpg) | CC BY-SA 4.0 |
+| `nz-main-divide-ridge` | Michal Klajban | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Main_Divide_from_Yeats_Ridge_Hut,_West_Coast_Region,_New_Zealand.jpg) | CC BY-SA 4.0 |
 
 ### Muscle and machines
 
@@ -42,6 +68,19 @@ Classic iron, chrome, and hot rods.
 | `amc-rebel-machine` | CZmarlin — Christopher Ziemnowicz | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:1970_AMC_Rebel_%22The_Machine%22_muscle_car_in_RWB_at_2021_Potomac_Ramblers_meet_01of14.jpg) | CC0 |
 | `1936-coupe-hot-rod` | Cars Down Under | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:1936_Ford_3_window_Coupe_Hot_Rod.jpg) | CC BY 2.0 |
 | `1933-five-window-coupe` | Sicnag | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:1933_Ford_Model_18_5_window_Coupe_(32043397296).jpg) | CC BY 2.0 |
+| `2023-gmc-sierra-2500-denali-hd` | Ethan Llamas | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:2023_GMC_Sierra_2500_Denali_HD_Ultimate_in_Titanium_Rush_Metallic,_front_left.jpg) | CC BY-SA 4.0 |
+| `23-gmc-sierra-3500hd-slt` | HJUdall | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:23_GMC_Sierra_3500HD_SLT.jpg) | CC0 |
+| `gmc-sierra-gmtk2xx-dsc-8581` | Alexander Migl | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:GMC_Sierra_(GMTK2XX)_DSC_8581.jpg) | CC BY-SA 4.0 |
+| `gmc-sierra-1500-denali-6-2l-cr` | Damian B Oh | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:GMC_Sierra_1500_Denali_6.2L_Crew_Cab_GMTT1XX_Avalon_White_Pearl_(11).jpg) | CC BY-SA 4.0 |
+| `gmc-sierra-1500-pickup-truck-e` | Chris Woodrich | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:GMC_Sierra_1500_pickup_truck,_Essex,_Ontario,_2025-08-30.jpg) | CC BY-SA 4.0 |
+| `gmc-sierra-2017-pickup-truck` | MTSRider18 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:GMC_Sierra_2017_Pickup_Truck.jpg) | CC BY-SA 3.0 |
+| `gmc-sierra-2017-pickup-truck-2` | MTSRider18 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:GMC_Sierra_2017_Pickup_Truck_2.jpg) | CC BY-SA 3.0 |
+| `gmc-sierra-2017-pickup-truck-3` | MTSRider18 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:GMC_Sierra_2017_Pickup_Truck_3.jpg) | CC BY-SA 3.0 |
+| `1994-gmc-sierra-bs-o24` | MrWalkr | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:1994_GMC_Sierra_BS_O24.jpg) | CC BY-SA 4.0 |
+| `1999-gmc-sierra-2500-front-lef` | SsmIntrigue | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:1999_GMC_Sierra_2500,_Front_Left,_02-18-2021.jpg) | CC BY-SA 4.0 |
+| `gmc-sierra-2017-pickup-truck-4` | MTSRider18 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:GMC_Sierra_2017_Pickup_Truck_4.jpg) | CC BY-SA 3.0 |
+| `gmc-sierra-2017-pickup-truck-5` | MTSRider18 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:GMC_Sierra_2017_Pickup_Truck_5.jpg) | CC BY-SA 3.0 |
+| `gmc-sierra-alberta` | dave_7 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:GMC_Sierra_Alberta.jpg) | CC BY 2.0 |
 
 ### Campfire
 
@@ -57,6 +96,9 @@ Fire rings, sparks and dark woods. Warm light against a lot of dark — easy to 
 | `fire-ring` | Mark Doliner | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Campfire_at_a_campsite.jpg) | CC BY-SA 2.0 |
 | `forest-camp` | JIP | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Campfire_in_Tulppio.jpg) | CC BY-SA 4.0 |
 | `bonfire-on-ice` | incommunicado | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Bonfire,_Great_Slave_Lake_(52771697844).jpg) | CC BY-SA 2.0 |
+| `riverside-lagerfeuer` | Michael Hoelzl | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:2009_Lagerfeuer.JPG) | Public domain |
+| `simple-campfire` | Leon Bovenkerk | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:A_simple_campfire.jpg) | CC BY-SA 2.0 |
+| `night-fire-sparks` | Raph.zufferey | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Feu_de_nuit.jpg) | CC BY-SA 3.0 |
 
 ### Arcade & rigs
 
@@ -71,6 +113,15 @@ Neon arcade cabinets and machined hardware. Deep blacks with pink and cyan edges
 | `rig-interior` | PantheraLeo1359531 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Gaming-PC_20240426_HOF2514-HDR_RAW-Export.png) | CC BY 4.0 |
 | `rig-loop` | PantheraLeo1359531 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Gaming-PC_20240426_HOF2511-HDR_RAW-Export.png) | CC BY 4.0 |
 | `socket-macro` | PantheraLeo1359531 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Gaming-PC_20240426_HOF2496-HDR_RAW-Export.png) | CC BY 4.0 |
+| `castlevania-marble-of-souls-da` | Reconrabbit | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Castlevania_Marble_of_Souls_Danbury_R1.jpg) | CC0 |
+| `computer-space-arcade-cabinet-` | Logg Tandy | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Computer_Space_arcade_cabinet_Model_and_Serial_number_badge_-_at_Billy's_Midway_Arcade_-_January_2025.jpg) | CC BY 4.0 |
+| `computer-space-cabinet-backsid` | Logg Tandy | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Computer_Space_cabinet_backside,_open,_wider_shot_-_at_Billy's_Midway_Arcade_-_January_2025.jpg) | CC BY 4.0 |
+| `gold-cabinet-ddr-world-danbury` | Reconrabbit | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Gold_Cabinet_DDR_World_Danbury_R1.jpg) | CC0 |
+| `gold-railroad-danbury-r1` | Reconrabbit | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Gold_Railroad_Danbury_R1.jpg) | CC0 |
+| `mazinger-z-arcade-cabinet-2026` | GuiltyGearFan37 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Mazinger_Z_arcade_cabinet_2026-08-14.jpg) | CC0 |
+| `playfield-of-star-wars-themed-` | Tessa Bury | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Playfield_of_Star_Wars–Themed_Pinball_Machine.jpg) | CC BY 4.0 |
+| `upper-playfield-acrylic-parts-` | Felipe Sanches from São Paulo, Brazil | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Upper_playfield_acrylic_parts_produced_at_Metalab_hackerspace_in_Vienna_(5220257040).jpg) | CC BY-SA 2.0 |
+| `2018-bay-area-mechanical-keybo` | Patrick Breen | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:2018_Bay_Area_Mechanical_Keyboard_Meetup_(31006275737).jpg) | CC BY 2.0 |
 
 ### Northwoods
 
@@ -86,6 +137,10 @@ Lakes, pines, snow, fog, and birch woods across the Upper Midwest. Calm and quie
 | `lake-vermilion-sunset` | Tony Webster | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Lake_Vermilion_Sunset,_Tower,_Minnesota_(36201633246).jpg) | CC BY-SA 2.0 |
 | `campbell-birch-snow` | Bob Wick / BLM Alaska | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Light_snow_on_BLM_Campbell_Tract_forest_(29700344465).jpg) | Public domain |
 | `illinois-farm-snow` | Joseph Gage | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Thin_blanket_of_snow_covering_the_farm_-_Flickr_-_Joe_K_Gage.jpg) | CC BY-SA 2.0 |
+| `horsehead-lake-sunset` | Corey Coyle | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:East_Horsehead_Lake_at_Sunset_-_panoramio.jpg) | CC BY 3.0 |
+| `crescent-lake-autumn` | Tony Webster | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Autumn_at_Crescent_Lake,_Wisconsin_(49113407061).jpg) | CC BY 2.0 |
+| `driftless-area-lake` | Corey Coyle | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Driftless_Area_and_Lake_Wisconsin_-_panoramio.jpg) | CC BY 3.0 |
+| `fall-colors-lake-wisconsin` | Corey Coyle | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Fall_Colors_at_Lake_Wisconsin_-_panoramio.jpg) | CC BY 3.0 |
 
 ### Cities at night
 
@@ -101,6 +156,14 @@ Skylines, bridges, and wet streets after dark. Deep blacks with bright accents �
 | `shanghai-night-lights` | David Zhang | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Night_lights_of_Shanghai.jpg) | CC BY-SA 2.0 |
 | `queensboro-bridge-night` | King of Hearts | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Queensboro_Bridge_New_York_October_2016_003.jpg) | CC BY-SA 4.0 |
 | `woljeonggyo-bridge-blue-hour` | Basile Morin | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Illuminated_Woljeonggyo_Bridge_at_blue_hour_in_Gyeongju_South_Korea.jpg) | CC BY-SA 4.0 |
+| `dubai-lights-from-orbit` | NASA, Expedition 39 crew (ISS) | [NASA / Wikimedia Commons](https://commons.wikimedia.org/wiki/File:ISS-39_Dubai,_United_Arab_Emirates.jpg) | Public domain |
+| `istanbul-bosphorus-bridge` | Andrey Filippov | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Bosphorus_Bridge_at_night.jpg) | CC BY 2.0 |
+| `sydney-harbour-bridge-moonrise` | sander88 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Sydney_Harbour_Bridge_at_night.jpg) | CC BY 2.0 |
+| `rio-botafogo-lagoon` | Wilfredor | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Botafogo_waterfront_skyline_reflected_at_night,_Rio_de_Janeiro,_Brazil.jpg) | CC0 |
+| `toronto-cn-tower-blue-hour` | Wladyslaw | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Toronto_-_ON_-_Skyline_bei_Nacht.jpg) | CC BY-SA 3.0 |
+| `prague-castle-blue-hour` | Lucas Garron | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Prague_Castle_at_Night_viewed_from_Charles_Bridge.jpg) | CC0 |
+| `vancouver-coal-harbour` | Ferdinand Stohr | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Vanouver_Harbour_(Unsplash).jpg) | CC0 |
+| `kuala-lumpur-petronas-towers` | Jakub Halun | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Petronas_Towers_at_night,_Kuala_Lumpur,_20250818_1954_1607.jpg) | CC BY 4.0 |
 
 ### Storms
 
@@ -116,6 +179,14 @@ Supercells, lightning, mammatus, and shelf clouds. Pairs with the weather widget
 | `shelf-cloud-italy` | Marek Wikipedista | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Eastern_italy_storm_with_shelf_cloud,_9th_July_2019.jpg) | CC BY-SA 4.0 |
 | `rainstorm-sawgrass-prairie` | David Carrillo / NPS | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Rainstorm_over_a_Sawgrass_Prairie_-_2020_Photo_Contest_(52687302392).jpg) | Public domain |
 | `storm-over-south-dakota-wetland` | Marcie Hebert / USFWS | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Storms_over_Althen_WPA_Lake_Andes_Wetland_Management_District_South_Dakota_(52388583566).jpg) | Public domain |
+| `supercell-kansas-farmland` | NOAA National Severe Storms Laboratory | [NOAA / Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Supercell-thunderstorm-in-Kansas.jpg) | Public domain |
+| `shelf-cloud-adriatic-coast` | Sime Baresic | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Shelf_cloud_-_Flickr_-_otrow_photography.jpg) | CC0 |
+| `mammatus-clouds-hazy` | Rubbish computer | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Hazy_mammatus_1.jpg) | CC BY-SA 4.0 |
+| `lightning-above-mountaintop` | International Gemini Observatory/NOIRLab/NSF/AURA/J. Chu | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Lightning_Above_the_Mountaintop_(iotw2433a).jpg) | CC BY 4.0 |
+| `snow-squall-drummond-island` | Corvair Owner | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Snow_storm_over_a_cove_--_Drummond_Island_during_the_winter.jpg) | CC BY-SA 2.0 |
+| `waves-in-a-gale` | Ronnie Robertson | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:December_Storm_IMG_5763_(15994349851).jpg) | CC BY-SA 2.0 |
+| `storm-cloud-top-from-orbit` | NASA | [NASA / Wikimedia Commons](https://commons.wikimedia.org/wiki/File:2010_wet_season_cloud_over_colombia.jpg) | Public domain |
+| `branching-lightning-treeline` | Friedrich Haag | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:004_2018_05_14_Extremes_Wetter.jpg) | CC BY-SA 4.0 |
 
 ## Sign-in page photographs
 
@@ -141,17 +212,18 @@ Supercells, lightning, mammatus, and shelf clouds. Pairs with the weather widget
 
 ## Summary
 
-68 images in total.
+139 images in total.
 
 | Licence | Images |
 | --- | --- |
-| CC BY 2.0 | 22 |
-| CC BY-SA 4.0 | 13 |
-| Public domain | 12 |
-| CC BY 4.0 | 7 |
-| CC BY-SA 2.0 | 7 |
-| CC0 | 6 |
-| CC BY-SA 3.0 | 1 |
+| CC BY-SA 4.0 | 32 |
+| CC BY 2.0 | 27 |
+| Public domain | 25 |
+| CC BY 4.0 | 16 |
+| CC0 | 15 |
+| CC BY-SA 2.0 | 11 |
+| CC BY-SA 3.0 | 10 |
+| CC BY 3.0 | 3 |
 
 Share-alike (CC BY-SA) applies to the images themselves and to adaptations of
 them. It does not reach the source code, which is separately licensed under
