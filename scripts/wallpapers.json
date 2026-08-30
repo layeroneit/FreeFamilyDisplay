@@ -117,6 +117,140 @@
           "license": "CC BY 2.0"
         }
       ]
+    },
+    {
+      "slug": "campfire",
+      "name": "Campfire",
+      "description": "Fire rings, sparks and dark woods. Warm light against a lot of dark — easy to read a clock over.",
+      "images": [
+        {
+          "file": ".photo-review/cf-bramble.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Campfire_at_Bramble_Bield.jpg",
+          "name": "bramble-embers",
+          "photographer": "Alasdair",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 2.0"
+        },
+        {
+          "file": ".photo-review/cf-flames.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Campfire_Flames.jpg",
+          "name": "flame-close",
+          "photographer": "Free Nature Stock",
+          "source": "Wikimedia Commons",
+          "license": "CC0"
+        },
+        {
+          "file": ".photo-review/cf-tahoe.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Campfire_by_Lake_Tahoe.jpg",
+          "name": "lake-tahoe",
+          "photographer": "tahoesignatureproperties.com",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/cf-serpentine.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Campfire_under_the_stars_at_Serpentine_Chalet_-_Flickr_-_whale05.jpg",
+          "name": "under-the-stars",
+          "photographer": "Nicholas Jones",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 2.0"
+        },
+        {
+          "file": ".photo-review/cf-kaberneeme.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Kaberneeme_campfire_site.jpg",
+          "name": "sparks",
+          "photographer": "Abrget47j",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 3.0"
+        },
+        {
+          "file": ".photo-review/cf-campsite.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Campfire_at_a_campsite.jpg",
+          "name": "fire-ring",
+          "photographer": "Mark Doliner",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 2.0"
+        },
+        {
+          "file": ".photo-review/cf-tulppio.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Campfire_in_Tulppio.jpg",
+          "name": "forest-camp",
+          "photographer": "JIP",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/cf-slave-lake.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Bonfire,_Great_Slave_Lake_(52771697844).jpg",
+          "name": "bonfire-on-ice",
+          "photographer": "incommunicado",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 2.0"
+        }
+      ]
+    },
+    {
+      "slug": "gaming",
+      "name": "Arcade & rigs",
+      "description": "Neon arcade cabinets and machined hardware. Deep blacks with pink and cyan edges.",
+      "images": [
+        {
+          "file": ".photo-review/gm-joysticks.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:DFC_0797_Close-up_of_a_row_of_retro_arcade_game_joysticks_glowing_with_neon_blue_and_pink_lights.jpg",
+          "name": "neon-joysticks",
+          "photographer": "PattayaPatrol",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/gm-claw.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:DFC_0798_Close-up_of_illuminated_arcade_claw_machines_with_glowing_joysticks_and_neon_accents.jpg",
+          "name": "cabinet-glow",
+          "photographer": "PattayaPatrol",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/gm-claw-row.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:DFC_2198_A_row_of_brightly_lit_claw_machines_glowing_in_pink_neon_each_filled_with_stuffed_toys_waiting_to_be_won.jpg",
+          "name": "pink-row",
+          "photographer": "PattayaPatrol",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/gm-arcade-street.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:DFC_2600_Two_people_stand_inside_a_small_arcade_filled_with_brightly_lit_claw_machines_the_storefront_glowing_in_neon_pink_and_purple_against_the_night_street.jpg",
+          "name": "arcade-street",
+          "photographer": "PattayaPatrol",
+          "source": "Wikimedia Commons",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "file": ".photo-review/gm-pc-1.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Gaming-PC_20240426_HOF2514-HDR_RAW-Export.png",
+          "name": "rig-interior",
+          "photographer": "PantheraLeo1359531",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 4.0"
+        },
+        {
+          "file": ".photo-review/gm-pc-2.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Gaming-PC_20240426_HOF2511-HDR_RAW-Export.png",
+          "name": "rig-loop",
+          "photographer": "PantheraLeo1359531",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 4.0"
+        },
+        {
+          "file": ".photo-review/gm-pc-3.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File:Gaming-PC_20240426_HOF2496-HDR_RAW-Export.png",
+          "name": "socket-macro",
+          "photographer": "PantheraLeo1359531",
+          "source": "Wikimedia Commons",
+          "license": "CC BY 4.0"
+        }
+      ]
     }
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-30T01:23:08.980Z",
+  "generatedAt": "2026-08-30T02:53:43.647Z",
   "collections": [
     {
       "slug": "deep-space",
@@ -295,6 +295,365 @@
             "sourceUrl": "https://commons.wikimedia.org/wiki/File:1933_Ford_Model_18_5_window_Coupe_(32043397296).jpg"
           },
           "sortOrder": 2
+        }
+      ]
+    },
+    {
+      "slug": "campfire",
+      "name": "Campfire",
+      "description": "Fire rings, sparks and dark woods. Warm light against a lot of dark — easy to read a clock over.",
+      "wallpapers": [
+        {
+          "basePath": "/wallpapers/campfire/bramble-embers",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.0854,
+          "luminanceVariance": 0.1501,
+          "dominantColors": [
+            "#000000",
+            "#660000",
+            "#993300",
+            "#ff6600",
+            "#cc0000"
+          ],
+          "suggestedScrimOpacity": 0.367,
+          "lqip": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAAAQBACdASoYABAAPu1iqU2ppaOiMAgBMB2JbACw7CFREHZL+N7+HU4hqAD+9CtWMTgMvnDTYRpF6SK7Vl3QlsKvmqmgw0pFSgjdHMDKyLE6wVqWEBayUMRWHwP98cWn6UQKbTLMdiotKIcgSLmkYMeCctcokUimPp5wBpTGwVLY2EAFAAA=",
+          "attribution": {
+            "photographer": "Alasdair",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 2.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Campfire_at_Bramble_Bield.jpg"
+          },
+          "sortOrder": 0
+        },
+        {
+          "basePath": "/wallpapers/campfire/flame-close",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.2478,
+          "luminanceVariance": 0.2902,
+          "dominantColors": [
+            "#000000",
+            "#663300",
+            "#cc6600",
+            "#ff9900",
+            "#ffcc66"
+          ],
+          "suggestedScrimOpacity": 0.459,
+          "lqip": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAACQBACdASoYABAAPu1iqU2ppaQiMAgBMB2JbACdL1yB0bWDW5ZKU0Bz/dmUAgAA/vQrMW3Wo6R5K8Ex8+yOLw/wraITE9PCJ2MCzvy6pJpK0inZXdOxbO/e5FGqImxBPeByiljD4cEdPjaIA8lK/J4SbhW68iSPSuqq2jz0mShehgrgeNW83dBN9R7jNz6N2x5aorqGmPbBhaIO3sJAAA==",
+          "attribution": {
+            "photographer": "Free Nature Stock",
+            "source": "Wikimedia Commons",
+            "license": "CC0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Campfire_Flames.jpg"
+          },
+          "sortOrder": 1
+        },
+        {
+          "basePath": "/wallpapers/campfire/lake-tahoe",
+          "width": 1920,
+          "height": 1440,
+          "meanLuminance": 0.3304,
+          "luminanceVariance": 0.2578,
+          "dominantColors": [
+            "#333333",
+            "#ccccff",
+            "#000000",
+            "#666666",
+            "#999999"
+          ],
+          "suggestedScrimOpacity": 0.48,
+          "lqip": "data:image/webp;base64,UklGRr4AAABXRUJQVlA4ILIAAACwBQCdASoYABIAPu1urlIppiQiqAgBMB2JYwCpJ4OusYAAHDHbo1Hjt8JxN93snBpUV/E3swAA/ueS6+kVTxtNQgG3ZSW4N9ovIzgB3qEbR5n86lB2xOOd35V2IHDc7AG7igLQDarezTX025x970VTSDf7TSx2278c/6GGh3MJ0pGJFzg0CvTgB58DwNkdB2r11YwltGW1D9b3BN5XW8jZ2xWvgkMh4rNAUm7b88rSK1AA",
+          "attribution": {
+            "photographer": "tahoesignatureproperties.com",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Campfire_by_Lake_Tahoe.jpg"
+          },
+          "sortOrder": 2
+        },
+        {
+          "basePath": "/wallpapers/campfire/under-the-stars",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.1002,
+          "luminanceVariance": 0.0831,
+          "dominantColors": [
+            "#000000",
+            "#333333",
+            "#663300",
+            "#666666",
+            "#cc6633"
+          ],
+          "suggestedScrimOpacity": 0.356,
+          "lqip": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADQAwCdASoYABAAPu1iqk2ppaQiMAgBMB2JYwDImB6QpVohe/+B9QAA/vK0t+XxOLyRsp21zOm04eNqBzI7UKAsT2YSTR75iAA=",
+          "attribution": {
+            "photographer": "Nicholas Jones",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 2.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Campfire_under_the_stars_at_Serpentine_Chalet_-_Flickr_-_whale05.jpg"
+          },
+          "sortOrder": 3
+        },
+        {
+          "basePath": "/wallpapers/campfire/sparks",
+          "width": 1920,
+          "height": 1344,
+          "meanLuminance": 0.0701,
+          "luminanceVariance": 0.0896,
+          "dominantColors": [
+            "#000000",
+            "#333333",
+            "#663300",
+            "#996633",
+            "#cc9933"
+          ],
+          "suggestedScrimOpacity": 0.347,
+          "lqip": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAACwAwCdASoYABEAPu1uqlEppiiiqAqpMB2JZwDGQBEcZTedxVWTAAD+7p2w9XRD54b49huRww0ej10oQ44wBGRgnjp9/+ZNBsJ5ldwAAAA=",
+          "attribution": {
+            "photographer": "Abrget47j",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 3.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Kaberneeme_campfire_site.jpg"
+          },
+          "sortOrder": 4
+        },
+        {
+          "basePath": "/wallpapers/campfire/fire-ring",
+          "width": 1920,
+          "height": 1081,
+          "meanLuminance": 0.2979,
+          "luminanceVariance": 0.1955,
+          "dominantColors": [
+            "#333333",
+            "#666666",
+            "#330000",
+            "#ff9933",
+            "#ff6600"
+          ],
+          "suggestedScrimOpacity": 0.453,
+          "lqip": "data:image/webp;base64,UklGRqgAAABXRUJQVlA4IJwAAADQBACdASoYAA4APu1iqU2ppaOiMAgBMB2JbACdMoJYAAr3ucroEMrABiKkdmLgAAD+7A7Q0Nsnnokyf80EalPWXsOz8cvbhPI1m3CRP6iG+ikeThSEWrlVzJfXGKERwhzaKhvgov6bqLRKo7F87pcdWBHANts/xUsHBJ3pWL0dtOxqpRTXW/LQhDiDD4vKGYrvGCoQe/pd7qbAAAA=",
+          "attribution": {
+            "photographer": "Mark Doliner",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 2.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Campfire_at_a_campsite.jpg"
+          },
+          "sortOrder": 5
+        },
+        {
+          "basePath": "/wallpapers/campfire/forest-camp",
+          "width": 1920,
+          "height": 1440,
+          "meanLuminance": 0.3368,
+          "luminanceVariance": 0.1992,
+          "dominantColors": [
+            "#333333",
+            "#336666",
+            "#669999",
+            "#99cccc",
+            "#ffffff"
+          ],
+          "suggestedScrimOpacity": 0.468,
+          "lqip": "data:image/webp;base64,UklGRqYAAABXRUJQVlA4IJoAAADQBACdASoYABIAPu1qrlCppaQiqAqpMB2JZQCsM2jA/jz+cEGWPPP+au5t7A0EAAD8y9hNkethgELs3fPvwFQyaPzSH5mMkPTGULNNROfJdWLxYOTbyIxcjx1Fu1VImCUSY7P+j60w80/u55ASnEK4bsn+UH/5FBkKSClcq7VgDIz/djtCCeUSQsOWd8bRifjrOde4bo5mAAAA",
+          "attribution": {
+            "photographer": "JIP",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Campfire_in_Tulppio.jpg"
+          },
+          "sortOrder": 6
+        },
+        {
+          "basePath": "/wallpapers/campfire/bonfire-on-ice",
+          "width": 1920,
+          "height": 1440,
+          "meanLuminance": 0.3103,
+          "luminanceVariance": 0.2436,
+          "dominantColors": [
+            "#000000",
+            "#666666",
+            "#999999",
+            "#333333",
+            "#cccccc"
+          ],
+          "suggestedScrimOpacity": 0.47,
+          "lqip": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAAAQBQCdASoYABIAPulcp02pJKOiN/VYASAdCWMAqPQQ8APjzuNsWIFQ9za+4JgUlfoAAP7yoF3tk5eJUgpgfbGEDm3ESVhgGtYupG1xppvPkFEFgE4xRdhoNEy+b6q+L/UoLW3lbH5zNUlHFCKZ/naOpRZ9uZ8D4nheAA==",
+          "attribution": {
+            "photographer": "incommunicado",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 2.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bonfire,_Great_Slave_Lake_(52771697844).jpg"
+          },
+          "sortOrder": 7
+        }
+      ]
+    },
+    {
+      "slug": "gaming",
+      "name": "Arcade & rigs",
+      "description": "Neon arcade cabinets and machined hardware. Deep blacks with pink and cyan edges.",
+      "wallpapers": [
+        {
+          "basePath": "/wallpapers/gaming/neon-joysticks",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.3921,
+          "luminanceVariance": 0.2283,
+          "dominantColors": [
+            "#333333",
+            "#000000",
+            "#336666",
+            "#669999",
+            "#66ccff"
+          ],
+          "suggestedScrimOpacity": 0.494,
+          "lqip": "data:image/webp;base64,UklGRrQAAABXRUJQVlA4IKgAAAAQBACdASoYABAAPu1iqU2ppaOiMAgBMB2JbACo+AgAndSEfwsAx7QYYAD+JRiAtpcPgnHOoWgb8zEdFkcifhKJ/qGb2GINY/RFowqFHcnCSHSZOAnzcrMIuNlXr5v4bG7CxIDgE1+SHFddLxL7khQv6heGNffRwuhfDpU2t1NLPZ39qBQbU8JzE/8jk2qDzYbgFKuUeZSouMJCnsBbgyw9+ODG9pBAAAA=",
+          "attribution": {
+            "photographer": "PattayaPatrol",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:DFC_0797_Close-up_of_a_row_of_retro_arcade_game_joysticks_glowing_with_neon_blue_and_pink_lights.jpg"
+          },
+          "sortOrder": 0
+        },
+        {
+          "basePath": "/wallpapers/gaming/cabinet-glow",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.5099,
+          "luminanceVariance": 0.2376,
+          "dominantColors": [
+            "#9999cc",
+            "#000000",
+            "#666666",
+            "#333333",
+            "#996699"
+          ],
+          "suggestedScrimOpacity": 0.538,
+          "lqip": "data:image/webp;base64,UklGRsIAAABXRUJQVlA4ILYAAABwBACdASoYABAAPu1iqU2ppaOiMAgBMB2JbAC7AYyebBzer3CMvSUwYJV+AAD8shEzF69pgBEfIee/G1T1wi5Jye4h6UQl0Q7W6d5clOSaAczXzVzm5UWfp3UstTjomP3wr/+ykQY+rkHpVjxSA7RAVO8zVGarBkxJk0CNClln7NpkzVTHZg9Kjl1NvLoU0OiIZOo3qjMdXt0Tk7F+XjQXBF8HGoCxpnw+YqCkso7zAaZt11AAAA==",
+          "attribution": {
+            "photographer": "PattayaPatrol",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:DFC_0798_Close-up_of_illuminated_arcade_claw_machines_with_glowing_joysticks_and_neon_accents.jpg"
+          },
+          "sortOrder": 1
+        },
+        {
+          "basePath": "/wallpapers/gaming/pink-row",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.3953,
+          "luminanceVariance": 0.2115,
+          "dominantColors": [
+            "#333333",
+            "#666666",
+            "#999999",
+            "#cccccc",
+            "#993366"
+          ],
+          "suggestedScrimOpacity": 0.491,
+          "lqip": "data:image/webp;base64,UklGRrQAAABXRUJQVlA4IKgAAABwAwCdASoYABAAPu1iqU2ppaOiMAgBMB2JaACdACDtl8ySmAAA/tqzaUrzjE0BO2Ekhavq0TSqJD1SdPiItApCnBELkcDaxGMhQEhM5wVktdbBs0gU5xh7J7cAq0ATCnj5eYSbwsZUc+5tHLhdUMN8sEXI+HGvrCnRmny9ECH7e2zlus1qr762twoO+zb5jf9pTooP9XyzzXO+JrYPes+e/MezxCYoAAA=",
+          "attribution": {
+            "photographer": "PattayaPatrol",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:DFC_2198_A_row_of_brightly_lit_claw_machines_glowing_in_pink_neon_each_filled_with_stuffed_toys_waiting_to_be_won.jpg"
+          },
+          "sortOrder": 2
+        },
+        {
+          "basePath": "/wallpapers/gaming/arcade-street",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.1671,
+          "luminanceVariance": 0.1899,
+          "dominantColors": [
+            "#000000",
+            "#330033",
+            "#333366",
+            "#996699",
+            "#cc66ff"
+          ],
+          "suggestedScrimOpacity": 0.406,
+          "lqip": "data:image/webp;base64,UklGRqwAAABXRUJQVlA4IKAAAABQBACdASoYABAAPu1iqU2ppaOiMAgBMB2JZACdACHd0H3f43bYEEhpha7AAP7qAJeGMGuyuxZxxKP+oZy6iY4cZn5I28CoV4dwbbDWQwHXRWMZtU13vByz4WErvbcpj3acAT1AT3biiqvqey2PeEgss/HhiOvfUdpscm3NhL2cFLKhAFKxmpgo1TYX4ZV0E+32wcoPA8qXcgZKR5lClAAA",
+          "attribution": {
+            "photographer": "PattayaPatrol",
+            "source": "Wikimedia Commons",
+            "license": "CC BY-SA 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:DFC_2600_Two_people_stand_inside_a_small_arcade_filled_with_brightly_lit_claw_machines_the_storefront_glowing_in_neon_pink_and_purple_against_the_night_street.jpg"
+          },
+          "sortOrder": 3
+        },
+        {
+          "basePath": "/wallpapers/gaming/rig-interior",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.2251,
+          "luminanceVariance": 0.1963,
+          "dominantColors": [
+            "#333333",
+            "#000000",
+            "#666666",
+            "#999999",
+            "#cccccc"
+          ],
+          "suggestedScrimOpacity": 0.428,
+          "lqip": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAADwAwCdASoYABAAPu1kqU2ppaQiMAgBMB2JaQAFEAISZOFq7Q3HQ4+AAP70JwFmtMb39NVbGVDsXEeexJsp5S2GNWgtipRX1yfZ3xeR2Y8UCg9FmPfgij6uF7pQ1kmuQhHp9BhXs5AxidpwEW0s5o69h0Y5yphE/AM9QwYUcOyHfaMgrkayNpAA",
+          "attribution": {
+            "photographer": "PantheraLeo1359531",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Gaming-PC_20240426_HOF2514-HDR_RAW-Export.png"
+          },
+          "sortOrder": 4
+        },
+        {
+          "basePath": "/wallpapers/gaming/rig-loop",
+          "width": 1920,
+          "height": 1280,
+          "meanLuminance": 0.2042,
+          "luminanceVariance": 0.1974,
+          "dominantColors": [
+            "#333333",
+            "#000000",
+            "#666666",
+            "#999999",
+            "#cccccc"
+          ],
+          "suggestedScrimOpacity": 0.421,
+          "lqip": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAAAQAwCdASoYABAAPu1iqU2ppaOiMAgBMB2JaQAAUctjCgAA9AZ1lhmTnwG+ndHa5JIwn7UP7xz3V0/5Kh/0fdEa4XnBIySgGn5mYuKsEZQjvMwzxmPyukAA",
+          "attribution": {
+            "photographer": "PantheraLeo1359531",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Gaming-PC_20240426_HOF2511-HDR_RAW-Export.png"
+          },
+          "sortOrder": 5
+        },
+        {
+          "basePath": "/wallpapers/gaming/socket-macro",
+          "width": 1920,
+          "height": 1328,
+          "meanLuminance": 0.3372,
+          "luminanceVariance": 0.1303,
+          "dominantColors": [
+            "#666666",
+            "#333333",
+            "#999999",
+            "#000000",
+            "#ffcc00"
+          ],
+          "suggestedScrimOpacity": 0.451,
+          "lqip": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAAAQBQCdASoYABEAPu1krE+ppSQiMBgIATAdiWMAAC524n+ycJj0WM0c3ajKjzMwlWyAAP2j4+CKEyLMn4jvpk7BSzjaU6mZcKczT6ld5zvtftIiAjY7dBIKi8gOABRgWnbKz3tL7AxsIj1+3tH/T3aU1JknKjMdJtwfq9Wk15wIKw1h8xytAAAA",
+          "attribution": {
+            "photographer": "PantheraLeo1359531",
+            "source": "Wikimedia Commons",
+            "license": "CC BY 4.0",
+            "sourceUrl": "https://commons.wikimedia.org/wiki/File:Gaming-PC_20240426_HOF2496-HDR_RAW-Export.png"
+          },
+          "sortOrder": 6
         }
       ]
     }

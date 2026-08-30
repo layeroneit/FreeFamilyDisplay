@@ -24,6 +24,14 @@ export const MAX_PHOTOS = 40;
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
 /** Shortest side below this is an avatar or an icon, not a photo. */
 const MIN_PHOTO_PX = 500;
+/**
+ * Mean per-channel standard deviation (0–255) below which an image is flat
+ * colour rather than a photograph. Measured against the operator's own
+ * 40-photo album on 2026-08-30: the least varied real photo scored 30.8 and
+ * the most varied 71.8, so 18 sits well clear of anything genuine while a
+ * single-colour letter tile scores in the low teens.
+ */
+const MIN_PHOTO_STDEV = 18;
 
 export type PhotoSourceKind = "google-photos" | "google-drive";
 
@@ -84,6 +92,34 @@ async function resolveAlbum(link: string): Promise<string[]> {
 }
 
 /**
+ * Rejects what an album page yields that isn't a family photo. Two signals,
+ * both cheap:
+ *
+ *  - Size. An icon or a sprite is small on its short side.
+ *  - Flatness. Google renders an account with no profile picture as a single
+ *    coloured square with one letter on it; blown up to fill a wall display
+ *    it is unmistakable. A photograph varies across every channel, a letter
+ *    tile barely varies at all, so a low standard deviation gives it away
+ *    where dimensions and file size cannot.
+ */
+async function isRealPhoto(file: string): Promise<boolean> {
+  try {
+    const img = sharp(file);
+    const meta = await img.metadata();
+    if (!meta.width || !meta.height) return false;
+    if (Math.min(meta.width, meta.height) < MIN_PHOTO_PX) return false;
+    const { channels } = await img.stats();
+    const rgb = channels.slice(0, 3);
+    if (rgb.length === 0) return false;
+    const spread = rgb.reduce((sum, c) => sum + c.stdev, 0) / rgb.length;
+    return spread >= MIN_PHOTO_STDEV;
+  } catch {
+    // Unreadable file: not something to put on the wall either.
+    return false;
+  }
+}
+
+/**
  * Syncs one photo widget's link into the local cache. Returns the cached
  * file names in display order. Throws with an actionable message.
  */
@@ -98,24 +134,23 @@ export async function syncPhotoLink(link: string, widgetId: string, mediaDir: st
   const files: string[] = [];
   for (const u of urls.slice(0, MAX_PHOTOS)) {
     const name = `${createHash("sha256").update(u.split("?")[0]!).digest("hex").slice(0, 24)}.jpg`;
-    keep.add(name);
-    files.push(name);
+    const abs = path.join(dir, name);
     const existing = await readdir(dir).catch(() => [] as string[]);
-    if (existing.includes(name)) continue; // already cached
+    const cached = existing.includes(name);
     try {
-      const img = await safeFetch(u, { accept: "image/*", maxBytes: MAX_IMAGE_BYTES });
-      if (img.status !== 200 || !img.contentType.startsWith("image/")) continue;
-      // Second line of defence against avatars, icons and sprite sheets that
-      // survive the URL filter: anything this small was never a wall photo.
-      const meta = await sharp(img.body)
-        .metadata()
-        .catch(() => null);
-      if (!meta?.width || !meta.height || Math.min(meta.width, meta.height) < MIN_PHOTO_PX) {
-        keep.delete(name);
-        files.splice(files.indexOf(name), 1);
+      if (!cached) {
+        const img = await safeFetch(u, { accept: "image/*", maxBytes: MAX_IMAGE_BYTES });
+        if (img.status !== 200 || !img.contentType.startsWith("image/")) continue;
+        await writeFile(abs, img.body);
+      }
+      // Re-checked on every sync, not just on download: an image cached before
+      // this rule existed has to be able to fall out of the set.
+      if (!(await isRealPhoto(abs))) {
+        await rm(abs, { force: true });
         continue;
       }
-      await writeFile(path.join(dir, name), img.body);
+      keep.add(name);
+      files.push(name);
     } catch (err) {
       if (err instanceof UnsafeUrlError) throw err;
       // One bad image shouldn't sink the album.
