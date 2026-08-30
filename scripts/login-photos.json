@@ -1,40 +1,13 @@
 {
-  "_comment": "Hand-picked login-page photography (docs/design/login-brief.md). Each entry is downloaded, resized, EXIF-stripped, and self-hosted by scripts/fetch-login-photos.mjs — the app NEVER hotlinks. Every image below was visually reviewed before inclusion (warm, bright, no identifiable people) and licensing verified via the Openverse API. The credit line renders on the login page.",
+  "_comment": "Hand-picked login-page photography (docs/design/login-brief.md). Every image was visually reviewed before inclusion: family-life scenes (beach sunsets, kids' sports, game night, campfire, kite park, a family walk) with NO identifiable faces — silhouettes, backs, distance, helmets, hands. Licensing verified via the Openverse API; the credit renders on the page. Downloaded, resized, EXIF-stripped, and self-hosted by scripts/fetch-login-photos.mjs — the app never hotlinks.",
   "photos": [
-    {
-      "url": "https://live.staticflickr.com/7300/13916488814_4fcb209d07_b.jpg",
-      "file": "breakfast-pancakes.webp",
-      "photographer": "kalyan02",
-      "source": "Flickr",
-      "license": "CC BY 2.0"
-    },
-    {
-      "url": "https://live.staticflickr.com/7451/12495708994_d27fd17038_b.jpg",
-      "file": "morning-strawberries.webp",
-      "photographer": "Helen.Yang",
-      "source": "Flickr",
-      "license": "CC BY 2.0"
-    },
-    {
-      "url": "https://live.staticflickr.com/2413/2503836572_df6ed2c4c7_b.jpg",
-      "file": "picnic-basket.webp",
-      "photographer": "uberculture",
-      "source": "Flickr",
-      "license": "CC BY 2.0"
-    },
-    {
-      "url": "https://live.staticflickr.com/2773/4263272885_1a49ea5209_b.jpg",
-      "file": "spring-tulips.webp",
-      "photographer": "Horia Varlan",
-      "source": "Flickr",
-      "license": "CC BY 2.0"
-    },
-    {
-      "url": "https://live.staticflickr.com/7356/11142064274_15cde3b6b9_b.jpg",
-      "file": "winter-path.webp",
-      "photographer": "Nicholas_T",
-      "source": "Flickr",
-      "license": "CC BY 2.0"
-    }
+    { "url": "https://live.staticflickr.com/3437/3316765964_01bf0b8fa0_b.jpg", "file": "beach-sunset-kids.webp", "photographer": "Kevin Krejci", "source": "Flickr", "license": "CC BY 2.0" },
+    { "url": "https://live.staticflickr.com/125/320473949_963c7cd3be_b.jpg", "file": "beach-run.webp", "photographer": "Lance Shields", "source": "Flickr", "license": "CC BY 2.0" },
+    { "url": "https://live.staticflickr.com/1045/1425008829_f17a5752b7_b.jpg", "file": "soccer.webp", "photographer": "susieq3c", "source": "Flickr", "license": "CC BY 2.0" },
+    { "url": "https://live.staticflickr.com/6152/6172707061_61b24c443c_b.jpg", "file": "football.webp", "photographer": "Fort George G. Meade", "source": "Flickr", "license": "CC BY 2.0" },
+    { "url": "https://live.staticflickr.com/2013/2212377184_e81e3c449a_b.jpg", "file": "game-night.webp", "photographer": "Andrew Turner", "source": "Flickr", "license": "CC BY 2.0" },
+    { "url": "https://live.staticflickr.com/65535/48333915077_3e0fe022ed_b.jpg", "file": "campfire.webp", "photographer": "John Brighenti", "source": "Flickr", "license": "CC BY 2.0" },
+    { "url": "https://live.staticflickr.com/8023/7129111837_a9b72413a8_b.jpg", "file": "kite-park.webp", "photographer": "Virginia State Parks", "source": "Flickr", "license": "CC BY 2.0" },
+    { "url": "https://live.staticflickr.com/8296/7751286604_4bf6e02356_b.jpg", "file": "family-walk.webp", "photographer": "Summer Skyes 11", "source": "Flickr", "license": "CC BY 2.0" }
   ]
 }

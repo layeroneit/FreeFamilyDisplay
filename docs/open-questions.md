@@ -63,6 +63,18 @@ following the operator's other project's session mechanism but none of its crede
 URL with a different scheme label. Rewrite to `https` before fetching — never
 `http` — then apply the §8.3 resolved-IP check normally.
 
+## Queued refactors
+
+**Token prefix `--hearth-*` → `--ffd-*`.** The plan's original project name
+leaks into every CSS token; the operator's wallpaper spec (and the product
+name) say `--ffd-*`. Mechanical rename across `globals.css`, `lib/themes.ts`,
+and the board components. Do it before Phase 3 hardens and before any custom
+CSS is documented (§7.6 promises token names are the stable contract).
+
+**Synology mount path** is needed *before* Phase 5 for a second reason now:
+the wallpaper ingest ladder (~1,500 files across 14+ collections) must not
+land on the container root disk.
+
 ## Parked proposals
 
 **Grafana "NOC page" (operator request, 2026-08-29).** Self-hosted Grafana is

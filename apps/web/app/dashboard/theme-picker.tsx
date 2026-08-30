@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import type { ThemeDef } from "@/lib/themes";
+import { themeVars, type ThemeDef } from "@/lib/themes";
 
 export function ThemePicker({ themes, current }: { themes: ThemeDef[]; current: string }) {
   const router = useRouter();
@@ -12,6 +12,9 @@ export function ThemePicker({ themes, current }: { themes: ThemeDef[]; current: 
   async function choose(id: string) {
     setSaving(id);
     setError(null);
+    // Instant, no round trip: repaint the page before the save even starts.
+    const t = themes.find((x) => x.id === id);
+    if (t) for (const [k, v] of Object.entries(themeVars(t))) document.body.style.setProperty(k, v);
     try {
       const res = await fetch("/api/me/theme", {
         method: "POST",
@@ -22,7 +25,8 @@ export function ThemePicker({ themes, current }: { themes: ThemeDef[]; current: 
         setError("Couldn't save that theme. Try again.");
         return;
       }
-      router.refresh(); // server layout re-renders with the new tokens
+      // Operator ask: picking a theme opens the widget picker in that look.
+      router.push(`/setup?theme=${id}`);
     } catch {
       setError("Couldn't reach the server.");
     } finally {

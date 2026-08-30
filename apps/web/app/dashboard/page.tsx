@@ -1,10 +1,11 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth/sessions";
 import { THEMES, themeById } from "@/lib/themes";
 import { ThemePicker } from "./theme-picker";
 import { LogoutButton } from "./logout-button";
 import { ProfileEditor } from "./profile-editor";
+import Link from "next/link";
+import { listBoards } from "@/lib/board/boards";
 
 export const metadata = { title: "Dashboard — FreeFamilyDisplay" };
 export const dynamic = "force-dynamic";
@@ -15,6 +16,7 @@ export default async function DashboardPage() {
 
   // Theme tokens come from the root layout now — this page just renders.
   const theme = themeById(user.uiTheme);
+  const boards = await listBoards(user.id);
 
   return (
     <main className="min-h-dvh px-6 py-10">
@@ -38,6 +40,37 @@ export default async function DashboardPage() {
           className="mt-8 rounded-xl border p-5"
           style={{ background: "var(--hearth-surface)", borderColor: "var(--hearth-border)" }}
         >
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold">Your displays</h2>
+            <Link href="/setup" className="rounded-lg px-3 py-1.5 text-sm font-semibold" style={{ background: "var(--hearth-accent-1)", color: "#1a1a1a" }}>
+              + Set up a display
+            </Link>
+          </div>
+          {boards.length === 0 ? (
+            <p className="mt-2 text-sm" style={{ color: "var(--hearth-text-muted)" }}>
+              No displays yet. Pick a theme below or hit “Set up a display” — three quick steps and it’s on screen.
+            </p>
+          ) : (
+            <ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+              {boards.map((b) => (
+                <li key={b.id}>
+                  <Link href={`/boards/${b.id}`} className="flex items-center justify-between rounded-lg border p-3 hover:opacity-90" style={{ borderColor: "var(--hearth-border)", background: "var(--hearth-bg)" }}>
+                    <span>
+                      <span className="block font-semibold">{b.name}</span>
+                      <span className="block text-xs" style={{ color: "var(--hearth-text-muted)" }}>{b.widgetCount} widgets · {themeById(b.theme).name}</span>
+                    </span>
+                    <span className="text-sm" style={{ color: "var(--hearth-accent-2)" }}>Edit →</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        <section
+          className="mt-6 rounded-xl border p-5"
+          style={{ background: "var(--hearth-surface)", borderColor: "var(--hearth-border)" }}
+        >
           <h2 className="text-lg font-semibold">Profile</h2>
           <ProfileEditor currentName={user.displayName} />
         </section>
@@ -46,10 +79,10 @@ export default async function DashboardPage() {
           className="mt-8 rounded-xl border p-5"
           style={{ background: "var(--hearth-surface)", borderColor: "var(--hearth-border)" }}
         >
-          <h2 className="text-lg font-semibold">Theme</h2>
+          <h2 className="text-lg font-semibold">Start with a look</h2>
           <p className="mb-4 mt-1 text-sm" style={{ color: "var(--hearth-text-muted)" }}>
-            Picks apply to your pages immediately. Boards get their own themes when the
-            editor arrives.
+            Pick a theme: it applies to your pages right away and opens the widget picker
+            for a new display in that look. Each display keeps its own theme.
           </p>
           <ThemePicker themes={THEMES} current={theme.id} />
         </section>
@@ -58,10 +91,8 @@ export default async function DashboardPage() {
           className="mt-6 rounded-xl border p-5"
           style={{ background: "var(--hearth-surface)", borderColor: "var(--hearth-border)" }}
         >
-          <h2 className="text-lg font-semibold">Coming next</h2>
-          <p className="mt-1 text-sm" style={{ color: "var(--hearth-text-muted)" }}>
-            The board editor (drag widgets, pick a theme per board) is the next build.
-            Meanwhile: <Link href="/status" className="underline" style={{ color: "var(--hearth-accent-2)" }}>system status</Link>{" "}
+          <h2 className="text-lg font-semibold">More</h2>
+          <p className="mt-1 text-sm" style={{ color: "var(--hearth-text-muted)" }}> <Link href="/status" className="underline" style={{ color: "var(--hearth-accent-2)" }}>system status</Link>{" "}
             · <Link href="/themes" className="underline" style={{ color: "var(--hearth-accent-2)" }}>theme swatches</Link>
           </p>
         </section>

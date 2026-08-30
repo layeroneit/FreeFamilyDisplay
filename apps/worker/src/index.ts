@@ -18,6 +18,7 @@ import { createLogger } from "@ffd/log";
 // Named import, not default: ioredis is CJS, and under NodeNext the default
 // import resolves to the module namespace, which is not constructable.
 import { Redis } from "ioredis";
+import { runWeatherCycle, startWeatherLoop } from "./weather.js";
 
 const log = createLogger("worker");
 
@@ -112,6 +113,14 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     return;
   }
 
+  if (path === "/jobs/weather" && req.method === "POST") {
+    // Internal-network ops trigger (the editor calls this after a weather
+    // widget is configured so the first forecast lands in seconds, not 15 min).
+    void runWeatherCycle().catch(() => undefined);
+    send(res, 202, { status: "started" });
+    return;
+  }
+
   send(res, 404, { error: "not found" });
 }
 
@@ -126,8 +135,10 @@ const server = createServer((req, res) => {
   });
 });
 
+const stopWeather = startWeatherLoop();
+
 server.listen(HEALTH_PORT, () => {
-  log.info("worker started", { port: HEALTH_PORT, phase: 0 });
+  log.info("worker started", { port: HEALTH_PORT, jobs: "weather" });
 });
 
 let shuttingDown = false;
@@ -142,6 +153,7 @@ async function shutdown(signal: string): Promise<void> {
   const deadline = setTimeout(() => process.exit(1), 5_000);
   deadline.unref();
 
+  stopWeather();
   await new Promise<void>((resolve) => server.close(() => resolve()));
   if (redis) {
     try {

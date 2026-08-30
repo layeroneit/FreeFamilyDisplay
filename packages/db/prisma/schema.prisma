@@ -62,6 +62,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   sessions      Session[]
+  boards        Board[]
   invitesSent   Invite[]  @relation("InviteCreatedBy")
   inviteUsed    Invite?   @relation("InviteConsumedBy")
 
@@ -153,4 +154,82 @@ model AuditLog {
 
   @@index([actorId, createdAt])
   @@index([action, createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// Phase 3 — boards and widgets (plan §5, §7)
+// ---------------------------------------------------------------------------
+
+/// A display layout. The canvas is fixed at 1920×1080 (plan §7.1); widgets
+/// are absolutely positioned in canvas pixels and the kiosk scales the whole
+/// thing with a CSS transform. Tenancy: every query is scoped by userId.
+model Board {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name String @db.VarChar(80)
+
+  /// Theme id from the built-in set (lib/themes.ts). Boards own their theme;
+  /// User.uiTheme is only the admin UI's palette.
+  theme String @default("midnight") @db.VarChar(32)
+
+  /// Optional per-board look overrides — Phase 3 format panel (§7.3).
+  /// Shape validated by zod at the API boundary, never trusted from the row.
+  style Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  widgets BoardWidget[]
+
+  @@index([userId, updatedAt])
+}
+
+model BoardWidget {
+  id String @id @default(cuid())
+
+  boardId String
+  board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+
+  /// Catalog key: clock | date | greeting | weather | calendar | photos |
+  /// quote | notes. Unknown keys are rejected at the API boundary.
+  type String @db.VarChar(32)
+
+  /// Canvas pixels on the 1920×1080 plane.
+  x Int
+  y Int
+  w Int
+  h Int
+  z Int @default(0)
+
+  /// Per-widget settings (weather location, greeting name, note text …).
+  /// Validated per type by zod on write.
+  config Json @default("{}")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([boardId])
+}
+
+/// Normalized external data written by `worker` on a schedule and read by
+/// the render path (plan §4.2 — web never fetches). `kind` + `key` identify
+/// a source: ("weather", "40.71,-74.01"), later ("ics", connectionId).
+model CachedPayload {
+  id String @id @default(cuid())
+
+  kind String @db.VarChar(32)
+  key  String @db.VarChar(120)
+
+  payload   Json
+  fetchedAt DateTime
+
+  /// Last failure, actionable and secret-free ("HTTP 503 from Open-Meteo").
+  lastError   String?   @db.VarChar(255)
+  lastErrorAt DateTime?
+
+  @@unique([kind, key])
+  @@index([kind, fetchedAt])
 }

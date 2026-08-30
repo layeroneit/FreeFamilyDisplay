@@ -314,6 +314,18 @@ obliges it. Rendering it always keeps the rule a simple invariant — "stock ima
 implies credit line" — rather than a per-license conditional that eventually gets
 a bug. Public-domain images credit the source rather than a photographer.
 
+#### 6.6.0 Wallpaper collections (operator spec, 2026-08-30)
+
+Curated 8–15 image sets — space, cars, Northwoods, a family's own vacation —
+that sit behind a board and **rotate weekly by default**. Fully specified in
+`docs/specs/wallpaper-collections.md`: ingest-time luminance analysis drives a
+per-image scrim and text color so any theme stays legible over any photo;
+rotation is a worker job with pin/skip; custom collections come from uploads or
+photo-share URLs. Built-ins are free-license only (NASA, cars, an aesthetic
+gaming set); anime and franchise art are user-supplied by design. The §6.6.1
+stockpile below is the *seed* of the built-in collections, not a separate
+system.
+
 #### 6.6.1 The bundled stockpile
 
 Live search covers the case where someone wants a specific image. It does not
@@ -713,7 +725,7 @@ Each phase ends deployable. Do not start a phase before the prior one's criteria
 **Phase 4 — Displays.** Pairing codes, device tokens, kiosk route, browser-side offline cache, auto-reconnect, screen wake, revocation UI.
 *Done when:* a paired tablet renders the board, survives a two-hour outage showing stale-but-labeled data, and goes blank within one cycle of revocation — **and the same board meets the §7.8 budget on the actual Raspberry Pi**, verified after two hours of uptime, not on a developer laptop.
 
-**Phase 5 — Remaining sources.** Open-Meteo, NWS alerts, RSS, photo URLs including Google Drive folders, stock backgrounds with attribution, and the §6.6.1 stockpile with its manifest and seed script.
+**Phase 5 — Remaining sources.** Open-Meteo *(pulled forward — shipped with the Phase 3 slice)*, NWS alerts, RSS, photo URLs including Google Drive folders, stock backgrounds with attribution, the §6.6.1 stockpile with its manifest and seed script, and **wallpaper collections** (`docs/specs/wallpaper-collections.md`) with weekly rotation.
 *Done when:* every source in Section 6 passes health check and renders, and a board with the network unplugged still shows stockpile backgrounds.
 
 **Phase 6 — Hardening and handoff.** CSP tightening, security checklist pass, rate limit tuning, container hardening, tunnel configured, runbook written.
