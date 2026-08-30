@@ -5,6 +5,7 @@ import { termsCurrent } from "@/lib/terms";
 import { deleteBoard, getBoard, updateBoard, type BoardPatch } from "@/lib/board/boards";
 import { CANVAS_PRESET_IDS, publicWidgetConfig, type CanvasPreset } from "@/lib/board/widgets";
 import { canUseCollection, requestAdvance } from "@/lib/board/wallpapers";
+import { pokeWorkerConnectors } from "@/lib/board/worker-poke";
 import { isThemeId } from "@/lib/themes";
 import { audit } from "@/lib/audit";
 
@@ -70,7 +71,13 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
   const ok = await updateBoard(user.id, id, patch);
   if (!ok) return NextResponse.json({ error: "No such display." }, { status: 404 });
   // A newly assigned collection gets its first wallpaper right away.
-  if (d.wallpaperCollectionId) void requestAdvance(id);
+  if (d.wallpaperCollectionId) {
+    void requestAdvance(id);
+    // A tag-backed theme is empty until the worker fetches it. Without this
+    // poke, picking "Anime" shows nothing for up to fifteen minutes and looks
+    // broken; with it the images start landing immediately.
+    pokeWorkerConnectors();
+  }
   return NextResponse.json({ ok: true });
 }
 

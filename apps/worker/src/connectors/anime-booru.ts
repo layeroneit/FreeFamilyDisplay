@@ -254,7 +254,14 @@ export async function collectPosts(tags: string): Promise<BooruPost[]> {
 
 export async function syncTagCollections(mediaDir: string): Promise<void> {
   const cols = await prisma.wallpaperCollection.findMany({
-    where: { isBuiltin: false, sourceTags: { not: null } },
+    where: {
+      sourceTags: { not: null },
+      // A household's own tag collection syncs as soon as it exists, because
+      // creating one IS the request. A built-in tag theme only syncs once a
+      // board has actually selected it -- an install that never picks "Anime"
+      // must not quietly download anime onto somebody's family server.
+      OR: [{ isBuiltin: false }, { boards: { some: {} } }],
+    },
     select: { id: true, sourceTags: true, name: true },
   });
   for (const c of cols) {

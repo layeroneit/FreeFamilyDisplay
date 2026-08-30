@@ -39,8 +39,18 @@ paste about eight commands into a terminal once.
 This is not an app you install from a store. Someone has to set it up. After
 that it is a normal website that everyone in the house opens on their phone.
 
-**Definitely not, if** you want somebody else to host it for you. Nobody does.
-That is the whole point.
+**Definitely not, if** you want somebody else to host it. Nobody does. That is
+the whole point.
+
+**Definitely not, if** you want your family's schedule sitting on a server in a
+state you have never visited, waiting patiently to become a headline.
+
+**Definitely not, if** you will miss the emails. There is no onboarding
+sequence, no "we've updated our privacy policy," no re-engagement nudge at 8pm
+because you have not opened the app in four days. It just shows the calendar.
+
+**Definitely not, if** you need someone to call when it breaks. You are the
+someone. Sorry.
 
 ---
 

@@ -71,6 +71,56 @@ export async function seedBuiltinWallpapers(): Promise<void> {
     }
   }
   log.info("built-in wallpapers seeded", { collections: manifest.collections.length, added });
+  await seedTagCollections();
+}
+
+/**
+ * Built-in themes whose images are FETCHED rather than shipped.
+ *
+ * Everything else in the picker is backed by files committed to this repo.
+ * These cannot be: the art belongs to the artists who drew it, this repo is
+ * public, and committing it would make the project the redistributor. So the
+ * theme ships as a NAME and a SEARCH, and each household's own instance fills
+ * it in on its own disk if and when somebody picks it.
+ *
+ * That "if and when" is the point. syncTagCollections only fetches a built-in
+ * tag theme once a board has actually selected it, so an install that never
+ * touches these downloads nothing at all.
+ *
+ * The slug matters: `anime` is a key in lib/board/collection-fonts.ts, so
+ * picking this theme also switches the board's lettering.
+ */
+const TAG_COLLECTIONS: Array<{ slug: string; name: string; description: string; tags: string; rightsNote: string }> = [
+  {
+    slug: "anime",
+    name: "Anime",
+    description: "Anime scenery, fetched to this machine on demand. Rights stay with the artists.",
+    // Scenery over characters: it is what actually reads well across a room,
+    // and it is the safest corner of a crowd-tagged index.
+    tags: "scenery no_humans",
+    rightsNote: "Fan art - rights remain with the original artists.",
+  },
+  {
+    slug: "anime-night",
+    name: "Anime nights",
+    description: "Night streets, lanterns and starfields, fetched on demand. Rights stay with the artists.",
+    tags: "scenery night no_humans",
+    rightsNote: "Fan art - rights remain with the original artists.",
+  },
+];
+
+async function seedTagCollections(): Promise<void> {
+  for (const c of TAG_COLLECTIONS) {
+    await prisma.wallpaperCollection.upsert({
+      where: { slug: c.slug },
+      create: { slug: c.slug, name: c.name, description: c.description, isBuiltin: true, sourceTags: c.tags, rightsNote: c.rightsNote },
+      // Deliberately does NOT reset sourceTags: an operator who retuned the
+      // tags on their own box should not have that undone by a restart.
+      update: { name: c.name, description: c.description, isBuiltin: true },
+      select: { id: true },
+    });
+  }
+  log.info("tag-backed themes seeded", { count: TAG_COLLECTIONS.length });
 }
 
 /** Most recent 04:00 boundary for the interval, in server-local time. */
