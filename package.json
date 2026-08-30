@@ -1,6 +1,16 @@
 {
   "name": "freefamilydisplay",
   "version": "0.0.1",
+  "author": "Layer One IT Consultants (https://layeroneconsultants.com/)",
+  "contributors": [
+    "Layer One IT Consultants (https://layeroneconsultants.com/)"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/layeroneit/FreeFamilyDisplay.git"
+  },
+  "homepage": "https://layeroneconsultants.com/",
   "private": true,
   "description": "Self-hosted family dashboard. Admin UI + kiosk renderer for wall displays.",
   "engines": {
