@@ -101,6 +101,20 @@ const TAG_COLLECTIONS: Array<{ slug: string; name: string; description: string; 
     rightsNote: "Fan art - rights remain with the original artists.",
   },
   {
+    slug: "anime-titan",
+    name: "Attack on Titan",
+    description: "Fetched to this machine on demand. Rights remain with the original artists.",
+    tags: "shingeki_no_kyojin",
+    rightsNote: "Fan art - rights remain with the original artists. Personal display only.",
+  },
+  {
+    slug: "anime-slayer",
+    name: "Demon Slayer",
+    description: "Fetched to this machine on demand. Rights remain with the original artists.",
+    tags: "kimetsu_no_yaiba",
+    rightsNote: "Fan art - rights remain with the original artists. Personal display only.",
+  },
+  {
     slug: "anime-night",
     name: "Anime nights",
     description: "Night streets, lanterns and starfields, fetched on demand. Rights stay with the artists.",

@@ -10,6 +10,10 @@ export default tseslint.config(
       "**/generated/**",
       "packages/db/prisma/migrations/**",
       ".audit-tmp/**",
+      // Gitignored staging for candidate photos before ingest: downloaded
+      // images plus whatever scratch scripts were used to sort them. Never
+      // shipped, so it is not ours to lint.
+      ".photo-review/**",
     ],
   },
   js.configs.recommended,

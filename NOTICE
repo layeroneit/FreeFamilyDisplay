@@ -47,6 +47,22 @@ but a modified or redistributed version must not be presented as Layer One's,
 and the marks should be removed if you fork it under another name.
 
 --------------------------------------------------------------------------
+BUNDLED FONTS
+--------------------------------------------------------------------------
+
+apps/web/public/fonts/ contains Latin subsets of three typefaces used by the
+anime themes, each under the SIL Open Font License, Version 1.1:
+
+    Hina Mincho     Copyright 2020 The Hina Mincho Project Authors
+    Mochiy Pop One  Copyright 2020 The Mochiypop Project Authors
+    Noto Sans JP    Copyright 2014-2021 Adobe, with Reserved Font Name Source
+
+The full licence is at apps/web/public/fonts/OFL.txt. The OFL permits bundling
+and redistribution, which is why these ship inside the repository. They are
+self-hosted rather than loaded from a font CDN so the display keeps its
+typography without internet access and discloses no viewer IP to a third party.
+
+--------------------------------------------------------------------------
 THIRD-PARTY IMAGES
 --------------------------------------------------------------------------
 

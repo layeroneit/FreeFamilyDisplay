@@ -6,7 +6,7 @@ import { largestSrc, loginPhotoSet } from "@/lib/board/photo-set";
 import { safeWidgetConfig } from "@/lib/board/widgets";
 import { WeatherPayloadSchema, weatherKey, type WeatherPayload } from "@/lib/board/weather-codes";
 import { currentWallpaper, type WallpaperInfo } from "@/lib/board/wallpapers";
-import { collectionFontVars } from "@/lib/board/collection-fonts";
+import { collectionFontVars, hasCollectionFonts } from "@/lib/board/collection-fonts";
 import type { BoardData, CalendarFeed } from "./widget-view";
 
 /** The collection's slug, which selects its lettering. Null for no collection. */
@@ -101,10 +101,12 @@ export async function loadBoardScene(board: BoardFull, viewerName: string): Prom
     // collection should look like one, not just swap the photo).
     const meta = await collectionMeta(board.wallpaperCollectionId);
     rightsNote = meta.rightsNote;
-    // A tag-fed collection is anime art by construction, but its slug is
-    // generated per user, so it can never match a name in the font table.
-    // Ask for the anime lettering by name instead.
-    Object.assign(varOverrides, collectionFontVars(meta.sourceTags ? "anime" : meta.slug));
+    // A built-in theme is named in the font table and keeps its own lettering.
+    // A collection somebody made themselves has a slug generated per user, so
+    // it can never match one -- if it is tag-fed it is anime art by
+    // construction, so ask for the anime lettering by name.
+    const fontKey = hasCollectionFonts(meta.slug) ? meta.slug : meta.sourceTags ? "anime" : meta.slug;
+    Object.assign(varOverrides, collectionFontVars(fontKey));
   }
 
   return { data, wallpaper, scrimOpacity, mood, varOverrides, rightsNote };

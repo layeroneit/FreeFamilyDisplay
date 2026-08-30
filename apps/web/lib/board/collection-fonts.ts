@@ -50,10 +50,17 @@ const COLLECTION_FONTS: Record<string, FontPair> = {
     display: '"Franklin Gothic Medium", "Haettenschweiler", "Arial Black", "Segoe UI", ui-sans-serif, sans-serif',
     body: '"Roboto Condensed", "Segoe UI", ui-sans-serif, system-ui, sans-serif',
   },
-  // Soft geometric with generous counters — the poster-lettering look.
+  // The two anime themes ship real bundled faces (app/anime-fonts.css, SIL
+  // OFL) rather than hoping a system has something suitable. Mochiy Pop One
+  // is the rounded poster face; Hina Mincho is the quieter brush serif for the
+  // night set; Noto Sans JP carries body text under both.
   anime: {
-    display: '"Century Gothic", "Futura", "Questrial", "Trebuchet MS", ui-rounded, ui-sans-serif, sans-serif',
-    body: '"Nunito", "Segoe UI", "Hiragino Sans", ui-rounded, ui-sans-serif, sans-serif',
+    display: '"Mochiy Pop One", "Century Gothic", "Futura", "Trebuchet MS", ui-rounded, ui-sans-serif, sans-serif',
+    body: '"Noto Sans JP", "Nunito", "Segoe UI", ui-sans-serif, system-ui, sans-serif',
+  },
+  "anime-night": {
+    display: '"Hina Mincho", "Iowan Old Style", "Palatino Linotype", Georgia, ui-serif, serif',
+    body: '"Noto Sans JP", "Segoe UI", ui-sans-serif, system-ui, sans-serif',
   },
   // Warm firelight; a little storybook.
   campfire: {
