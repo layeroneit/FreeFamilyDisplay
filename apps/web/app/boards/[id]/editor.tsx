@@ -7,19 +7,7 @@ import { BoardCanvas } from "@/components/board/canvas";
 import { WidgetFrame } from "@/components/board/widget-frame";
 import type { BoardWidgetRow } from "@/lib/board/boards";
 import type { CollectionInfo } from "@/lib/board/wallpapers";
-import {
-  CANVAS_PRESETS,
-  CANVAS_PRESET_IDS,
-  CLOCK_STYLES,
-  GRID,
-  WIDGET_META,
-  WIDGET_TYPES,
-  canvasSize,
-  normalizeGeometry,
-  safeWidgetConfig,
-  type CanvasPreset,
-  type WidgetType,
-} from "@/lib/board/widgets";
+import { CANVAS_PRESETS, CANVAS_PRESET_IDS, CLOCK_STYLES, GRID, WIDGET_META, WIDGET_TYPES, canvasSize, normalizeGeometry, safeWidgetConfig, type CanvasPreset, type WidgetType, textScale } from "@/lib/board/widgets";
 import type { ThemeDef } from "@/lib/themes";
 
 const field = { background: "var(--hearth-surface)", borderColor: "var(--hearth-border)", color: "var(--hearth-text)" };
@@ -257,7 +245,7 @@ export function BoardEditor({
               {widgets.map((w) => (
                 <div key={w.id}>
                   <div onPointerDown={(e) => startDrag(e, w.id, "move")} style={{ position: "absolute", left: 0, top: 0, cursor: "move", touchAction: "none" }}>
-                    <WidgetFrame type={w.type} x={w.x} y={w.y} w={w.w} h={w.h} z={10 + w.z} plain={WIDGET_META[w.type].plain} translucent={hasWallpaper}>
+                    <WidgetFrame type={w.type} x={w.x} y={w.y} w={w.w} h={w.h} z={10 + w.z} plain={WIDGET_META[w.type].plain} translucent={hasWallpaper} scale={textScale(w.type, w.w, w.h, (safeWidgetConfig(w.type, w.config) as { fontScale: number }).fontScale)}>
                       <div style={{ pointerEvents: "none", height: "100%", position: "relative" }}>{slots[w.id]}</div>
                     </WidgetFrame>
                   </div>
@@ -581,6 +569,11 @@ function WidgetSettings({
       </div>
 
       <div className="mt-3 space-y-3">
+        <label className="block">
+          Text size · {Math.round(Number(draft["fontScale"] ?? 1) * 100)}%
+          <span className="block text-xs" style={{ color: "var(--hearth-text-muted)" }}>Text already grows with the widget; this nudges it.</span>
+          <input type="range" min={0.5} max={2.5} step={0.05} className="mt-1 w-full" value={Number(draft["fontScale"] ?? 1)} onChange={(e) => set("fontScale", Number(e.target.value))} />
+        </label>
         {widget.type === "greeting" && (
           <label className="block">
             Name to greet
@@ -634,11 +627,28 @@ function WidgetSettings({
                 <option value="c">°C</option>
               </select>
             </label>
+            <label className="block">
+              Layout
+              <select className={field} style={input} value={String(draft["view"] ?? "detailed")} onChange={(e) => set("view", e.target.value)}>
+                <option value="detailed">Detailed — now, conditions, 5 days</option>
+                <option value="daily">Daily — 7-day forecast</option>
+                <option value="hourly">Hourly — next 12 hours</option>
+                <option value="compact">Compact — right now only</option>
+              </select>
+            </label>
           </>
         )}
         {widget.type === "calendar" && (
           <>
             <label className="block">
+              Layout
+              <select className={field} style={input} value={String(draft["view"] ?? "week")} onChange={(e) => set("view", e.target.value)}>
+                <option value="week">Week — columns from today</option>
+                <option value="day">Day — today's agenda</option>
+                <option value="month">Month — full grid</option>
+              </select>
+            </label>
+            <label className="block" hidden={draft["view"] === "day" || draft["view"] === "month"}>
               Days shown (1–14)
               <input type="number" min={1} max={14} className={field} style={input} value={Number(draft["days"] ?? 7)} onChange={(e) => set("days", clampInt(e.target.value, 1, 14, 7))} />
             </label>

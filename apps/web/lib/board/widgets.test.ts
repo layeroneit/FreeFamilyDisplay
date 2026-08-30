@@ -25,16 +25,17 @@ test("every widget type has meta and a starter position inside the canvas", () =
 });
 
 test("config parsing fills defaults and rejects garbage", () => {
-  assert.deepEqual(parseWidgetConfig("clock", {}), { format: "12h", showSeconds: false, style: "digital" });
-  assert.deepEqual(parseWidgetConfig("weather", { location: "  Oslo " }), { location: "Oslo", units: "f" });
+  assert.deepEqual(parseWidgetConfig("clock", {}), { format: "12h", showSeconds: false, style: "digital", fontScale: 1 });
+  assert.deepEqual(parseWidgetConfig("weather", { location: "  Oslo " }), { location: "Oslo", units: "f", view: "detailed", fontScale: 1 });
   assert.throws(() => parseWidgetConfig("weather", { location: "" }));
   assert.throws(() => parseWidgetConfig("clock", { format: "13h" }));
   assert.throws(() => parseWidgetConfig("notes", { text: "x".repeat(2001) }));
 });
 
 test("safeWidgetConfig never throws on a corrupt row", () => {
-  assert.deepEqual(safeWidgetConfig("clock", { format: "nope" }), { format: "12h", showSeconds: false, style: "digital" });
-  assert.deepEqual(safeWidgetConfig("quote", null), {});
+  assert.deepEqual(safeWidgetConfig("clock", { format: "nope" }), { format: "12h", showSeconds: false, style: "digital", fontScale: 1 });
+  assert.deepEqual(safeWidgetConfig("quote", null), { fontScale: 1 });
+  assert.throws(() => parseWidgetConfig("quote", { fontScale: 9 }));
 });
 
 test("normalizeGeometry snaps, clamps, and enforces minimum size", () => {

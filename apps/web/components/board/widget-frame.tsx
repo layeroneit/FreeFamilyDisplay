@@ -19,6 +19,7 @@ export function WidgetFrame({
   plain = false,
   translucent = false,
   reduceEffects = false,
+  scale = 1,
 }: {
   type: string;
   x: number;
@@ -30,6 +31,8 @@ export function WidgetFrame({
   plain?: boolean;
   translucent?: boolean;
   reduceEffects?: boolean;
+  /** Text/content scale (see lib/board/widgets textScale). 1 = as designed at the default size. */
+  scale?: number;
 }) {
   const surface = translucent
     ? reduceEffects
@@ -60,7 +63,11 @@ export function WidgetFrame({
         textShadow: plain && translucent ? "0 1px 6px rgb(0 0 0 / 0.55)" : undefined,
       }}
     >
-      {children}
+      {/* zoom scales px font sizes AND the layout box together, so content
+          re-flows exactly as if the widget were its default size. */}
+      <div data-part="content" style={{ height: "100%", position: "relative", zoom: scale === 1 ? undefined : scale }}>
+        {children}
+      </div>
     </div>
   );
 }

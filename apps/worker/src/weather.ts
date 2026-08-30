@@ -51,13 +51,26 @@ const ForecastResponse = z.object({
     weather_code: z.number().int(),
     wind_speed_10m: z.number(),
     is_day: z.number(),
+    apparent_temperature: z.number().optional(),
+    relative_humidity_2m: z.number().optional(),
   }),
+  hourly: z
+    .object({
+      time: z.array(z.string()),
+      temperature_2m: z.array(z.number()),
+      weather_code: z.array(z.number().int()),
+      precipitation_probability: z.array(z.number().nullable()),
+      is_day: z.array(z.number()),
+    })
+    .optional(),
   daily: z.object({
     time: z.array(z.string()).min(1),
     weather_code: z.array(z.number().int()),
     temperature_2m_max: z.array(z.number()),
     temperature_2m_min: z.array(z.number()),
     precipitation_probability_max: z.array(z.number().nullable()),
+    sunrise: z.array(z.string()).optional(),
+    sunset: z.array(z.string()).optional(),
   }),
 });
 
@@ -112,13 +125,35 @@ async function geocode(location: string): Promise<Geo> {
   return geo;
 }
 
+type HourlyRaw = z.infer<typeof ForecastResponse>["hourly"];
+
+function hourlyWindow(h: HourlyRaw, nowIso: string) {
+  if (!h) return undefined;
+  // Both are local-time strings from the same timezone=auto response, so a
+  // lexical compare on "YYYY-MM-DDTHH:MM" finds the current hour.
+  const cur = nowIso.slice(0, 13);
+  let start = h.time.findIndex((t) => t.slice(0, 13) >= cur);
+  if (start < 0) start = 0;
+  return h.time.slice(start, start + 24).map((time, j) => {
+    const i = start + j;
+    return {
+      time,
+      tempC: h.temperature_2m[i] ?? 0,
+      code: h.weather_code[i] ?? 0,
+      pop: h.precipitation_probability[i] ?? null,
+      isDay: (h.is_day[i] ?? 1) === 1,
+    };
+  });
+}
+
 async function fetchForecast(geo: Geo) {
   // lat/lon are validated finite numbers in range — safe to interpolate.
   const url =
     `https://api.open-meteo.com/v1/forecast?latitude=${geo.lat}&longitude=${geo.lon}` +
-    `&current=temperature_2m,weather_code,wind_speed_10m,is_day` +
-    `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max` +
-    `&timezone=auto&forecast_days=5`;
+    `&current=temperature_2m,weather_code,wind_speed_10m,is_day,apparent_temperature,relative_humidity_2m` +
+    `&hourly=temperature_2m,weather_code,precipitation_probability,is_day` +
+    `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset` +
+    `&timezone=auto&forecast_days=7`;
   const b = ForecastResponse.parse(await getJson(url));
   return {
     place: geo,
@@ -128,13 +163,19 @@ async function fetchForecast(geo: Geo) {
       windKmh: b.current.wind_speed_10m,
       isDay: b.current.is_day === 1,
       time: b.current.time,
+      ...(b.current.apparent_temperature !== undefined ? { feelsC: b.current.apparent_temperature } : {}),
+      ...(b.current.relative_humidity_2m !== undefined ? { humidity: Math.round(b.current.relative_humidity_2m) } : {}),
     },
+    // Next 24 hours from the current hour (Open-Meteo returns the whole day from 00:00).
+    hourly: hourlyWindow(b.hourly, b.current.time),
     daily: b.daily.time.map((date, i) => ({
       date,
       code: b.daily.weather_code[i] ?? 0,
       maxC: b.daily.temperature_2m_max[i] ?? 0,
       minC: b.daily.temperature_2m_min[i] ?? 0,
       pop: b.daily.precipitation_probability_max[i] ?? null,
+      ...(b.daily.sunrise?.[i] ? { sunrise: b.daily.sunrise[i] } : {}),
+      ...(b.daily.sunset?.[i] ? { sunset: b.daily.sunset[i] } : {}),
     })),
   };
 }

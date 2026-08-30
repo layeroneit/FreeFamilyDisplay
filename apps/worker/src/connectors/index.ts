@@ -42,6 +42,36 @@ async function record(kind: string, key: string, payload: unknown | null, error:
   }
 }
 
+/**
+ * https://calendar.google.com/calendar/embed?src=<id>… or ?cid=<base64 id>
+ * → https://calendar.google.com/calendar/ical/<id>/public/basic.ics
+ * Only works for calendars whose owner made them public; the caller falls
+ * back to a helpful error otherwise.
+ */
+export function googleEmbedToIcs(raw: string): string | null {
+  let u: URL;
+  try {
+    u = new URL(raw);
+  } catch {
+    return null;
+  }
+  if (u.hostname !== "calendar.google.com") return null;
+  if (/\/calendar\/ical\//.test(u.pathname)) return null; // already an ICS address
+  let id = u.searchParams.get("src");
+  if (!id) {
+    const cid = u.searchParams.get("cid");
+    if (cid) {
+      try {
+        id = Buffer.from(cid.replace(/-/g, "+").replace(/_/g, "/"), "base64").toString("utf8");
+      } catch {
+        id = null;
+      }
+    }
+  }
+  if (!id || !/^[\w.@%+-]{3,200}$/.test(id)) return null;
+  return `https://calendar.google.com/calendar/ical/${encodeURIComponent(id)}/public/basic.ics`;
+}
+
 async function syncCalendars(): Promise<void> {
   const rows = await prisma.boardWidget.findMany({ where: { type: "calendar" }, select: { id: true, config: true } });
   for (const r of rows) {
@@ -52,8 +82,22 @@ async function syncCalendars(): Promise<void> {
       const res = await safeFetch(url, { accept: "text/calendar, text/plain;q=0.8, */*;q=0.5", maxBytes: ICS_MAX_BYTES });
       if (res.status === 404) throw new Error("Calendar feed returned 404 — check the link");
       if (res.status !== 200) throw new Error(`Calendar feed returned HTTP ${res.status}`);
-      const text = res.body.toString("utf8");
-      if (!text.includes("BEGIN:VCALENDAR")) throw new Error("That link didn't return a calendar (.ics) file");
+      let text = res.body.toString("utf8");
+      if (!text.includes("BEGIN:VCALENDAR")) {
+        // Google's "embed" / share page instead of the iCal address. If the
+        // calendar is public, its .ics lives at a predictable URL — try that.
+        const alt = googleEmbedToIcs(url);
+        const altText = alt ? (await safeFetch(alt, { accept: "text/calendar", maxBytes: ICS_MAX_BYTES }).catch(() => null))?.body.toString("utf8") : null;
+        if (altText && altText.includes("BEGIN:VCALENDAR")) {
+          text = altText;
+        } else {
+          throw new Error(
+            alt
+              ? "That is Google's share/embed link and the calendar isn't public. In Google Calendar → Settings → your calendar → Integrate calendar, copy the “Secret address in iCal format” instead."
+              : "That link didn't return a calendar (.ics) file. Use the calendar's iCal/ICS address.",
+          );
+        }
+      }
       const from = new Date();
       from.setHours(0, 0, 0, 0);
       const to = new Date(from);

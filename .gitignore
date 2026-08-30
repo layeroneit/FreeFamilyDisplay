@@ -14,7 +14,7 @@ dist/
 # set (5 reviewed, licensed webps, ~540 KB total) IS committed — it must exist
 # at image-build time for the standalone bundle, and hand-reviewed licensing is
 # exactly what belongs in a diff. The §6.6.1 stockpile (~250 images) stays out.
-media/
+/media/
 packages/stockpile/images/
 .photo-review/
 

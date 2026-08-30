@@ -2,7 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth/sessions";
 import { termsCurrent } from "@/lib/terms";
 import { getBoard } from "@/lib/board/boards";
-import { WIDGET_META, canvasSize } from "@/lib/board/widgets";
+import { WIDGET_META, canvasSize, safeWidgetConfig, textScale } from "@/lib/board/widgets";
 import { themeById, themeVars } from "@/lib/themes";
 import { BoardCanvas } from "@/components/board/canvas";
 import { BoardBackdrop } from "@/components/board/backdrop";
@@ -39,7 +39,7 @@ export default async function BoardViewPage({ params }: { params: Promise<{ id: 
         <BoardCanvas vars={vars} width={size.w} height={size.h} className="h-full">
           <BoardBackdrop wallpaper={scene.wallpaper} scrimOpacity={scene.scrimOpacity} mood={scene.mood} canvasW={size.w} effects />
           {board.widgets.map((w) => (
-            <WidgetFrame key={w.id} type={w.type} x={w.x} y={w.y} w={w.w} h={w.h} z={10 + w.z} plain={WIDGET_META[w.type].plain} translucent={scene.wallpaper !== null}>
+            <WidgetFrame key={w.id} type={w.type} x={w.x} y={w.y} w={w.w} h={w.h} z={10 + w.z} plain={WIDGET_META[w.type].plain} translucent={scene.wallpaper !== null} scale={textScale(w.type, w.w, w.h, (safeWidgetConfig(w.type, w.config) as { fontScale: number }).fontScale)}>
               <WidgetView widget={w} data={scene.data} />
             </WidgetFrame>
           ))}

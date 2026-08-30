@@ -39,7 +39,12 @@ export const WeatherPayloadSchema = z.object({
     windKmh: z.number().finite(),
     isDay: z.boolean(),
     time: z.string(),
+    feelsC: z.number().finite().optional(),
+    humidity: z.number().int().optional(),
   }),
+  hourly: z
+    .array(z.object({ time: z.string(), tempC: z.number().finite(), code: z.number().int(), pop: z.number().nullable(), isDay: z.boolean() }))
+    .optional(),
   daily: z
     .array(
       z.object({
@@ -48,6 +53,8 @@ export const WeatherPayloadSchema = z.object({
         maxC: z.number().finite(),
         minC: z.number().finite(),
         pop: z.number().nullable(),
+        sunrise: z.string().optional(),
+        sunset: z.string().optional(),
       }),
     )
     .min(1),
