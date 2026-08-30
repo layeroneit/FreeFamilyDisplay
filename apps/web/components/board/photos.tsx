@@ -4,6 +4,11 @@ import { useEffect, useState } from "react";
 
 /** Rotating photo panel. Crossfade on a timer; reduced-motion gets a single frame. */
 export function PhotosWidget({ srcs, intervalSec, note }: { srcs: string[]; intervalSec: number; note?: string }) {
+  // Index is derived from the wall clock, never accumulated in state: the
+  // board reloads every 5 minutes and the kiosk watchdog relaunches the
+  // browser besides, and a counter starting from 0 each time means nothing
+  // past the first handful of photos is ever seen. Server render starts at 0
+  // to keep hydration stable; the effect below corrects it on mount.
   const [i, setI] = useState(0);
   const [reduced, setReduced] = useState(false);
 
@@ -11,11 +16,27 @@ export function PhotosWidget({ srcs, intervalSec, note }: { srcs: string[]; inte
     setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   }, []);
 
+  const period = Math.max(5, intervalSec) * 1000;
+  const count = srcs.length;
+
   useEffect(() => {
-    if (reduced || srcs.length < 2) return;
-    const id = setInterval(() => setI((n) => (n + 1) % srcs.length), Math.max(5, intervalSec) * 1000);
-    return () => clearInterval(id);
-  }, [reduced, srcs, intervalSec]);
+    if (count === 0) return;
+    const at = (t: number) => Math.floor(t / period) % count;
+    // Land on the photo that *should* be showing right now, whatever happened
+    // before — refresh, crash, reboot.
+    setI(at(Date.now()));
+    if (reduced || count < 2) return;
+    let timer: ReturnType<typeof setTimeout>;
+    // Re-align to the wall clock on every tick rather than trusting a fixed
+    // interval: setInterval drifts, and a backgrounded tab is throttled.
+    const tick = () => {
+      const now = Date.now();
+      setI(at(now));
+      timer = setTimeout(tick, period - (now % period));
+    };
+    timer = setTimeout(tick, period - (Date.now() % period));
+    return () => clearTimeout(timer);
+  }, [reduced, count, period]);
 
   if (srcs.length === 0) {
     return <div style={{ color: "var(--hearth-text-muted)", fontSize: 24 }}>No photos yet.</div>;

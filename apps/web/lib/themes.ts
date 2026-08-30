@@ -40,6 +40,20 @@ export function isThemeId(id: string): boolean {
   return THEMES.some((t) => t.id === id);
 }
 
+/**
+ * Perceived lightness of a theme's background, 0..1 (sRGB relative luminance).
+ * Four of the ten palettes are light, which is why the Layer One mark cannot
+ * simply be painted white.
+ */
+export function bgLuminance(theme: ThemeDef): number {
+  const hex = theme.bg.replace("#", "");
+  const ch = (i: number) => {
+    const v = parseInt(hex.slice(i * 2, i * 2 + 2), 16) / 255;
+    return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * ch(0) + 0.7152 * ch(1) + 0.0722 * ch(2);
+}
+
 /** CSS custom-property map for a theme — the --hearth-* token contract. */
 export function themeVars(theme: ThemeDef): Record<string, string> {
   return {
@@ -52,5 +66,10 @@ export function themeVars(theme: ThemeDef): Record<string, string> {
     "--hearth-accent-2": theme.accents[1],
     "--hearth-accent-3": theme.accents[2],
     "--hearth-accent-4": theme.accents[3],
+    // The Layer One mark is a monochrome outline. It is painted with this
+    // token rather than the theme's own text colour so it stays neutral --
+    // it is someone else's mark, not part of this app's palette -- while
+    // still being legible on the four light palettes.
+    "--hearth-logo-ink": bgLuminance(theme) > 0.5 ? "#1F1F1F" : "#E8E8E8",
   };
 }

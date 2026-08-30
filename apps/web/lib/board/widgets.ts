@@ -63,7 +63,13 @@ const BASE_CONFIG = {
     icsMask: z.string().max(200).optional(),
   }),
   photos: z.object({
-    intervalSec: z.number().int().min(5).max(600).default(20),
+    /**
+     * Dwell per photo. 60s over a 40-photo album is a ~40-minute cycle, which
+     * reads as calm from across a room; 20s read as busy on a wall you walk
+     * past all day. Existing boards keep whatever they were set to - this is
+     * only the default for new photo widgets.
+     */
+    intervalSec: z.number().int().min(5).max(600).default(60),
     /** "sample" = the bundled family photos; "link" = a pasted album/folder link. */
     source: z.enum(["sample", "link"]).default("sample"),
     /** Encrypted share link. Never the plaintext. */
