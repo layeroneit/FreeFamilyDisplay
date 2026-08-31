@@ -2,6 +2,7 @@ import "server-only";
 import { prisma } from "@ffd/db";
 import type { BoardFull } from "@/lib/board/boards";
 import { moodFor, type Mood } from "@/lib/board/mood";
+import { birthdaysOn } from "@/lib/board/birthdays";
 import { largestSrc, loginPhotoSet } from "@/lib/board/photo-set";
 import { safeWidgetConfig } from "@/lib/board/widgets";
 import { WeatherPayloadSchema, weatherKey, type WeatherPayload } from "@/lib/board/weather-codes";
@@ -27,6 +28,9 @@ export type BoardScene = {
   varOverrides: Record<string, string>;
   /** Owner-written note on the wallpaper collection, shown with the credit. */
   rightsNote: string | null;
+  /** Names the calendar says have a birthday today. Empty when the board has
+   *  the celebration switched off, or when nobody does. */
+  birthdays: string[];
 };
 
 /** Everything the renderer needs, resolved from Postgres only (plan §4.2). */
@@ -86,6 +90,15 @@ export async function loadBoardScene(board: BoardFull, viewerName: string): Prom
     if (w) mood = moodFor(w.current.code, w.current.isDay, board.weatherMoodStrength);
   }
 
+  // Every calendar widget on the board feeds one list — a household often
+  // keeps birthdays on a contacts calendar separate from the family one.
+  const birthdays = board.style.birthdayCheer
+    ? birthdaysOn(
+        Object.values(data.calendars).flatMap((c) => c?.events ?? []),
+        data.now,
+      )
+    : [];
+
   const scrimOpacity = wallpaper ? (board.scrimOpacityOverride ?? wallpaper.suggestedScrimOpacity) : 0;
 
   const varOverrides: Record<string, string> = {};
@@ -109,5 +122,5 @@ export async function loadBoardScene(board: BoardFull, viewerName: string): Prom
     Object.assign(varOverrides, collectionFontVars(fontKey));
   }
 
-  return { data, wallpaper, scrimOpacity, mood, varOverrides, rightsNote };
+  return { data, wallpaper, scrimOpacity, mood, varOverrides, rightsNote, birthdays };
 }

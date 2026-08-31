@@ -9,9 +9,13 @@ import type { BoardWidgetRow } from "@/lib/board/boards";
 import type { CollectionInfo } from "@/lib/board/wallpapers";
 import { CANVAS_PRESETS, CANVAS_PRESET_IDS, CLOCK_STYLES, GRID, WIDGET_META, WIDGET_TYPES, canvasSize, normalizeGeometry, safeWidgetConfig, type CanvasPreset, type WidgetType, textScale } from "@/lib/board/widgets";
 import type { ThemeDef } from "@/lib/themes";
+import { SEASON_DECOR, seasonFor } from "@/lib/board/season";
+import { CELEBRATION_FROM_HOUR, CELEBRATION_TO_HOUR } from "@/lib/board/birthdays";
 
 const field = { background: "var(--hearth-surface)", borderColor: "var(--hearth-border)", color: "var(--hearth-text)" };
 const primary = { background: "var(--hearth-accent-1)", color: "#1a1a1a" };
+
+const formatHour = (h: number) => `${h % 12 || 12}${h < 12 ? "am" : "pm"}`;
 
 type EditorBoard = {
   id: string;
@@ -26,6 +30,8 @@ type EditorBoard = {
   matchPaletteToWallpaper: boolean;
   weatherMood: boolean;
   weatherMoodStrength: number;
+  seasonalDecor: boolean;
+  birthdayCheer: boolean;
   pinned: boolean;
   /** Whether a display link exists. The token itself never reaches the client. */
   hasDisplayLink: boolean;
@@ -492,6 +498,27 @@ function DisplaySettings({
         ) : null}
         <p className="mt-1 text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
           Follows the town on this display&apos;s weather widget. Raindrops and lightning turn off automatically on low-power screens.
+        </p>
+      </section>
+
+      <section>
+        <span className={label} style={{ color: "var(--hearth-text-muted)" }}>Seasons &amp; celebrations</span>
+        <label className="mt-1 flex items-center gap-2">
+          <input type="checkbox" checked={board.seasonalDecor} onChange={(e) => onSave({ seasonalDecor: e.target.checked })} />
+          Decorate the edges with the season
+        </label>
+        <p className="mt-1 text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
+          Right now that is <strong>{SEASON_DECOR[seasonFor(new Date())].label.toLowerCase()}</strong>. It changes itself on the first of
+          March, June, September and December. The decor sits behind your widgets and never covers one.
+        </p>
+        <label className="mt-3 flex items-center gap-2">
+          <input type="checkbox" checked={board.birthdayCheer} onChange={(e) => onSave({ birthdayCheer: e.target.checked })} />
+          Celebrate birthdays from the calendar
+        </label>
+        <p className="mt-1 text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
+          Reads the calendar links on this display for today&apos;s birthdays — an event called &ldquo;Ella&apos;s birthday&rdquo; is enough — and
+          throws confetti across the screen on the hour, {formatHour(CELEBRATION_FROM_HOUR)} to {formatHour(CELEBRATION_TO_HOUR)}. Nothing happens
+          on a day nobody has one.
         </p>
       </section>
 

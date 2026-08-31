@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { getSessionUser } from "@/lib/auth/sessions";
 import { termsCurrent } from "@/lib/terms";
-import { deleteBoard, getBoard, updateBoard, type BoardPatch } from "@/lib/board/boards";
+import { deleteBoard, getBoard, patchBoardStyle, updateBoard, type BoardPatch, type BoardStyle } from "@/lib/board/boards";
 import { CANVAS_PRESET_IDS, publicWidgetConfig, type CanvasPreset } from "@/lib/board/widgets";
 import { canUseCollection, requestAdvance } from "@/lib/board/wallpapers";
 import { pokeWorkerConnectors } from "@/lib/board/worker-poke";
@@ -25,6 +25,9 @@ const PatchInput = z
     matchPaletteToWallpaper: z.boolean().optional(),
     weatherMood: z.boolean().optional(),
     weatherMoodStrength: z.number().int().min(0).max(100).optional(),
+    /** Stored in the board's style JSON, not in a column of its own. */
+    seasonalDecor: z.boolean().optional(),
+    birthdayCheer: z.boolean().optional(),
   })
   .refine((v) => Object.values(v).some((x) => x !== undefined), "Nothing to update.");
 
@@ -68,8 +71,19 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
   if (d.weatherMood !== undefined) patch.weatherMood = d.weatherMood;
   if (d.weatherMoodStrength !== undefined) patch.weatherMoodStrength = d.weatherMoodStrength;
 
-  const ok = await updateBoard(user.id, id, patch);
-  if (!ok) return NextResponse.json({ error: "No such display." }, { status: 404 });
+  const stylePatch: Partial<BoardStyle> = {};
+  if (d.seasonalDecor !== undefined) stylePatch.seasonalDecor = d.seasonalDecor;
+  if (d.birthdayCheer !== undefined) stylePatch.birthdayCheer = d.birthdayCheer;
+
+  // A style-only request must not send an empty `data` to the column update.
+  if (Object.keys(patch).length > 0) {
+    const ok = await updateBoard(user.id, id, patch);
+    if (!ok) return NextResponse.json({ error: "No such display." }, { status: 404 });
+  }
+  if (Object.keys(stylePatch).length > 0) {
+    const ok = await patchBoardStyle(user.id, id, stylePatch);
+    if (!ok) return NextResponse.json({ error: "No such display." }, { status: 404 });
+  }
   // A newly assigned collection gets its first wallpaper right away.
   if (d.wallpaperCollectionId) {
     void requestAdvance(id);

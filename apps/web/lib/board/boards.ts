@@ -43,7 +43,20 @@ export type BoardWidgetRow = {
   config: unknown;
 };
 
-export type BoardStyle = { wallpaperShown?: string[]; wallpaperSkipped?: string[]; wallpaperPinned?: string | null };
+export type BoardStyle = {
+  wallpaperShown?: string[];
+  wallpaperSkipped?: string[];
+  wallpaperPinned?: string | null;
+  /**
+   * Seasonal edge decor and the hourly birthday celebration. Both live in the
+   * style JSON rather than in their own columns: they are display preferences,
+   * not relational data, and this ships them without a migration. Absent means
+   * on — the features are why they were built, and a board that has never been
+   * touched should show them.
+   */
+  seasonalDecor?: boolean;
+  birthdayCheer?: boolean;
+};
 
 export type BoardFull = {
   id: string;
@@ -96,6 +109,8 @@ function readStyle(raw: unknown): BoardStyle {
     wallpaperShown: Array.isArray(s["wallpaperShown"]) ? (s["wallpaperShown"] as string[]) : [],
     wallpaperSkipped: Array.isArray(s["wallpaperSkipped"]) ? (s["wallpaperSkipped"] as string[]) : [],
     wallpaperPinned: typeof s["wallpaperPinned"] === "string" ? (s["wallpaperPinned"] as string) : null,
+    seasonalDecor: s["seasonalDecor"] !== false,
+    birthdayCheer: s["birthdayCheer"] !== false,
   };
 }
 

@@ -92,3 +92,41 @@ body {
 .mood-fog-band { animation: mood-fog-roll ease-in-out infinite alternate; }
 /* One brief double-flash roughly every 40 seconds — rare, never a loop that reads as one. */
 .mood-lightning { animation: mood-flash 40s linear infinite; }
+
+/* Seasonal edge decor (components/board/seasonal-frame). Transform-only, one
+ * long slow cycle per piece, and every piece carries its own duration and a
+ * negative delay so nothing pulses in unison. The base rotation lives on the
+ * wrapping div, so these keyframes are free to own the transform. */
+@keyframes season-sway {
+  0% { transform: translate(0, 0) rotate(-5deg); }
+  50% { transform: translate(0, 7px) rotate(5deg); }
+  100% { transform: translate(0, 0) rotate(-5deg); }
+}
+.season-sway { animation: season-sway ease-in-out infinite; }
+
+/* Birthday celebration (components/board/birthday-celebration). Plays for
+ * about twenty seconds on the hour and then removes itself from the tree —
+ * unlike the mood layers this is never a standing animation. */
+@keyframes bday-fall {
+  from { transform: translate3d(0, 0, 0) rotate(0deg); }
+  to { transform: translate3d(var(--bday-drift, 0px), var(--bday-fall, 1200px), 0) rotate(var(--bday-spin, 720deg)); }
+}
+@keyframes bday-overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes bday-overlay-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes bday-pop {
+  0% { opacity: 0; transform: scale(0.62); }
+  62% { opacity: 1; transform: scale(1.07); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.bday-overlay { animation: bday-overlay-in 0.55s ease-out both; }
+.bday-overlay.bday-out { animation: bday-overlay-out 1.4s ease-in both; }
+.bday-flake { animation-name: bday-fall; animation-timing-function: linear; animation-iteration-count: infinite; }
+.bday-pop { animation: bday-pop 0.85s cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
+.bday-pop-2 { animation-delay: 0.28s; }
+.bday-pop-3 { animation-delay: 0.55s; }
