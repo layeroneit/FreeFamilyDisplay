@@ -270,9 +270,26 @@ Put that on a schedule with `cron`, and copy the result somewhere that is not th
 
 ```bash
 cd FreeFamilyDisplay
+./update.sh
+```
+
+That fetches, fast-forwards, rebuilds and restarts, then shows you the status.
+It stops and tells you rather than merging or discarding anything if the box's
+history has diverged from `origin`.
+
+The long way, if you would rather see each step:
+
+```bash
+cd FreeFamilyDisplay
 git pull
 docker compose -f infra/compose.yaml --env-file .env up -d --build
 ```
+
+Both flags are needed every time. `docker compose up -d` on its own cannot work
+here: the compose file is in `infra/` and Compose only searches the current
+directory and its parents, never a subdirectory — and running it from `infra/`
+instead makes Compose look for `infra/.env`, miss the real one in the project
+root, and fail on the first required variable.
 
 Migrations run automatically on start, as they did the first time. Take a [backup](#backups) first — it takes ten seconds and someday you will be glad.
 
