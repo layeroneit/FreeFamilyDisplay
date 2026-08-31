@@ -186,9 +186,11 @@ function decor(w: number, h: number, opacityScale = 1): string {
         ...(g.paths ?? []).map((path) => `<path d="${path}"/>`),
         ...(g.circles ?? []).map((c) => `<circle cx="${c.cx}" cy="${c.cy}" r="${c.r}"/>`),
       ].join("");
-      const detail = g.detail
-        ? `<path d="${g.detail}" fill="none" stroke="${piece.color}" stroke-width="${filled ? 1.3 : 1.7}" stroke-linecap="round" opacity="${filled ? 0.5 : 1}"/>`
-        : "";
+      // Two stroke channels, matching seasonal-frame.tsx: detail keeps the
+      // piece colour (sun rays, stems), veins are dark marks on the fill.
+      let detail = "";
+      if (g.detail) detail += `<path d="${g.detail}" fill="none" stroke="${piece.color}" stroke-width="${filled ? 1.5 : 1.7}" stroke-linecap="round" stroke-linejoin="round"/>`;
+      if (g.veins) detail += `<path d="${g.veins}" fill="none" stroke="rgb(0 0 0 / 0.38)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>`;
       const op = (piece.opacity * opacityScale).toFixed(3);
       return `<g transform="translate(${piece.x + piece.size / 2} ${piece.y + piece.size / 2}) rotate(${piece.rot}) scale(${k}) translate(-12 -12)" opacity="${op}" fill="${piece.color}">${body}${detail}</g>`;
     })

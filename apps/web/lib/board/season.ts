@@ -37,30 +37,60 @@ export type SeasonGlyph = {
   name: string;
   paths?: string[];
   circles?: { cx: number; cy: number; r: number }[];
+  /**
+   * Stroked in the piece's OWN colour. For line drawing that leaves the
+   * silhouette - a sun's rays, a tulip's stem, a snowflake entire. Drawing
+   * these dark puts black lines on the board's dark ground and they vanish.
+   */
   detail?: string;
+  /**
+   * Stroked DARK, and only ever on top of a fill - a leaf's veins, an acorn's
+   * cap line. These must contrast with the shape they lie on, which the
+   * piece's own colour cannot do.
+   */
+  veins?: string;
 };
 
+/**
+ * Every glyph has to read in ONE colour, at about 40px, from across a room.
+ * That rules out anything whose meaning lives in its colouring (a watermelon
+ * slice is a half-disc in mono) and puts all the weight on silhouette. These
+ * were redrawn on 2026-08-31 after the operator's children reported, correctly,
+ * that the autumn leaves were not leaves.
+ */
+
+/** A simple leaf: asymmetric, with a stem. Nature is rarely a teardrop. */
 const LEAF: SeasonGlyph = {
   name: "leaf",
-  paths: ["M12 2.2c5.1 4.1 7.7 8 7.7 11.8A7.7 7.7 0 0 1 4.3 14C4.3 10.2 6.9 6.3 12 2.2Z"],
-  detail: "M12 21.6V6.4M12 11.6 8.4 8.9M12 11.6l3.6-2.7M12 15.9l-3.2-2.4M12 15.9l3.2-2.4",
+  paths: [
+    "M20.4 3.2c1 5.4-.6 9.6-3.6 12.1-2.8 2.3-6.4 2.6-8.8 1.3-.5 1.4-.8 2.9-.9 4.6H5.3c.2-2.4.7-4.5 1.5-6.3C4.4 11.6 4.9 7.2 7.6 5.1c3-2.4 8.1-2.4 12.8-1.9Z",
+  ],
+  veins: "M6.8 21.2C9.4 13.4 14 8.4 19.6 4.6M10.6 13.2l-.5-3.9M13.4 10.4l-.4-3.8M16 8.3l-.3-3.4M8.7 16.7l-.5-3.6",
 };
 
+/**
+ * Eleven-point maple, as a plain polygon so the shape can be reasoned about
+ * point by point. The first attempt was a spiky star - symmetric points
+ * radiating from a centre, which is a sparkle, never a leaf. The second drew
+ * its stem as a thin spike back up INTO the leaf, which left a notch through
+ * the middle. A maple reads by three deep bays and one stem going down.
+ */
 const MAPLE: SeasonGlyph = {
   name: "maple",
   paths: [
-    "M12 1.6l2.4 4.3 2.6-.9-.7 2.8 4.1-.6-2.7 3.2 3.2 1.3-3.6 2 1.6 2.5-4.4-.5.3 2.7L12 17l-3.8 2.4.3-2.7-4.4.5 1.6-2.5-3.6-2 3.2-1.3L2.6 7.2l4.1.6-.7-2.8 2.6.9L12 1.6Z",
+    "M12 1.6 13.5 6.2 16.9 4.6 16.2 9 20.6 7.8 19.2 11 22.6 12.4 18.9 15.4 19.8 17.4 14.8 16.6 14.6 18.8 12.7 17.2 12.7 22.2 11.3 22.2 11.3 17.2 9.4 18.8 9.2 16.6 4.2 17.4 5.1 15.4 1.4 12.4 4.8 11 3.4 7.8 7.8 9 7.1 4.6 10.5 6.2Z",
   ],
-  detail: "M12 22.4V9.5",
 };
 
+/** Nut with a proper cap sitting ON it. The first one floated a bar above a disc. */
 const ACORN: SeasonGlyph = {
   name: "acorn",
   paths: [
-    "M12 22c-3.3 0-5.6-2.4-5.6-5.6 0-2.8 2-5.4 5.6-7.4 3.6 2 5.6 4.6 5.6 7.4C17.6 19.6 15.3 22 12 22Z",
-    "M5.8 9.4h12.4a1.5 1.5 0 0 0 0-3H5.8a1.5 1.5 0 0 0 0 3Z",
+    "M12 22.4c-3.3 0-5.7-2.4-5.7-5.9 0-2.9 2-5.9 5.7-8.2 3.7 2.3 5.7 5.3 5.7 8.2 0 3.5-2.4 5.9-5.7 5.9Z",
+    "M12 5.6c3.4 0 6.1 1.4 6.1 3.1 0 1.2-.9 1.9-2.2 1.9H8.1c-1.3 0-2.2-.7-2.2-1.9 0-1.7 2.7-3.1 6.1-3.1Z",
   ],
-  detail: "M12 6.4V3.2",
+  detail: "M12 5.6V2.4",
+  veins: "M7.4 8.4h9.2",
 };
 
 const SNOWFLAKE: SeasonGlyph = {
@@ -69,20 +99,31 @@ const SNOWFLAKE: SeasonGlyph = {
     "M12 2v20M3.3 7l17.4 10M20.7 7 3.3 17M12 6.5 9.4 4M12 6.5 14.6 4M12 17.5 9.4 20M12 17.5l2.6 2.5M7.2 9.3 3.9 9M7.2 9.3 5.9 6.2M16.8 14.7l3.3.3M16.8 14.7l1.3 3.1M16.8 9.3l3.3-.3M16.8 9.3l1.3-3.1M7.2 14.7l-3.3.3M7.2 14.7l-1.3 3.1",
 };
 
+/** A fir with layered boughs rather than a single triangle on a stick. */
 const PINE: SeasonGlyph = {
   name: "pine",
-  paths: ["M12 2 7.5 9.5h2.6L6 16.5h4.6V22h2.8v-5.5H18l-4.1-7h2.6L12 2Z"],
+  paths: ["M12 1.6l3.6 5.2h-1.9l3.4 4.9h-1.9l4 5.7h-6.4V22h-1.6v-4.6H4.8l4-5.7H6.9l3.4-4.9H8.4L12 1.6Z"],
 };
 
-const HOLLY: SeasonGlyph = {
-  name: "holly",
-  paths: [
-    "M12 1.6c1.6 1.4 2 2.9 1.6 4.4 1.5-.5 3-.2 4.4 1-1.7.6-2.6 1.6-2.9 3 1.6.1 2.8.9 3.6 2.4-1.8.2-3 .8-3.7 2 1.3.9 2 2.2 2 3.9-1.9-.7-3.4-.6-4.5.4-.2-1.6-.7-2.7-1.6-3.4-.9.7-1.4 1.8-1.6 3.4-1.1-1-2.6-1.1-4.5-.4 0-1.7.7-3 2-3.9-.7-1.2-1.9-1.8-3.7-2 .8-1.5 2-2.3 3.6-2.4-.3-1.4-1.2-2.4-2.9-3 1.4-1.2 2.9-1.5 4.4-1C10 4.5 10.4 3 12 1.6Z",
+/**
+ * Snowman, replacing holly. Holly went through two drafts and both came out as
+ * a starburst: spines arranged around a centre read as a star no matter how
+ * they are shaped, and the berries disappeared inside the spikes. A snowman is
+ * three stacked circles - it cannot be mistaken for anything else in one
+ * colour, and the children this decor is for will recognise it instantly.
+ */
+const SNOWMAN: SeasonGlyph = {
+  name: "snowman",
+  paths: ["M8.6 5.1h6.8v1.3H8.6zM10 1.9h4v3.2h-4z"],
+  circles: [
+    { cx: 12, cy: 9.4, r: 2.9 },
+    { cx: 12, cy: 15, r: 3.6 },
+    { cx: 12, cy: 20.2, r: 3.1 },
   ],
-  circles: [{ cx: 9.6, cy: 20.4, r: 1.7 }, { cx: 13.2, cy: 21.2, r: 1.7 }, { cx: 12.4, cy: 17.6, r: 1.7 }],
+  veins: "M9.9 9h.1M14 9h.1M10.5 10.6c.9.7 2.1.7 3 0",
 };
 
-/** Five petal circles at 72° around the centre, plus a pistil. */
+/** Five petal circles at 72 degrees around the centre, plus a pistil. */
 const BLOSSOM: SeasonGlyph = {
   name: "blossom",
   circles: [
@@ -107,6 +148,22 @@ const SUN: SeasonGlyph = {
   detail: "M12 1.4v3.2M12 19.4v3.2M1.4 12h3.2M19.4 12h3.2M4.5 4.5l2.2 2.2M17.3 17.3l2.2 2.2M19.5 4.5l-2.2 2.2M6.7 17.3l-2.2 2.2",
 };
 
+/**
+ * Butterfly, replacing a five-petal blossom that came out green and read as
+ * clover. The body is a dark vein rather than a filled shape, because in one
+ * colour a filled body merges with the wings and the whole thing turns into a
+ * bow.
+ */
+const BUTTERFLY: SeasonGlyph = {
+  name: "butterfly",
+  paths: [
+    "M11.2 7.4C10 4.6 7.7 2.6 5.3 2.6 3.2 2.6 1.8 4.1 1.8 6.2c0 2.7 2.3 4.8 5.2 5.8-2.9 1-5.2 3.1-5.2 5.8 0 2.1 1.4 3.6 3.5 3.6 2.4 0 4.7-2 5.9-4.8V7.4Z",
+    "M12.8 7.4c1.2-2.8 3.5-4.8 5.9-4.8 2.1 0 3.5 1.5 3.5 3.6 0 2.7-2.3 4.8-5.2 5.8 2.9 1 5.2 3.1 5.2 5.8 0 2.1-1.4 3.6-3.5 3.6-2.4 0-4.7-2-5.9-4.8V7.4Z",
+  ],
+  detail: "M11.4 6.2 9 2.6M12.6 6.2 15 2.6",
+  veins: "M12 5.8v12.4",
+};
+
 export type SeasonDecor = {
   label: string;
   glyphs: SeasonGlyph[];
@@ -116,10 +173,10 @@ export type SeasonDecor = {
 };
 
 export const SEASON_DECOR: Record<Season, SeasonDecor> = {
-  fall: { label: "Autumn leaves", glyphs: [LEAF, MAPLE, ACORN], palette: ["#C2410C", "#B45309", "#D97706", "#92400E", "#A16207", "#DC2626"] },
-  winter: { label: "Winter frost", glyphs: [SNOWFLAKE, PINE, HOLLY], palette: ["#E0F2FE", "#BAE6FD", "#7DD3FC", "#CBD5E1", "#F8FAFC", "#38BDF8"] },
+  fall: { label: "Autumn leaves", glyphs: [MAPLE, LEAF, ACORN], palette: ["#C2410C", "#B45309", "#D97706", "#92400E", "#A16207", "#DC2626"] },
+  winter: { label: "Winter frost", glyphs: [SNOWFLAKE, PINE, SNOWMAN], palette: ["#E0F2FE", "#BAE6FD", "#7DD3FC", "#CBD5E1", "#F8FAFC", "#38BDF8"] },
   spring: { label: "Spring blossom", glyphs: [BLOSSOM, TULIP, LEAF], palette: ["#F9A8D4", "#FBCFE8", "#86EFAC", "#A7F3D0", "#FDE68A", "#F472B6"] },
-  summer: { label: "Summer green", glyphs: [SUN, LEAF, BLOSSOM], palette: ["#FACC15", "#4ADE80", "#22C55E", "#FDE047", "#FCD34D", "#A3E635"] },
+  summer: { label: "Summer green", glyphs: [SUN, LEAF, BUTTERFLY], palette: ["#FACC15", "#4ADE80", "#22C55E", "#FDE047", "#FCD34D", "#A3E635"] },
 };
 
 /** One placed piece of decor, in canvas pixels. */

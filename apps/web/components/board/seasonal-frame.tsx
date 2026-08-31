@@ -87,17 +87,15 @@ export function SeasonalFrame({
                   <circle key={j} cx={c.cx} cy={c.cy} r={c.r} />
                 ))}
               </g>
+              {/* Line work that leaves the silhouette keeps the piece's colour. */}
               {g.detail ? (
-                <path
-                  d={g.detail}
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={filled ? 1.3 : 1.7}
-                  strokeLinecap="round"
-                  // On a glyph that is nothing BUT detail (a snowflake) the
-                  // stroke is the whole shape and must not be ghosted.
-                  opacity={filled ? 0.5 : 1}
-                />
+                <path d={g.detail} fill="none" stroke="currentColor" strokeWidth={filled ? 1.5 : 1.7} strokeLinecap="round" strokeLinejoin="round" />
+              ) : null}
+              {/* Marks lying ON the fill must be darker than it. currentColor
+                  was the same colour as the fill, so every leaf vein was
+                  invisible and an autumn leaf came out a featureless blob. */}
+              {g.veins ? (
+                <path d={g.veins} fill="none" stroke="rgb(0 0 0 / 0.38)" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round" />
               ) : null}
             </svg>
           </div>
