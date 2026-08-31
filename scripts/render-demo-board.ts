@@ -216,6 +216,16 @@ function cardDecor(x: number, y: number, w: number, h: number): string {
 
 // ------------------------------------------------------------------- build
 
+/** The photo widget's walnut-and-matte frame, drawn as rings over the still. */
+function photoFrameOverlay(x: number, y: number, w: number, h: number): Buffer {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">
+    <rect x="14" y="14" width="${w - 28}" height="${h - 28}" fill="none" stroke="#F2EDE2" stroke-width="16"/>
+    <rect x="6" y="6" width="${w - 12}" height="${h - 12}" rx="6" fill="none" stroke="#5b3c22" stroke-width="12"/>
+  </svg>`;
+  void x; void y;
+  return Buffer.from(svg);
+}
+
 type Wallpaper = { basePath: string; suggestedScrimOpacity: number; attribution: { photographer: string; source: string; license: string } };
 
 async function main(): Promise<void> {
@@ -260,6 +270,7 @@ async function main(): Promise<void> {
     .composite([
       { input: Buffer.from(overlay), top: 0, left: 0 },
       { input: photo, top: 720, left: 1400 },
+      { input: photoFrameOverlay(1400, 720, 480, 320), top: 720, left: 1400 },
     ])
     // WebP, not PNG: the same picture is 182 KB instead of 1.3 MB, and this
     // repository is cloned by people who only wanted a wall calendar.
@@ -371,6 +382,7 @@ async function renderPortrait(): Promise<void> {
     .composite([
       { input: Buffer.from(overlay), top: 0, left: 0 },
       { input: photo, top: 1600, left: 40 },
+      { input: photoFrameOverlay(40, 1600, 1000, 280), top: 1600, left: 40 },
     ])
     .webp({ quality: 92 })
     .toFile(OUT_PORTRAIT);

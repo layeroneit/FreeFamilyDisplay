@@ -43,6 +43,10 @@ export function PhotosWidget({ srcs, intervalSec, note }: { srcs: string[]; inte
   }
   // Never index past the end if the set shrank under us — no blank frame.
   const current = i % srcs.length;
+  // The photo hangs in a frame — walnut lip, cream matte — because a family
+  // photo on a wall lives in a frame, not on a black slab (operator,
+  // 2026-08-31). Everything is in the widget's own zoomed units, so the frame
+  // scales with the card like any framed print would.
   // Mount three frames, not the whole album. Rendering every <img> meant a
   // 400-photo album put 400 decoded images in memory on a Raspberry Pi that is
   // also driving a screen. The outgoing frame has to stay mounted for the
@@ -54,7 +58,29 @@ export function PhotosWidget({ srcs, intervalSec, note }: { srcs: string[]; inte
   const frames = [...new Set([(current - 1 + srcs.length) % srcs.length, current, (current + 1) % srcs.length])];
   return (
     <div data-part="photos" style={{ position: "absolute", inset: 0 }}>
-      {frames.map((n) => (
+      <div
+        data-part="photo-frame"
+        style={{
+          height: "100%",
+          boxSizing: "border-box",
+          padding: 12,
+          borderRadius: 6,
+          background: "linear-gradient(135deg, #6d4a2c, #503219 55%, #6d4a2c)",
+          boxShadow: "inset 0 0 0 1px rgb(255 235 200 / 0.25), 0 6px 18px rgb(0 0 0 / 0.45)",
+        }}
+      >
+        <div
+          data-part="photo-matte"
+          style={{
+            height: "100%",
+            boxSizing: "border-box",
+            padding: 16,
+            background: "#F2EDE2",
+            boxShadow: "inset 0 1px 4px rgb(0 0 0 / 0.28)",
+          }}
+        >
+          <div style={{ position: "relative", height: "100%", overflow: "hidden", boxShadow: "inset 0 0 0 1px rgb(0 0 0 / 0.22)" }}>
+            {frames.map((n) => (
         <img
           key={`${n}:${srcs[n]}`}
           src={srcs[n]}
@@ -88,23 +114,26 @@ export function PhotosWidget({ srcs, intervalSec, note }: { srcs: string[]; inte
           }}
           draggable={false}
         />
-      ))}
-      {note ? (
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            padding: "8px 14px",
-            fontSize: 16,
-            color: "rgb(255 255 255 / 0.85)",
-            background: "linear-gradient(transparent, rgb(0 0 0 / 0.55))",
-          }}
-        >
-          {note}
+            ))}
+            {note ? (
+              <div
+                style={{
+                  position: "absolute",
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  padding: "8px 14px",
+                  fontSize: 16,
+                  color: "rgb(255 255 255 / 0.85)",
+                  background: "linear-gradient(transparent, rgb(0 0 0 / 0.55))",
+                }}
+              >
+                {note}
+              </div>
+            ) : null}
+          </div>
         </div>
-      ) : null}
+      </div>
     </div>
   );
 }

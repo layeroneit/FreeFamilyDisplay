@@ -277,7 +277,9 @@ export function seasonalFall(season: Season, w: number, h: number): FallingPiece
         glyph: 0,
         x: Math.round(w * (0.04 + rand() * 0.92)),
         y: Math.round(h * (0.12 + rand() * 0.8)),
-        size: Math.round(5 + rand() * 4),
+        // 8-14px, up from 5-9: at firefly-glow opacity the small ones were
+        // invisible from the couch (operator, 2026-08-31 evening).
+        size: Math.round(8 + rand() * 6),
         color: rand() < 0.7 ? "#FFE28A" : "#D9F99D",
         opacity: 1, // the pulse animation owns the opacity
         dur: +(2.6 + rand() * 3.4).toFixed(1),
