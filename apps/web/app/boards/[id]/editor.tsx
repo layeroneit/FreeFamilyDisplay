@@ -505,12 +505,13 @@ function DisplaySettings({
         <span className={label} style={{ color: "var(--hearth-text-muted)" }}>Seasons &amp; celebrations</span>
         <label className="mt-1 flex items-center gap-2">
           <input type="checkbox" checked={board.seasonalDecor} onChange={(e) => onSave({ seasonalDecor: e.target.checked })} />
-          Show the season on the calendar
+          Let the season fall through the calendar
         </label>
         <p className="mt-1 text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
-          Right now that is <strong>{SEASON_DECOR[seasonFor(new Date())].label.toLowerCase()}</strong>, and it changes itself on the first of
-          March, June, September and December. It lines the inside of the calendar card only &mdash; the rest of the board is left to your
-          wallpaper and the weather, so leaves never end up drawn over the rain.
+          Leaves tumble in autumn, snow drifts in winter, petals in spring, and fireflies glow on summer evenings &mdash; inside the
+          calendar card only, behind the words, so the rest of the board stays with your wallpaper and the weather. Right now it is{" "}
+          <strong>{SEASON_DECOR[seasonFor(new Date())].label.toLowerCase()}</strong>; it turns itself over on the first of March, June,
+          September and December.
         </p>
         <label className="mt-3 flex items-center gap-2">
           <input type="checkbox" checked={board.birthdayCheer} onChange={(e) => onSave({ birthdayCheer: e.target.checked })} />

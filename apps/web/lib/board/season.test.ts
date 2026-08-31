@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { SEASON_DECOR, SEASONS, seasonFor, seasonalFrame } from "./season";
+import { PETAL_GLYPH, SEASON_DECOR, SEASONS, seasonFor, seasonalFall } from "./season";
 
 test("meteorological seasons, month by month", () => {
   const want = ["winter", "winter", "spring", "spring", "spring", "summer", "summer", "summer", "fall", "fall", "fall", "winter"] as const;
@@ -17,26 +17,42 @@ test("every season has decor to draw", () => {
     assert.ok(d.palette.length >= 3, s);
     for (const g of d.glyphs) assert.ok(g.paths?.length || g.circles?.length || g.detail, `${s}/${g.name}`);
   }
+  assert.ok(PETAL_GLYPH.paths?.length, "the loose petal exists");
 });
 
-test("decor stays on the edges and off the widgets", () => {
-  for (const [w, h] of [[1920, 1080], [1080, 1920], [2560, 1080]] as const) {
-    const band = Math.min(w, h) * 0.075;
-    const pieces = seasonalFrame("fall", w, h);
-    assert.ok(pieces.length >= 20, `${w}x${h} count`);
+test("falling pieces stay inside the card and inside their season", () => {
+  for (const s of SEASONS) {
+    const w = 1126;
+    const h = 558;
+    const pieces = seasonalFall(s, w, h);
+    assert.ok(pieces.length >= 8 && pieces.length <= 22, `${s}: ${pieces.length} pieces`);
     for (const p of pieces) {
-      const cx = p.x + p.size / 2;
-      const cy = p.y + p.size / 2;
-      const onEdge = cx <= band || cx >= w - band || cy <= band || cy >= h - band;
-      assert.ok(onEdge, `piece centred at ${cx},${cy} on ${w}x${h} is in the middle of the board`);
-      assert.ok(p.glyph >= 0 && p.glyph < SEASON_DECOR.fall.glyphs.length);
-      assert.ok(p.opacity > 0 && p.opacity < 1);
+      assert.ok(p.x >= 0 && p.x <= w, `${s}: x ${p.x}`);
+      assert.ok(p.size > 0 && p.size < 60, `${s}: size ${p.size}`);
+      assert.ok(p.dur > 0 && p.delay >= 0, `${s}: timing`);
+      if (p.kind === "glyph") {
+        // -1 is the loose petal; anything else must be a real glyph index.
+        assert.ok(p.glyph >= -1 && p.glyph < SEASON_DECOR[s].glyphs.length, `${s}: glyph ${p.glyph}`);
+        assert.ok(p.opacity > 0 && p.opacity < 1, `${s}: opacity`);
+      } else {
+        assert.ok(p.y >= 0 && p.y <= h, `${s}: firefly y ${p.y}`);
+      }
     }
   }
 });
 
-test("the same board lays out identically every render", () => {
-  // A five-minute refresh must not teleport the leaves.
-  assert.deepEqual(seasonalFrame("winter", 1920, 1080), seasonalFrame("winter", 1920, 1080));
-  assert.notDeepEqual(seasonalFrame("winter", 1920, 1080), seasonalFrame("spring", 1920, 1080));
+test("summer glows in place; the other seasons fall", () => {
+  assert.ok(seasonalFall("summer", 1126, 558).every((p) => p.kind === "firefly"));
+  for (const s of ["fall", "winter", "spring"] as const) {
+    assert.ok(seasonalFall(s, 1126, 558).every((p) => p.kind === "glyph"), s);
+  }
+  // Spring mostly drops loose petals, not whole flowers.
+  const petals = seasonalFall("spring", 1126, 558).filter((p) => p.glyph === -1).length;
+  assert.ok(petals >= 3, `only ${petals} petals`);
+});
+
+test("the same card animates identically every render", () => {
+  // A five-minute refresh must resume the sky, not reshuffle it.
+  assert.deepEqual(seasonalFall("winter", 1126, 558), seasonalFall("winter", 1126, 558));
+  assert.notDeepEqual(seasonalFall("winter", 1126, 558), seasonalFall("fall", 1126, 558));
 });

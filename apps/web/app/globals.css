@@ -93,16 +93,27 @@ body {
 /* One brief double-flash roughly every 40 seconds — rare, never a loop that reads as one. */
 .mood-lightning { animation: mood-flash 40s linear infinite; }
 
-/* Seasonal edge decor (components/board/seasonal-frame). Transform-only, one
- * long slow cycle per piece, and every piece carries its own duration and a
- * negative delay so nothing pulses in unison. The base rotation lives on the
- * wrapping div, so these keyframes are free to own the transform. */
-@keyframes season-sway {
-  0% { transform: translate(0, 0) rotate(-5deg); }
-  50% { transform: translate(0, 7px) rotate(5deg); }
-  100% { transform: translate(0, 0) rotate(-5deg); }
+/* The season falling through the calendar card (seasonal-frame). Transform-only
+ * with per-piece custom properties; a negative delay puts every piece mid-fall
+ * on first paint, so a page refresh resumes the sky instead of restarting it.
+ * Fireflies are summer's version: they hold position and pulse. */
+@keyframes season-fall {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(var(--sf-wobble, 20px), calc(var(--sf-fall, 600px) * 0.5), 0) rotate(calc(var(--sf-spin, 360deg) * 0.5)); }
+  100% { transform: translate3d(var(--sf-drift, 0px), var(--sf-fall, 600px), 0) rotate(var(--sf-spin, 360deg)); }
 }
-.season-sway { animation: season-sway ease-in-out infinite; }
+.season-fall-piece { animation: season-fall linear infinite; }
+@keyframes firefly-pulse {
+  0%, 100% { opacity: 0.12; }
+  50% { opacity: 0.8; }
+}
+@keyframes firefly-wander {
+  0% { transform: translate(0, 0); }
+  33% { transform: translate(var(--sf-wobble, 14px), calc(var(--sf-wobble, 14px) * -0.6)); }
+  66% { transform: translate(var(--sf-drift, -10px), calc(var(--sf-wobble, 14px) * 0.5)); }
+  100% { transform: translate(0, 0); }
+}
+.season-firefly { animation: firefly-pulse ease-in-out infinite, firefly-wander ease-in-out infinite; }
 
 /* Birthday celebration (components/board/birthday-celebration). Plays for
  * about twenty seconds on the hour and then removes itself from the tree —

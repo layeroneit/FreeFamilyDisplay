@@ -123,6 +123,13 @@ const SNOWMAN: SeasonGlyph = {
   veins: "M9.9 9h.1M14 9h.1M10.5 10.6c.9.7 2.1.7 3 0",
 };
 
+/** One loose petal, for spring's falling pieces - a soft comma of a shape. */
+const PETAL: SeasonGlyph = {
+  name: "petal",
+  paths: ["M12 3.2c4.2 1.8 6.4 5.2 6.4 9.6 0 4.6-2.6 7.9-6.4 8-3.8-.1-6.4-3.4-6.4-8 0-4.4 2.2-7.8 6.4-9.6Z"],
+  veins: "M12 19.2c-.4-4.6-.4-9.4 0-14.2",
+};
+
 /** Five petal circles at 72 degrees around the centre, plus a pistil. */
 const BLOSSOM: SeasonGlyph = {
   name: "blossom",
@@ -179,24 +186,37 @@ export const SEASON_DECOR: Record<Season, SeasonDecor> = {
   summer: { label: "Summer green", glyphs: [SUN, LEAF, BUTTERFLY], palette: ["#FACC15", "#4ADE80", "#22C55E", "#FDE047", "#FCD34D", "#A3E635"] },
 };
 
-/** One placed piece of decor, in canvas pixels. */
-export type FramePiece = {
-  x: number;
-  y: number;
-  /** Box side in px; the glyph's 24-unit grid is scaled to it. */
-  size: number;
-  rot: number;
-  /** Index into the season's glyph list. */
+/**
+ * One falling piece of the season, inside the calendar card. The card is the
+ * sky: a piece starts above the top edge, tumbles the full height, and loops.
+ * All coordinates are in the card's own (zoomed) units.
+ *
+ * Summer is the exception: fireflies do not fall. A firefly piece keeps its
+ * position and pulses instead - the renderer switches on `kind`.
+ */
+export type FallingPiece = {
+  kind: "glyph" | "firefly";
+  /** Index into the season's glyph list. Unused for fireflies. */
   glyph: number;
+  x: number;
+  /** Fireflies only: resting y position. Fallers start above the card. */
+  y: number;
+  size: number;
   color: string;
   opacity: number;
-  /** Sway animation duration (s) and negative start offset (s). */
+  /** Seconds for one full traverse (fall) or one wander cycle (firefly). */
   dur: number;
+  /** Negative start offset, so the sky is already busy on first paint. */
   delay: number;
+  /** Sideways wander at the halfway point and at the bottom, in px. */
+  wobble: number;
+  drift: number;
+  /** Total rotation over one traverse, degrees. Fireflies: 0. */
+  spin: number;
 };
 
-/** Deterministic PRNG — the same board must lay out identically on every
- *  render, or the 5-minute refresh would teleport every leaf. */
+/** Deterministic PRNG - the same card must animate identically on every
+ *  render, or the 5-minute refresh would teleport every leaf mid-fall. */
 function rng(seed: number) {
   let s = seed >>> 0 || 1;
   return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296);
@@ -208,43 +228,68 @@ function seedOf(season: Season, w: number, h: number): number {
   return s;
 }
 
+/** How many pieces a card of this area carries. ~14 on the default calendar;
+ *  the Pi animates ninety rain particles full-screen, so this is light. */
+function countFor(w: number, h: number): number {
+  return Math.max(8, Math.min(22, Math.round((w * h) / 42_000)));
+}
+
 /**
- * Scatters decor down all four edges of a canvas, inset from the corners so
- * nothing clusters there, and never further in than `band` — the widgets own
- * the middle of the board and must not be sat on.
+ * The season falling through a card of w x h (the card's own units).
+ * Fall/winter/spring drop their glyphs top to bottom on long, slow loops;
+ * summer scatters fireflies that stay put and glow.
  */
-export function seasonalFrame(season: Season, w: number, h: number): FramePiece[] {
+export function seasonalFall(season: Season, w: number, h: number): FallingPiece[] {
   const decor = SEASON_DECOR[season];
   const rand = rng(seedOf(season, w, h));
-  const band = Math.round(Math.min(w, h) * 0.075);
-  const pieces: FramePiece[] = [];
+  const n = countFor(w, h);
+  const pieces: FallingPiece[] = [];
 
-  const place = (n: number, at: (t: number, jitter: number) => { x: number; y: number }) => {
+  if (season === "summer") {
     for (let i = 0; i < n; i++) {
-      // Evenly spaced along the edge, inset 6% at each end, jittered a little
-      // so it reads as scattered rather than as a ruler of stamps.
-      const t = 0.06 + (0.88 * (i + 0.5)) / n + (rand() - 0.5) * (0.5 / n);
-      const { x, y } = at(t, rand());
-      const size = Math.round(band * (0.62 + rand() * 0.5));
       pieces.push({
-        x: Math.round(x - size / 2),
-        y: Math.round(y - size / 2),
-        size,
-        rot: Math.round(rand() * 360),
-        glyph: Math.floor(rand() * decor.glyphs.length),
-        color: decor.palette[Math.floor(rand() * decor.palette.length)]!,
-        opacity: +(0.34 + rand() * 0.26).toFixed(2),
-        dur: +(9 + rand() * 9).toFixed(1),
-        delay: +(rand() * 12).toFixed(1),
+        kind: "firefly",
+        glyph: 0,
+        x: Math.round(w * (0.04 + rand() * 0.92)),
+        y: Math.round(h * (0.12 + rand() * 0.8)),
+        size: Math.round(5 + rand() * 4),
+        color: rand() < 0.7 ? "#FFE28A" : "#D9F99D",
+        opacity: 1, // the pulse animation owns the opacity
+        dur: +(2.6 + rand() * 3.4).toFixed(1),
+        delay: +(rand() * 6).toFixed(1),
+        wobble: Math.round(8 + rand() * 18),
+        drift: Math.round((rand() - 0.5) * 30),
+        spin: 0,
       });
     }
-  };
+    return pieces;
+  }
 
-  const down = Math.max(3, Math.round(h / 190));
-  const across = Math.max(3, Math.round(w / 240));
-  place(down, (t, j) => ({ x: band * (0.28 + j * 0.5), y: h * t }));
-  place(down, (t, j) => ({ x: w - band * (0.28 + j * 0.5), y: h * t }));
-  place(across, (t, j) => ({ x: w * t, y: band * (0.28 + j * 0.5) }));
-  place(across, (t, j) => ({ x: w * t, y: h - band * (0.28 + j * 0.5) }));
+  // Winter falls slow and swings wide; autumn tumbles; spring flutters.
+  const speed = season === "winter" ? 1.25 : season === "spring" ? 1.1 : 1;
+  for (let i = 0; i < n; i++) {
+    // Spring drops loose petals four times out of five, whole blossoms rarely.
+    const glyph = season === "spring" && rand() < 0.8 ? -1 : Math.floor(rand() * decor.glyphs.length);
+    // Big enough to read from a couch. The first cut was 16-34px and even the
+    // still frames looked like specks.
+    const size = Math.round(22 + rand() * 20);
+    pieces.push({
+      kind: "glyph",
+      glyph,
+      x: Math.round(w * (0.02 + rand() * 0.96)),
+      y: 0,
+      size,
+      color: decor.palette[Math.floor(rand() * decor.palette.length)]!,
+      opacity: +(0.35 + rand() * 0.2).toFixed(2),
+      dur: +((20 + rand() * 18) * speed).toFixed(1),
+      delay: +(rand() * 38).toFixed(1),
+      wobble: Math.round((rand() - 0.5) * 2 * (season === "winter" ? 70 : 45)),
+      drift: Math.round((rand() - 0.5) * 90),
+      spin: season === "winter" ? Math.round((rand() - 0.5) * 240) : Math.round((rand() - 0.5) * 2 * (360 + rand() * 360)),
+    });
+  }
   return pieces;
 }
+
+/** Spring's loose petal, exported for the renderer's glyph = -1 case. */
+export const PETAL_GLYPH: SeasonGlyph = PETAL;

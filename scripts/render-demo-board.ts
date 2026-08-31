@@ -18,7 +18,7 @@
 import { readFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 import sharp from "sharp";
-import { SEASON_DECOR, seasonalFrame } from "../apps/web/lib/board/season";
+import { PETAL_GLYPH, SEASON_DECOR, seasonalFall } from "../apps/web/lib/board/season";
 
 const ROOT = join(import.meta.dirname, "..");
 const PUBLIC = join(ROOT, "apps/web/public");
@@ -175,24 +175,29 @@ function strip(): string {
  * CARD, so that the board is left to the wallpaper and the weather layer and
  * leaves never end up drawn on top of the rain.
  */
-function decor(w: number, h: number, opacityScale = 1): string {
-  const d = SEASON_DECOR.fall;
-  return seasonalFrame("fall", w, h)
-    .map((piece) => {
-      const g = d.glyphs[piece.glyph]!;
+function decor(w: number, h: number): string {
+  // A still cannot show motion, so it shows first paint: every piece has a
+  // negative animation-delay, so at t=0 it is delay/dur of the way down its
+  // fall. This is exactly what the wall shows the instant the page loads.
+  return seasonalFall("fall", w, h)
+    .map((p) => {
+      if (p.kind !== "glyph") return "";
+      const g = p.glyph < 0 ? PETAL_GLYPH : SEASON_DECOR.fall.glyphs[p.glyph]!;
       const filled = Boolean(g.paths?.length || g.circles?.length);
-      const k = piece.size / 24;
+      const pr = (p.delay % p.dur) / p.dur;
+      const y = -p.size * 1.5 + pr * (h + p.size * 3);
+      if (y > h) return "";
+      const x = p.x + (pr < 0.5 ? p.wobble * pr * 2 : p.wobble + (p.drift - p.wobble) * (pr - 0.5) * 2);
+      const rot = pr * p.spin;
+      const k = p.size / 24;
       const body = [
         ...(g.paths ?? []).map((path) => `<path d="${path}"/>`),
         ...(g.circles ?? []).map((c) => `<circle cx="${c.cx}" cy="${c.cy}" r="${c.r}"/>`),
       ].join("");
-      // Two stroke channels, matching seasonal-frame.tsx: detail keeps the
-      // piece colour (sun rays, stems), veins are dark marks on the fill.
-      let detail = "";
-      if (g.detail) detail += `<path d="${g.detail}" fill="none" stroke="${piece.color}" stroke-width="${filled ? 1.5 : 1.7}" stroke-linecap="round" stroke-linejoin="round"/>`;
-      if (g.veins) detail += `<path d="${g.veins}" fill="none" stroke="rgb(0 0 0 / 0.38)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>`;
-      const op = (piece.opacity * opacityScale).toFixed(3);
-      return `<g transform="translate(${piece.x + piece.size / 2} ${piece.y + piece.size / 2}) rotate(${piece.rot}) scale(${k}) translate(-12 -12)" opacity="${op}" fill="${piece.color}">${body}${detail}</g>`;
+      let strokes = "";
+      if (g.detail) strokes += `<path d="${g.detail}" fill="none" stroke="${p.color}" stroke-width="${filled ? 1.5 : 1.7}" stroke-linecap="round" stroke-linejoin="round"/>`;
+      if (g.veins) strokes += `<path d="${g.veins}" fill="none" stroke="rgb(0 0 0 / 0.38)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>`;
+      return `<g transform="translate(${(x + p.size / 2).toFixed(1)} ${(y + p.size / 2).toFixed(1)}) rotate(${rot.toFixed(0)}) scale(${k.toFixed(3)}) translate(-12 -12)" opacity="${p.opacity}" fill="${p.color}">${body}${strokes}</g>`;
     })
     .join("");
 }
@@ -200,7 +205,7 @@ function decor(w: number, h: number, opacityScale = 1): string {
 /** Wraps decor in the card's interior, in the card's own zoomed units. */
 function cardDecor(x: number, y: number, w: number, h: number): string {
   const scale = Math.min(4, Math.max(0.5, Math.sqrt((w * h) / (1300 * 560))));
-  return `<g transform="translate(${x + 24} ${y + 24}) scale(${scale.toFixed(4)})">${decor((w - 48) / scale, (h - 48) / scale, 0.5)}</g>`;
+  return `<g transform="translate(${x + 24} ${y + 24}) scale(${scale.toFixed(4)})">${decor((w - 48) / scale, (h - 48) / scale)}</g>`;
 }
 
 // ------------------------------------------------------------------- build

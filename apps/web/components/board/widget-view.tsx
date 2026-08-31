@@ -99,7 +99,7 @@ export function WidgetView({ widget, data }: { widget: BoardWidgetRow; data: Boa
       const cardScale = textScale("calendar", widget.w, widget.h, c.fontScale);
       return (
         <div style={{ position: "relative", height: "100%" }}>
-          <SeasonalFrame now={data.now} boxW={(widget.w - 48) / cardScale} boxH={(widget.h - 48) / cardScale} opacityScale={0.5} />
+          <SeasonalFrame now={data.now} boxW={(widget.w - 48) / cardScale} boxH={(widget.h - 48) / cardScale} />
           <div style={{ position: "relative", height: "100%", zIndex: 1 }}>{body}</div>
         </div>
       );
