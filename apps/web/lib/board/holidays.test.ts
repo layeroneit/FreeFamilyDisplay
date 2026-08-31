@@ -107,3 +107,13 @@ test("every holiday has decor to draw", () => {
     }
   }
 });
+
+test("2027: game on Valentine's Day - football keeps the run-up, hearts keep the day", () => {
+  // Super Bowl Sunday 2027 is Feb 14. Its window concedes the day itself.
+  assert.equal(activeHoliday(new Date(2027, 1, 14, 12))?.id, "valentines");
+  assert.equal(activeHoliday(new Date(2027, 1, 13, 12))?.id, "super-bowl");
+  assert.equal(activeHoliday(new Date(2027, 1, 10, 12))?.id, "super-bowl");
+  // An ordinary year is untouched: game day stays football, then hearts.
+  assert.equal(activeHoliday(new Date(2026, 1, 8, 12))?.id, "super-bowl");
+  assert.equal(activeHoliday(new Date(2026, 1, 9, 12))?.id, "valentines");
+});

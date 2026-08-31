@@ -229,9 +229,9 @@ function rng(seed: number) {
   return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296);
 }
 
-function seedOf(season: Season, w: number, h: number): number {
+function seedOf(tag: string, w: number, h: number): number {
   let s = w * 31 + h * 17;
-  for (const ch of season) s = (s * 33 + ch.charCodeAt(0)) >>> 0;
+  for (const ch of tag) s = (s * 33 + ch.charCodeAt(0)) >>> 0;
   return s;
 }
 
@@ -312,6 +312,47 @@ export function seasonalFall(season: Season, w: number, h: number): FallingPiece
       y: 0,
       size,
       color: decor.palette[Math.floor(rand() * decor.palette.length)]!,
+      opacity: +(0.4 + rand() * 0.2).toFixed(2),
+      dur: +between(rand, phys.dur).toFixed(1),
+      delay: +(rand() * 60).toFixed(1),
+      drift,
+      sway: Math.round(between(rand, phys.sway)),
+      rock: Math.round(between(rand, phys.rock)),
+      flutterDur: +(2.8 + rand() * 3).toFixed(1),
+      flutterDelay: +(rand() * 5).toFixed(1),
+    });
+  }
+  return pieces;
+}
+
+/**
+ * A holiday falling through the card, borrowing autumn's statement-piece
+ * physics: near a holiday, the household wants pumpkins the size of leaves,
+ * not confetti. Seeded on the holiday's id, so each window brings its own
+ * sky and the five-minute refresh still resumes rather than reshuffles.
+ */
+export function holidayFall(
+  holiday: { id: string; glyphs: SeasonGlyph[]; palette: string[] },
+  w: number,
+  h: number,
+): FallingPiece[] {
+  const rand = rng(seedOf(`holiday:${holiday.id}`, w, h));
+  const phys = FALL_PHYSICS.fall;
+  const windSign = rand() < 0.5 ? -1 : 1;
+  const n = Math.round(between(rand, phys.count));
+  const pieces: FallingPiece[] = [];
+  for (let i = 0; i < n; i++) {
+    const drift = Math.round(windSign * (30 + rand() * 90));
+    const size = Math.round(between(rand, phys.size));
+    const lo = Math.max(0, -drift) + 4;
+    const hi = w - size - Math.max(0, drift) - 4;
+    pieces.push({
+      kind: "glyph",
+      glyph: Math.floor(rand() * holiday.glyphs.length),
+      x: Math.round(lo + rand() * Math.max(1, hi - lo)),
+      y: 0,
+      size,
+      color: holiday.palette[Math.floor(rand() * holiday.palette.length)]!,
       opacity: +(0.4 + rand() * 0.2).toFixed(2),
       dur: +between(rand, phys.dur).toFixed(1),
       delay: +(rand() * 60).toFixed(1),

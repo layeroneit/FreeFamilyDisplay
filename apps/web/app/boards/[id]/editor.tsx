@@ -508,7 +508,9 @@ function DisplaySettings({
           Let the season fall through the calendar
         </label>
         <p className="mt-1 text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
-          Leaves tumble in autumn, snow drifts in winter, petals in spring, and fireflies glow on summer evenings &mdash; inside the
+          Leaves tumble in autumn, snow drifts in winter, petals in spring, fireflies glow on summer evenings &mdash; and near a
+          holiday, the holiday takes over: pumpkins and ghosts through late October, a turkey before Thanksgiving, hearts before
+          Valentine&apos;s, gifts through December. All of it inside the
           calendar card only, behind the words, so the rest of the board stays with your wallpaper and the weather. Right now it is{" "}
           <strong>{SEASON_DECOR[seasonFor(new Date())].label.toLowerCase()}</strong>; it turns itself over on the first of March, June,
           September and December.

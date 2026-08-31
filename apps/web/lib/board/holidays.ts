@@ -347,6 +347,9 @@ const ORNAMENT: SeasonGlyph = {
  * the anticipation; New Year's takes just Dec 29 - Jan 1 so the tree decor
  * isn't still up in the second week of January.
  */
+// Valentine's sits before Super Bowl as belt-and-braces: the Feb-14 collision
+// is resolved inside super-bowl's own window (it concedes the day), so no tie
+// should exist - but if one ever does, list order decides, and hearts win.
 export const HOLIDAYS: Holiday[] = [
   {
     id: "new-years",
@@ -357,21 +360,25 @@ export const HOLIDAYS: Holiday[] = [
     window: windowBefore(0, 1, 3),
   },
   {
+    id: "valentines",
+    label: "Valentine's Day",
+    glyphs: [HEART, HEART_ARROW],
+    palette: ["#F43F5E", "#FB7185", "#F9A8D4", "#E11D48", "#FDA4AF", "#F472B6"],
+    window: windowBefore(1, 14, 7),
+  },
+  {
     id: "super-bowl",
     label: "Super Bowl Sunday",
     glyphs: [FOOTBALL, GOALPOST, PENNANT],
     palette: ["#92400E", "#B45309", "#22C55E", "#4ADE80", "#F8FAFC", "#FACC15"],
     window: (year) => {
       const day = nthWeekday(year, 1, 0, 2); // second Sunday of February
-      return { start: startOfDay(year, 1, day - 5), end: endOfDay(year, 1, day) };
+      // When the game lands ON Valentine's Day (2027, 2038...), football keeps
+      // its run-up but concedes the day itself to hearts - the window simply
+      // ends the night before, so no arbitration tie ever exists.
+      const end = day === 14 ? endOfDay(year, 1, 13) : endOfDay(year, 1, day);
+      return { start: startOfDay(year, 1, day - 5), end };
     },
-  },
-  {
-    id: "valentines",
-    label: "Valentine's Day",
-    glyphs: [HEART, HEART_ARROW],
-    palette: ["#F43F5E", "#FB7185", "#F9A8D4", "#E11D48", "#FDA4AF", "#F472B6"],
-    window: windowBefore(1, 14, 7),
   },
   {
     id: "st-patricks",

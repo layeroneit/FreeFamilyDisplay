@@ -1,4 +1,5 @@
-import { PETAL_GLYPH, SEASON_DECOR, seasonFor, seasonalFall, type Season, type SeasonGlyph } from "@/lib/board/season";
+import { PETAL_GLYPH, SEASON_DECOR, holidayFall, seasonFor, seasonalFall, type Season, type SeasonGlyph } from "@/lib/board/season";
+import { activeHoliday } from "@/lib/board/holidays";
 
 /**
  * The season, falling through the calendar card. Leaves tumble in autumn,
@@ -31,12 +32,18 @@ export function SeasonalFrame({
 }) {
   const s = season ?? seasonFor(now);
   const decor = SEASON_DECOR[s];
-  const pieces = seasonalFall(s, boxW, boxH);
+  // Near a holiday, the holiday takes the sky: falling pumpkins through late
+  // October, hearts before Valentine's, gifts through December. The season
+  // resumes the day after the holiday's window closes.
+  const holiday = season ? null : activeHoliday(now);
+  const glyphSet = holiday ? holiday.glyphs : decor.glyphs;
+  const pieces = holiday ? holidayFall(holiday, boxW, boxH) : seasonalFall(s, boxW, boxH);
 
   return (
     <div
       data-part="seasonal-fall"
       data-season={s}
+      data-holiday={holiday?.id}
       aria-hidden
       style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none", zIndex: 0 }}
     >
@@ -65,7 +72,7 @@ export function SeasonalFrame({
             />
           );
         }
-        const g: SeasonGlyph = p.glyph < 0 ? PETAL_GLYPH : decor.glyphs[p.glyph]!;
+        const g: SeasonGlyph = p.glyph < 0 ? PETAL_GLYPH : glyphSet[p.glyph]!;
         const filled = Boolean(g.paths?.length || g.circles?.length);
         return (
           // Two animations that must not share a transform: the outer span

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { PETAL_GLYPH, SEASON_DECOR, SEASONS, seasonFor, seasonalFall } from "./season";
+import { PETAL_GLYPH, SEASON_DECOR, SEASONS, holidayFall, seasonFor, seasonalFall } from "./season";
+import { HOLIDAYS } from "./holidays";
 
 test("meteorological seasons, month by month", () => {
   const want = ["winter", "winter", "spring", "spring", "spring", "summer", "summer", "summer", "fall", "fall", "fall", "winter"] as const;
@@ -74,4 +75,19 @@ test("the same card animates identically every render", () => {
   // A five-minute refresh must resume the sky, not reshuffle it.
   assert.deepEqual(seasonalFall("winter", 1126, 558), seasonalFall("winter", 1126, 558));
   assert.notDeepEqual(seasonalFall("winter", 1126, 558), seasonalFall("fall", 1126, 558));
+});
+
+test("every holiday falls with the same discipline as the seasons", () => {
+  for (const h of HOLIDAYS) {
+    const pieces = holidayFall(h, 1126, 558);
+    assert.ok(pieces.length >= 6 && pieces.length <= 10, `${h.id}: ${pieces.length}`);
+    const signs = new Set(pieces.map((p) => Math.sign(p.drift)));
+    assert.equal(signs.size, 1, `${h.id}: mixed wind`);
+    for (const p of pieces) {
+      assert.ok(p.glyph >= 0 && p.glyph < h.glyphs.length, `${h.id}: glyph ${p.glyph}`);
+      const end = p.x + p.drift;
+      assert.ok(p.x >= 0 && end >= 0 && end + p.size <= 1126, `${h.id}: stays on the card`);
+    }
+    assert.deepEqual(pieces, holidayFall(h, 1126, 558), `${h.id}: deterministic`);
+  }
 });
