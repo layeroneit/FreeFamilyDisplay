@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import { textScale } from "@/lib/board/widgets";
-import { ROW_CHROME, ROW_EVENT_H, ROW_EVENT_SIZE, planWeekRows } from "@/lib/board/week-plan";
+import { COL_EVENT_SIZE, FURNITURE_H, ROW_EVENT_SIZE, columnCapacity, planWeekRows, shownOn } from "@/lib/board/week-plan";
 
 export type CalEvent = { uid: string; title: string; location: string | null; start: string; end: string; allDay: boolean };
 export type CalendarFeed = { events: CalEvent[]; syncedAt: Date | null; error: string | null } | undefined;
@@ -21,9 +21,6 @@ const COL_GAP = 8;
  * portrait board ~129px and the default landscape calendar ~172px.
  */
 const MIN_COLUMN_PX = 150;
-/** Heights of the fixed furniture around the day rows. */
-const MONTH_BAND_H = 87;
-const FOOTER_H = 30;
 
 /**
  * The month, on a row of its own, big enough to read from the other side of
@@ -91,7 +88,10 @@ const eventsOn = (events: CalEvent[], d: Date) => {
 
 function Footer({ feed, count, note }: { feed: CalendarFeed; count: number; note?: string | undefined }) {
   return (
-    <div style={{ ...muted, fontSize: 16, marginTop: 8 }}>
+    // One line, always: FOOTER_H is what the row budget subtracts, so a footer
+    // that wrapped to two would quietly clip the bottom day off the card. The
+    // note leads, because it is the half that tells somebody what to do.
+    <div style={{ ...muted, fontSize: 16, marginTop: 8, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
       {note ? <span>{note} &middot; </span> : null}
       {!feed
         ? "Paste a calendar link in this widget’s settings to see real events."
@@ -104,7 +104,7 @@ function Footer({ feed, count, note }: { feed: CalendarFeed; count: number; note
   );
 }
 
-function EventLine({ e, day, size = 17 }: { e: CalEvent; day: Date; size?: number }) {
+function EventLine({ e, day, size = COL_EVENT_SIZE }: { e: CalEvent; day: Date; size?: number }) {
   const s = new Date(e.start);
   const timed = !e.allDay && sameDay(s, day);
   return (
@@ -146,7 +146,7 @@ function EventLine({ e, day, size = 17 }: { e: CalEvent; day: Date; size?: numbe
 }
 
 /** Week as columns, for a card wide enough to give each day real room. */
-function WeekColumns({ cols, events }: { cols: Date[]; events: CalEvent[] }) {
+function WeekColumns({ cols, events, perDay }: { cols: Date[]; events: CalEvent[]; perDay: number }) {
   return (
     <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(cols.length, 7)}, 1fr)`, gap: COL_GAP, flex: 1, minHeight: 0 }}>
       {cols.map((d, i) => (
@@ -165,11 +165,24 @@ function WeekColumns({ cols, events }: { cols: Date[]; events: CalEvent[] }) {
           <div style={{ ...muted, fontSize: 18, textTransform: "uppercase", letterSpacing: 1 }}>{DAY[d.getDay()]}</div>
           <div style={{ fontSize: 40, fontWeight: 600, fontFamily: "var(--hearth-font-display)", color: i === 0 ? "var(--hearth-accent-2)" : "inherit" }}>{d.getDate()}</div>
           <ul style={{ listStyle: "none", margin: "8px 0 0", padding: 0, display: "flex", flexDirection: "column", gap: 6 }}>
-            {eventsOn(events, d)
-              .slice(0, 6)
-              .map((e) => (
-                <EventLine key={e.uid} e={e} day={d} />
-              ))}
+            {(() => {
+              // A column that overruns its track used to print over the footer,
+              // so what does not fit is summarised rather than silently clipped.
+              // A plain slice, not shownOn: a column event is two lines against
+              // the marker's one, so here the marker really is the cheaper way
+              // to say it.
+              const evs = eventsOn(events, d);
+              const take = Math.min(evs.length, perDay);
+              const rest = evs.length - take;
+              return (
+                <>
+                  {evs.slice(0, take).map((e) => (
+                    <EventLine key={e.uid} e={e} day={d} />
+                  ))}
+                  {rest > 0 ? <li style={{ ...muted, fontSize: COL_EVENT_SIZE - 2 }}>+{rest} more</li> : null}
+                </>
+              );
+            })()}
           </ul>
         </div>
       ))}
@@ -187,14 +200,16 @@ function WeekColumns({ cols, events }: { cols: Date[]; events: CalEvent[] }) {
  * it should hand its space to a day with three things on it, and that is what
  * lets a busy week fit at a size you can read across a room.
  */
-function WeekRows({ cols, events, perDay, zoom }: { cols: Date[]; events: CalEvent[]; perDay: number; zoom: number }) {
+function WeekRows({ cols, events, perDay }: { cols: Date[]; events: CalEvent[]; perDay: number }) {
   return (
-    // The plan may shrink the whole rows block a little to keep every day on
-    // the card - the week's integrity beats a couple of points of type size.
-    <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0, overflow: "hidden", zoom: zoom === 1 ? undefined : zoom }}>
+    // The shrink that keeps every day on the card lives on the calendar body,
+    // one level up, so the month band gives up its share of the space too.
+    <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0, overflow: "hidden" }}>
       {cols.map((d, i) => {
         const evs = eventsOn(events, d);
-        const shown = evs.slice(0, perDay);
+        // shownOn, not a plain slice: the budget this row was planned against
+        // never spends a "+1 more" line, so neither may the row.
+        const shown = evs.slice(0, shownOn(evs.length, perDay));
         const rest = evs.length - shown.length;
         const isFirst = i === 0;
         return (
@@ -297,27 +312,34 @@ export function WeekView({
   // card height into them before budgeting rows.
   const scale = textScale("calendar", w, h, fontScale);
   const boxH = (h - CARD_PAD) / scale;
-  const rowH = (boxH - MONTH_BAND_H - FOOTER_H) / Math.max(1, cols.length);
-  // Capacity of one row at nominal size...
-  const perDay = Math.min(6, Math.max(1, Math.floor((rowH - ROW_CHROME) / ROW_EVENT_H)));
-  // ...then a plan costed from the week that is actually on the calendar. A
-  // worst-case budget here once reserved a fully-busy "+n more" row seven
-  // times over and showed a two-day week; the real week is usually far
-  // cheaper. When it still overflows, the rows shrink before any day hides.
-  const availH = boxH - MONTH_BAND_H - FOOTER_H;
-  const plan = dense ? planWeekRows(cols.map((d) => eventsOn(events, d).length), perDay, availH) : { days: cols.length, zoom: 1, hidden: 0 };
-  const shown = cols.slice(0, plan.days);
-  const note = plan.hidden > 0 ? `+${plan.hidden} more day${plan.hidden === 1 ? "" : "s"} — a taller calendar or smaller text shows the whole week` : undefined;
+  // A plan costed from the week that is actually on the calendar, in the order
+  // a family would give things up: fewer events listed per day, then slightly
+  // smaller rows, and only then a day dropped and named in the footer.
+  const plan = planWeekRows(cols.map((d) => eventsOn(events, d).length), boxH, fontScale);
+  // Column mode clips each column independently, so it needs no shrink — only
+  // the day-rows layout is budgeted as one block.
+  const zoom = dense ? plan.zoom : 1;
+  const shown = dense ? cols.slice(0, plan.days) : cols;
+  const hidden = dense ? plan.hidden : 0;
+  const note = hidden > 0 ? `+${hidden} more day${hidden === 1 ? "" : "s"} — a taller calendar shows the whole week` : undefined;
 
   return (
     <div
       data-part="calendar"
       data-mode="week"
       data-layout={dense ? "rows" : "columns"}
-      style={{ display: "flex", flexDirection: "column", height: "100%" }}
+      // The zoom rides the WHOLE body, month band and footer included. On the
+      // rows alone it shrank the events out from under a month band that kept
+      // its full size, which is what made a tight week look wrong rather than
+      // merely small.
+      style={{ display: "flex", flexDirection: "column", height: "100%", zoom: zoom === 1 ? undefined : zoom }}
     >
       <MonthBand from={shown[0]!} to={shown[shown.length - 1]!} />
-      {dense ? <WeekRows cols={shown} events={events} perDay={perDay} zoom={plan.zoom} /> : <WeekColumns cols={cols} events={events} />}
+      {dense ? (
+        <WeekRows cols={shown} events={events} perDay={plan.perDay} />
+      ) : (
+        <WeekColumns cols={cols} events={events} perDay={columnCapacity(boxH - FURNITURE_H)} />
+      )}
       <Footer feed={feed} count={events.length} note={note} />
     </div>
   );
