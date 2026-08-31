@@ -202,7 +202,13 @@ function WeekRows({ cols, events, perDay }: { cols: Date[]; events: CalEvent[]; 
               alignItems: "start",
               borderTop: `2px solid ${isFirst ? "var(--hearth-accent-2)" : "var(--hearth-border)"}`,
               padding: "7px 0",
-              minHeight: 0,
+              // A row must keep its natural height. It is a flex item, so the
+              // default flex-shrink:1 - and worse, an explicit minHeight:0 -
+              // let the column squash rows BELOW their content, at which point
+              // each ul spilled out of its own row and printed on top of the
+              // next one (operator screenshot, 2026-08-31). Rows hold their
+              // size; the container clips at the bottom, which is honest.
+              flexShrink: 0,
             }}
           >
             <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
