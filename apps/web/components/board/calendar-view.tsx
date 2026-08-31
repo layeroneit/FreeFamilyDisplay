@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { textScale } from "@/lib/board/widgets";
+import { ROW_CHROME, ROW_EVENT_H, ROW_EVENT_SIZE, planWeekRows } from "@/lib/board/week-plan";
 
 export type CalEvent = { uid: string; title: string; location: string | null; start: string; end: string; allDay: boolean };
 export type CalendarFeed = { events: CalEvent[]; syncedAt: Date | null; error: string | null } | undefined;
@@ -20,18 +21,9 @@ const COL_GAP = 8;
  * portrait board ~129px and the default landscape calendar ~172px.
  */
 const MIN_COLUMN_PX = 150;
-/** Heights of the fixed furniture, used to budget how many events a row holds. */
+/** Heights of the fixed furniture around the day rows. */
 const MONTH_BAND_H = 87;
 const FOOTER_H = 30;
-/** Day-row event type size, and the vertical space one line of it costs. */
-const ROW_EVENT_SIZE = 21;
-const ROW_EVENT_H = ROW_EVENT_SIZE * 1.25 + 4;
-/** A day row's own border and padding, which the event lines do not get. */
-const ROW_CHROME = 2 + 7 + 7;
-/** The "+n more" line and the gap above it, when a day overflows. */
-const MORE_LINE_H = 19 * 1.4 + 5;
-/** The date gutter (34px date, lineHeight 1) floors a row's height. */
-const GUTTER_H = 34;
 
 /**
  * The month, on a row of its own, big enough to read from the other side of
@@ -97,9 +89,10 @@ const eventsOn = (events: CalEvent[], d: Date) => {
   return events.filter((e) => new Date(e.start) < end && new Date(e.end) > d);
 };
 
-function Footer({ feed, count }: { feed: CalendarFeed; count: number }) {
+function Footer({ feed, count, note }: { feed: CalendarFeed; count: number; note?: string | undefined }) {
   return (
     <div style={{ ...muted, fontSize: 16, marginTop: 8 }}>
+      {note ? <span>{note} &middot; </span> : null}
       {!feed
         ? "Paste a calendar link in this widget’s settings to see real events."
         : feed.error && count === 0
@@ -194,9 +187,11 @@ function WeekColumns({ cols, events }: { cols: Date[]; events: CalEvent[] }) {
  * it should hand its space to a day with three things on it, and that is what
  * lets a busy week fit at a size you can read across a room.
  */
-function WeekRows({ cols, events, perDay }: { cols: Date[]; events: CalEvent[]; perDay: number }) {
+function WeekRows({ cols, events, perDay, zoom }: { cols: Date[]; events: CalEvent[]; perDay: number; zoom: number }) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0, overflow: "hidden" }}>
+    // The plan may shrink the whole rows block a little to keep every day on
+    // the card - the week's integrity beats a couple of points of type size.
+    <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0, overflow: "hidden", zoom: zoom === 1 ? undefined : zoom }}>
       {cols.map((d, i) => {
         const evs = eventsOn(events, d);
         const shown = evs.slice(0, perDay);
@@ -303,22 +298,16 @@ export function WeekView({
   const scale = textScale("calendar", w, h, fontScale);
   const boxH = (h - CARD_PAD) / scale;
   const rowH = (boxH - MONTH_BAND_H - FOOTER_H) / Math.max(1, cols.length);
-  // How many event lines actually FIT. Third revision of this arithmetic, and
-  // the audit that forced it found the same failure both times: optimism here
-  // does not crop a line off a day, it pushes Saturday out of the bottom of
-  // the card. So the budget now charges for everything a busy row really
-  // renders - its border and padding, the event lines, AND the "+n more" line
-  // that appears exactly when a row is at its cap - and clamps to the date
-  // gutter's floor, which a row can never render below.
-  const budget = rowH - ROW_CHROME - MORE_LINE_H;
-  const perDay = Math.min(6, Math.max(1, Math.floor(budget / ROW_EVENT_H)));
-  // The worst case a row can render: its chrome, plus the larger of the date
-  // gutter and a full complement of lines with the overflow marker. If N such
-  // rows cannot fit, showing fewer days honestly beats clipping Saturday
-  // silently - the row budget shrinks the week before it loses any of it.
-  const worstRow = ROW_CHROME + Math.max(GUTTER_H, perDay * ROW_EVENT_H + MORE_LINE_H);
-  const fitDays = Math.max(1, Math.min(cols.length, Math.floor((boxH - MONTH_BAND_H - FOOTER_H) / worstRow)));
-  const shown = dense ? cols.slice(0, fitDays) : cols;
+  // Capacity of one row at nominal size...
+  const perDay = Math.min(6, Math.max(1, Math.floor((rowH - ROW_CHROME) / ROW_EVENT_H)));
+  // ...then a plan costed from the week that is actually on the calendar. A
+  // worst-case budget here once reserved a fully-busy "+n more" row seven
+  // times over and showed a two-day week; the real week is usually far
+  // cheaper. When it still overflows, the rows shrink before any day hides.
+  const availH = boxH - MONTH_BAND_H - FOOTER_H;
+  const plan = dense ? planWeekRows(cols.map((d) => eventsOn(events, d).length), perDay, availH) : { days: cols.length, zoom: 1, hidden: 0 };
+  const shown = cols.slice(0, plan.days);
+  const note = plan.hidden > 0 ? `+${plan.hidden} more day${plan.hidden === 1 ? "" : "s"} — a taller calendar or smaller text shows the whole week` : undefined;
 
   return (
     <div
@@ -328,8 +317,8 @@ export function WeekView({
       style={{ display: "flex", flexDirection: "column", height: "100%" }}
     >
       <MonthBand from={shown[0]!} to={shown[shown.length - 1]!} />
-      {dense ? <WeekRows cols={shown} events={events} perDay={perDay} /> : <WeekColumns cols={cols} events={events} />}
-      <Footer feed={feed} count={events.length} />
+      {dense ? <WeekRows cols={shown} events={events} perDay={perDay} zoom={plan.zoom} /> : <WeekColumns cols={cols} events={events} />}
+      <Footer feed={feed} count={events.length} note={note} />
     </div>
   );
 }
