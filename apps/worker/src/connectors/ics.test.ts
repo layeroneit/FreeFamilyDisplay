@@ -75,10 +75,10 @@ test("hostile input never throws and output is bounded", () => {
   assert.deepEqual(parseIcs("", from, to), []);
   assert.deepEqual(parseIcs("BEGIN:VEVENT\nDTSTART:garbage\nEND:VEVENT", from, to), []);
   const big = ["BEGIN:VCALENDAR"];
-  for (let i = 0; i < 500; i++) big.push("BEGIN:VEVENT", `UID:${i}`, "DTSTART;VALUE=DATE:20260915", `SUMMARY:${"x".repeat(5000)}<script>`, "END:VEVENT");
+  for (let i = 0; i < 900; i++) big.push("BEGIN:VEVENT", `UID:${i}`, "DTSTART;VALUE=DATE:20260915", `SUMMARY:${"x".repeat(5000)}<script>`, "END:VEVENT");
   big.push("END:VCALENDAR");
   const ev = parseIcs(big.join("\n"), from, to);
-  assert.equal(ev.length, 200);
+  assert.equal(ev.length, 400);
   assert.ok(ev[0]!.title.length <= 200);
 });
 
@@ -118,6 +118,6 @@ test("a feed of thousands of endless recurrences is bounded in time", () => {
   const t0 = performance.now();
   const out = parseIcs(parts.join("\r\n"), new Date("2026-08-31T00:00:00Z"), new Date("2026-09-07T00:00:00Z"));
   const ms = performance.now() - t0;
-  assert.ok(out.length <= 200);
+  assert.ok(out.length <= 400);
   assert.ok(ms < 2000, `parse took ${Math.round(ms)}ms`);
 });

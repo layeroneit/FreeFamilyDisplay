@@ -100,10 +100,15 @@ async function syncCalendars(): Promise<void> {
           );
         }
       }
+      // Back to the 1st of this month, not to today: the month view draws a
+      // whole grid, and a window that starts today leaves every day already
+      // gone this month blank, which reads as a broken calendar rather than
+      // as the past.
       const from = new Date();
       from.setHours(0, 0, 0, 0);
       const to = new Date(from);
       to.setDate(to.getDate() + 31);
+      from.setDate(1);
       const events = parseIcs(text, from, to);
       await record("ics", r.id, { events, syncedAt: new Date().toISOString() }, null);
       log.info("calendar synced", { widgetId: r.id, events: events.length });

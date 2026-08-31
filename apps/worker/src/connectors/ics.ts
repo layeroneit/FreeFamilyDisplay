@@ -19,7 +19,10 @@ export type IcsEvent = {
 
 const MAX_VEVENTS = 2000;
 const MAX_EXPANSION_STEPS = 50_000;
-const MAX_EVENTS = 200;
+// Doubled alongside the sync window, which now reaches back to the 1st of the
+// month for the month grid: at 200 a busy shared calendar could spend the
+// whole budget on days already gone and leave the week ahead empty.
+const MAX_EVENTS = 400;
 const MAX_TEXT = 200;
 
 /** Unfold continuation lines (CRLF + single space/tab). */
