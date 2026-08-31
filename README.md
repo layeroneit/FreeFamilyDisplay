@@ -13,6 +13,12 @@ week calendar, the weather for the next few days, a photo, a quote and a note
 for the household, with autumn leaves scattered down the
 edges](docs/images/demo-board.webp)
 
+<img src="docs/images/demo-board-portrait.webp" alt="The same board on a screen turned on its side: the week drawn as one row per day" width="300">
+
+<sub>Turn the screen on its side and the week redraws as one row per day — seven
+columns in a portrait 1000px would be about nine characters each, so the
+calendar changes shape rather than shrinking the words.</sub>
+
 <sub>Generated, not photographed. Every name, event and temperature above is
 invented; the photographs are ones this project already ships and credits. Your
 own board is a picture of your family beside a timetable of where your children

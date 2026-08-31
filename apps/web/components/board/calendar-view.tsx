@@ -23,7 +23,11 @@ const MIN_COLUMN_PX = 150;
 /** Heights of the fixed furniture, used to budget how many events a row holds. */
 const MONTH_BAND_H = 87;
 const FOOTER_H = 30;
-const ROW_EVENT_H = 24 * 1.28 + 5;
+/** Day-row event type size, and the vertical space one line of it costs. */
+const ROW_EVENT_SIZE = 21;
+const ROW_EVENT_H = ROW_EVENT_SIZE * 1.25 + 4;
+/** A day row's own border and padding, which the event lines do not get. */
+const ROW_CHROME = 2 + 7 + 7;
 
 /**
  * The month, on a row of its own, big enough to read from the other side of
@@ -218,8 +222,8 @@ function WeekRows({ cols, events, perDay }: { cols: Date[]; events: CalEvent[]; 
                     data-part="event"
                     title={e.title}
                     style={{
-                      fontSize: 24,
-                      lineHeight: 1.28,
+                      fontSize: ROW_EVENT_SIZE,
+                      lineHeight: 1.25,
                       // Full width means a title almost never runs out of room.
                       // When one does, an ellipsis is honest; a mid-word split
                       // is not.
@@ -281,7 +285,12 @@ export function WeekView({
   const scale = textScale("calendar", w, h, fontScale);
   const boxH = (h - CARD_PAD) / scale;
   const rowH = (boxH - MONTH_BAND_H - FOOTER_H) / Math.max(1, cols.length);
-  const perDay = Math.min(6, Math.max(2, Math.floor(rowH / ROW_EVENT_H) + 1));
+  // How many event lines actually FIT - after the row's own border and padding
+  // are taken out, and with no rounding up. Getting this wrong does not crop a
+  // line off a day, it pushes the last days of the week out of the bottom of
+  // the card, and a wall calendar that silently loses the weekend is worse
+  // than one that says "+2 more".
+  const perDay = Math.min(6, Math.max(1, Math.floor((rowH - ROW_CHROME) / ROW_EVENT_H)));
 
   return (
     <div

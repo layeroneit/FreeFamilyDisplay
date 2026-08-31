@@ -24,6 +24,7 @@ const ROOT = join(import.meta.dirname, "..");
 const PUBLIC = join(ROOT, "apps/web/public");
 const OUT_DIR = join(ROOT, "docs/images");
 const OUT = join(OUT_DIR, "demo-board.webp");
+const OUT_PORTRAIT = join(OUT_DIR, "demo-board-portrait.webp");
 
 const W = 1920;
 const H = 1080;
@@ -243,6 +244,128 @@ async function main(): Promise<void> {
   process.stdout.write(`Wrote ${OUT}\n`);
   process.stdout.write(`Backdrop: ${credit}\n`);
   process.stdout.write("Photo card: Andrew Turner · Flickr · CC BY 2.0\n");
+  await renderPortrait();
+}
+
+
+// ------------------------------------------------------------ portrait board
+
+/**
+ * The portrait board (1080x1920), which is what a screen turned on its side in
+ * a hallway shows. Its calendar is drawn as day-rows, because seven columns in
+ * 1000px would be ~129px each and the app switches layout below 150.
+ *
+ * The calendar's contents are written in the widget's own layout units inside a
+ * single scale() group - exactly what the `zoom` on the real widget does - so
+ * the numbers here are the numbers in calendar-view.tsx.
+ */
+const PORTRAIT_ROWS: { day: string; n: number; evs: { t?: string; s: string }[] }[] = [
+  { day: "THU", n: 8, evs: [{ t: "3:30", s: "Soccer practice" }, { t: "6 PM", s: "Book club" }] },
+  { day: "FRI", n: 9, evs: [{ s: "Pizza night" }, { t: "7 PM", s: "Movie night" }] },
+  { day: "SAT", n: 10, evs: [{ t: "9 AM", s: "Farmers market" }, { t: "2 PM", s: "Piano recital" }, { t: "6 PM", s: "Dinner at Nana's" }] },
+  { day: "SUN", n: 11, evs: [{ s: "Grandma visiting" }, { t: "4 PM", s: "Leaf raking" }] },
+  { day: "MON", n: 12, evs: [{ t: "7:15", s: "Bus leaves early" }, { t: "4 PM", s: "Piano lesson" }, { t: "6 PM", s: "Scouts" }] },
+  { day: "TUE", n: 13, evs: [{ t: "9:30", s: "Dentist — both kids" }, { t: "5 PM", s: "Swim team" }] },
+  { day: "WED", n: 14, evs: [{ s: "Trash out" }, { t: "5 PM", s: "Robotics club" }, { t: "7 PM", s: "Choir" }] },
+];
+
+function portraitCalendar(x: number, y: number, w: number, h: number): string {
+  const scale = Math.min(4, Math.max(0.5, Math.sqrt((w * h) / (1300 * 560))));
+  const boxW = (w - 48) / scale;
+  const boxH = (h - 48) / scale;
+  const EV_SIZE = 21;
+  const EV_H = EV_SIZE * 1.25 + 4;
+  const CHROME = 16;
+  const rowH = (boxH - 87 - 30) / 7;
+  const perDay = Math.min(6, Math.max(1, Math.floor((rowH - CHROME) / EV_H)));
+
+  const g: string[] = [];
+  g.push(text(0, 58, "OCTOBER", { size: 72, weight: 600, spacing: 1 }));
+  g.push(text(boxW, 58, "2026", { size: 28, weight: 500, fill: T.muted, anchor: "end" }));
+  g.push(`<rect x="0" y="76" width="${boxW}" height="3" fill="${T.a2}"/>`);
+
+  let cy = 87;
+  PORTRAIT_ROWS.forEach((r, i) => {
+    const shown = r.evs.slice(0, perDay);
+    const rest = r.evs.length - shown.length;
+    const bodyH = Math.max(34, shown.length * EV_H + (rest > 0 ? 26 : 0));
+    g.push(`<rect x="0" y="${cy}" width="${boxW}" height="2" fill="${i === 0 ? T.a2 : T.border}"/>`);
+    const top = cy + 9;
+    g.push(text(0, top + 27, String(r.n), { size: 34, weight: 600, fill: i === 0 ? T.a2 : T.text }));
+    g.push(text(String(r.n).length > 1 ? 66 : 50, top + 27, r.day, { size: 19, fill: T.muted, spacing: 1 }));
+    shown.forEach((ev, k) => {
+      const ly = top + 20 + k * EV_H;
+      g.push(`<rect x="144" y="${ly - 16}" width="3" height="${EV_SIZE + 4}" fill="${T.a1}"/>`);
+      if (ev.t) g.push(text(156, ly, ev.t, { size: EV_SIZE, fill: T.muted }));
+      g.push(text(156 + (ev.t ? ev.t.length * 12 + 10 : 0), ly, ev.s, { size: EV_SIZE }));
+    });
+    if (rest > 0) g.push(text(156, top + 20 + shown.length * EV_H, `+${rest} more`, { size: 19, fill: T.muted }));
+    cy += 2 + 7 + bodyH + 7;
+  });
+  g.push(text(0, boxH - 6, `${PORTRAIT_ROWS.flatMap((r) => r.evs).length} events · updated 3:41 PM`, { size: 16, fill: T.muted }));
+
+  return `${card(x, y, w, h)}<g transform="translate(${x + 24} ${y + 24}) scale(${scale.toFixed(4)})">${g.join("")}</g>`;
+}
+
+async function renderPortrait(): Promise<void> {
+  const PW = 1080;
+  const PH = 1920;
+  const manifest = JSON.parse(readFileSync(join(PUBLIC, "wallpapers/manifest.json"), "utf8")) as {
+    collections: { slug: string; wallpapers: Wallpaper[] }[];
+  };
+  const wp = manifest.collections.flatMap((c) => c.wallpapers).find((x) => x.basePath.endsWith("/andrew-lake-dock"))!;
+  const credit = `${wp.attribution.photographer} · ${wp.attribution.source} · ${wp.attribution.license}`;
+
+  const bg = await sharp(join(PUBLIC, `${wp.basePath}-1920.webp`)).resize(PW, PH, { fit: "cover" }).toBuffer();
+
+  const pw = 1000;
+  const ph = 280;
+  const photo = await sharp(join(PUBLIC, "login-photos/campfire-1920.webp"))
+    .resize(pw, ph, { fit: "cover" })
+    .composite([{ input: Buffer.from(`<svg width="${pw}" height="${ph}"><rect width="${pw}" height="${ph}" rx="14" fill="#fff"/></svg>`), blend: "dest-in" }])
+    .png()
+    .toBuffer();
+
+  const decorPieces = seasonalFrame("fall", PW, PH)
+    .map((piece) => {
+      const gl = SEASON_DECOR.fall.glyphs[piece.glyph]!;
+      const filled = Boolean(gl.paths?.length || gl.circles?.length);
+      const k = piece.size / 24;
+      const body = [
+        ...(gl.paths ?? []).map((path) => `<path d="${path}"/>`),
+        ...(gl.circles ?? []).map((c) => `<circle cx="${c.cx}" cy="${c.cy}" r="${c.r}"/>`),
+      ].join("");
+      const detail = gl.detail
+        ? `<path d="${gl.detail}" fill="none" stroke="${piece.color}" stroke-width="${filled ? 1.3 : 1.7}" stroke-linecap="round" opacity="${filled ? 0.5 : 1}"/>`
+        : "";
+      return `<g transform="translate(${piece.x + piece.size / 2} ${piece.y + piece.size / 2}) rotate(${piece.rot}) scale(${k}) translate(-12 -12)" opacity="${piece.opacity}" fill="${piece.color}">${body}${detail}</g>`;
+    })
+    .join("");
+
+  const overlay = `<svg xmlns="http://www.w3.org/2000/svg" width="${PW}" height="${PH}">
+    <rect width="${PW}" height="${PH}" fill="#000" opacity="${wp.suggestedScrimOpacity.toFixed(3)}"/>
+    ${decorPieces}
+    <text x="40" y="112" font-family="${FONT}" font-size="58" font-weight="600" fill="${T.text}">Good afternoon, <tspan fill="${T.a1}">Rivera</tspan></text>
+    ${text(40, 268, "3:42", { size: 108, weight: 600 })}
+    ${text(292, 268, "PM", { size: 32, weight: 500, fill: T.muted })}
+    ${text(40, 350, "Thursday, October 8", { size: 34, weight: 500, fill: T.muted })}
+    ${portraitCalendar(40, 400, 1000, 860)}
+    ${card(40, 1280, 1000, 300)}
+    ${text(64, 1336, "Millbrook", { size: 30, weight: 600 })}
+    ${text(64, 1428, "68°", { size: 82, weight: 600 })}
+    ${text(190, 1428, "Partly cloudy", { size: 24, fill: T.muted })}
+    ${text(64, 1500, "Fri  71° / 52°     Sat  69° / 50°     Sun  66° / 48°", { size: 22, fill: T.muted })}
+    ${text(PW - 16, PH - 12, credit, { size: 14, fill: "rgb(255,255,255,0.72)", anchor: "end" })}
+  </svg>`;
+
+  await sharp(bg)
+    .composite([
+      { input: Buffer.from(overlay), top: 0, left: 0 },
+      { input: photo, top: 1600, left: 40 },
+    ])
+    .webp({ quality: 92 })
+    .toFile(OUT_PORTRAIT);
+  process.stdout.write(`Wrote ${OUT_PORTRAIT} (day-rows week, perDay from the real budget)\n`);
 }
 
 main().catch((err: unknown) => {
