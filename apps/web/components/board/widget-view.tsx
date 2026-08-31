@@ -3,9 +3,10 @@ import { quoteForDay } from "@/lib/board/quotes";
 import { weatherKey, type WeatherPayload } from "@/lib/board/weather-codes";
 import { WeatherView } from "./weather-view";
 import { DayView, MonthView, WeekView } from "./calendar-view";
-import { safeWidgetConfig } from "@/lib/board/widgets";
+import { safeWidgetConfig, textScale } from "@/lib/board/widgets";
 import { ClockWidget } from "./clock";
 import { PhotosWidget } from "./photos";
+import { SeasonalFrame } from "./seasonal-frame";
 
 export type CalendarEvent = { uid: string; title: string; location: string | null; start: string; end: string; allDay: boolean };
 export type CalendarFeed = { events: CalendarEvent[]; syncedAt: Date | null; error: string | null };
@@ -21,6 +22,8 @@ export type BoardData = {
   /** keyed by photos widget id — present only when the widget uses a link. */
   linkPhotos: Record<string, { srcs: string[]; error: string | null }>;
   now: Date;
+  /** Whether the calendar card wears the season. */
+  seasonalDecor: boolean;
 };
 
 function greetingFor(hour: number): string {
@@ -79,11 +82,27 @@ export function WidgetView({ widget, data }: { widget: BoardWidgetRow; data: Boa
     case "calendar": {
       const c = safeWidgetConfig("calendar", widget.config);
       const feed = data.calendars[widget.id];
-      if (c.view === "day") return <DayView now={data.now} feed={feed} />;
-      if (c.view === "month") return <MonthView now={data.now} feed={feed} />;
-      // The week view picks its own layout from how wide a day column would
-      // really be, so it needs the card's size, not just its contents.
-      return <WeekView now={data.now} days={c.days} feed={feed} w={widget.w} h={widget.h} fontScale={c.fontScale} />;
+      const body =
+        c.view === "day" ? (
+          <DayView now={data.now} feed={feed} />
+        ) : c.view === "month" ? (
+          <MonthView now={data.now} feed={feed} />
+        ) : (
+          // The week view picks its own layout from how wide a day column
+          // would really be, so it needs the card's size, not just its
+          // contents.
+          <WeekView now={data.now} days={c.days} feed={feed} w={widget.w} h={widget.h} fontScale={c.fontScale} />
+        );
+      if (!data.seasonalDecor) return body;
+      // The card's interior in the widget's own (zoomed) units, which is the
+      // space the decor has to lay itself out in.
+      const cardScale = textScale("calendar", widget.w, widget.h, c.fontScale);
+      return (
+        <div style={{ position: "relative", height: "100%" }}>
+          <SeasonalFrame now={data.now} boxW={(widget.w - 48) / cardScale} boxH={(widget.h - 48) / cardScale} opacityScale={0.5} />
+          <div style={{ position: "relative", height: "100%", zIndex: 1 }}>{body}</div>
+        </div>
+      );
     }
     case "photos": {
       const c = safeWidgetConfig("photos", widget.config);

@@ -169,10 +169,15 @@ function strip(): string {
   return p.join("");
 }
 
-/** Fall decor, straight out of the module the app renders from. */
-function decor(): string {
+/**
+ * Fall decor, straight out of the module the app renders from. Draws into a
+ * box rather than the whole board: the app lines the inside of the CALENDAR
+ * CARD, so that the board is left to the wallpaper and the weather layer and
+ * leaves never end up drawn on top of the rain.
+ */
+function decor(w: number, h: number, opacityScale = 1): string {
   const d = SEASON_DECOR.fall;
-  return seasonalFrame("fall", W, H)
+  return seasonalFrame("fall", w, h)
     .map((piece) => {
       const g = d.glyphs[piece.glyph]!;
       const filled = Boolean(g.paths?.length || g.circles?.length);
@@ -184,9 +189,16 @@ function decor(): string {
       const detail = g.detail
         ? `<path d="${g.detail}" fill="none" stroke="${piece.color}" stroke-width="${filled ? 1.3 : 1.7}" stroke-linecap="round" opacity="${filled ? 0.5 : 1}"/>`
         : "";
-      return `<g transform="translate(${piece.x + piece.size / 2} ${piece.y + piece.size / 2}) rotate(${piece.rot}) scale(${k}) translate(-12 -12)" opacity="${piece.opacity}" fill="${piece.color}">${body}${detail}</g>`;
+      const op = (piece.opacity * opacityScale).toFixed(3);
+      return `<g transform="translate(${piece.x + piece.size / 2} ${piece.y + piece.size / 2}) rotate(${piece.rot}) scale(${k}) translate(-12 -12)" opacity="${op}" fill="${piece.color}">${body}${detail}</g>`;
     })
     .join("");
+}
+
+/** Wraps decor in the card's interior, in the card's own zoomed units. */
+function cardDecor(x: number, y: number, w: number, h: number): string {
+  const scale = Math.min(4, Math.max(0.5, Math.sqrt((w * h) / (1300 * 560))));
+  return `<g transform="translate(${x + 24} ${y + 24}) scale(${scale.toFixed(4)})">${decor((w - 48) / scale, (h - 48) / scale, 0.5)}</g>`;
 }
 
 // ------------------------------------------------------------------- build
@@ -223,9 +235,9 @@ async function main(): Promise<void> {
 
   const overlay = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
     <rect width="${W}" height="${H}" fill="#000" opacity="${wp.suggestedScrimOpacity.toFixed(3)}"/>
-    ${decor()}
     ${strip()}
     ${calendar()}
+    ${cardDecor(40, 200, 1300, 560)}
     ${weather()}
     ${text(W - 16, H - 12, credit, { size: 14, fill: "rgb(255,255,255,0.72)", anchor: "end" })}
   </svg>`;
@@ -326,30 +338,14 @@ async function renderPortrait(): Promise<void> {
     .png()
     .toBuffer();
 
-  const decorPieces = seasonalFrame("fall", PW, PH)
-    .map((piece) => {
-      const gl = SEASON_DECOR.fall.glyphs[piece.glyph]!;
-      const filled = Boolean(gl.paths?.length || gl.circles?.length);
-      const k = piece.size / 24;
-      const body = [
-        ...(gl.paths ?? []).map((path) => `<path d="${path}"/>`),
-        ...(gl.circles ?? []).map((c) => `<circle cx="${c.cx}" cy="${c.cy}" r="${c.r}"/>`),
-      ].join("");
-      const detail = gl.detail
-        ? `<path d="${gl.detail}" fill="none" stroke="${piece.color}" stroke-width="${filled ? 1.3 : 1.7}" stroke-linecap="round" opacity="${filled ? 0.5 : 1}"/>`
-        : "";
-      return `<g transform="translate(${piece.x + piece.size / 2} ${piece.y + piece.size / 2}) rotate(${piece.rot}) scale(${k}) translate(-12 -12)" opacity="${piece.opacity}" fill="${piece.color}">${body}${detail}</g>`;
-    })
-    .join("");
-
   const overlay = `<svg xmlns="http://www.w3.org/2000/svg" width="${PW}" height="${PH}">
     <rect width="${PW}" height="${PH}" fill="#000" opacity="${wp.suggestedScrimOpacity.toFixed(3)}"/>
-    ${decorPieces}
     <text x="40" y="112" font-family="${FONT}" font-size="58" font-weight="600" fill="${T.text}">Good afternoon, <tspan fill="${T.a1}">Rivera</tspan></text>
     ${text(40, 268, "3:42", { size: 108, weight: 600 })}
     ${text(292, 268, "PM", { size: 32, weight: 500, fill: T.muted })}
     ${text(40, 350, "Thursday, October 8", { size: 34, weight: 500, fill: T.muted })}
     ${portraitCalendar(40, 400, 1000, 860)}
+    ${cardDecor(40, 400, 1000, 860)}
     ${card(40, 1280, 1000, 300)}
     ${text(64, 1336, "Millbrook", { size: 30, weight: 600 })}
     ${text(64, 1428, "68°", { size: 82, weight: 600 })}

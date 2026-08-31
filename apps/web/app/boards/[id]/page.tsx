@@ -3,11 +3,10 @@ import { notFound, redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth/sessions";
 import { termsCurrent } from "@/lib/terms";
 import { getBoard } from "@/lib/board/boards";
-import { canvasSize, publicWidgetConfig } from "@/lib/board/widgets";
+import { publicWidgetConfig } from "@/lib/board/widgets";
 import { listCollections } from "@/lib/board/wallpapers";
 import { THEMES, themeById, themeVars } from "@/lib/themes";
 import { BoardBackdrop } from "@/components/board/backdrop";
-import { SeasonalFrame } from "@/components/board/seasonal-frame";
 import { loadBoardScene } from "@/components/board/render-data";
 import { WidgetView } from "@/components/board/widget-view";
 import { BoardEditor } from "./editor";
@@ -23,7 +22,6 @@ export default async function BoardPage({ params }: { params: Promise<{ id: stri
   if (!board) notFound();
 
   const [scene, collections] = await Promise.all([loadBoardScene(board, user.displayName), listCollections(user.id)]);
-  const canvas = canvasSize(board.canvas);
 
   // Server-rendered widget content, handed to the client editor by id so the
   // editor owns geometry (drag/resize) without re-implementing any renderer.
@@ -63,15 +61,7 @@ export default async function BoardPage({ params }: { params: Promise<{ id: stri
       suggestedScrim={scene.wallpaper?.suggestedScrimOpacity ?? null}
       collections={collections}
       moodLabel={scene.mood?.label ?? null}
-      backdrop={
-        <>
-          <BoardBackdrop wallpaper={scene.wallpaper} scrimOpacity={scene.scrimOpacity} mood={scene.mood} canvasW={board.canvas === "ULTRAWIDE" ? 2560 : 1920} effects />
-          {/* The decor previews here so the toggle has visible effect. The
-              birthday celebration deliberately does NOT — nobody wants
-              confetti over the board they are trying to drag widgets on. */}
-          {board.style.seasonalDecor ? <SeasonalFrame now={scene.data.now} canvasW={canvas.w} canvasH={canvas.h} /> : null}
-        </>
-      }
+      backdrop={<BoardBackdrop wallpaper={scene.wallpaper} scrimOpacity={scene.scrimOpacity} mood={scene.mood} canvasW={board.canvas === "ULTRAWIDE" ? 2560 : 1920} effects />}
     />
   );
 }

@@ -76,7 +76,7 @@ export async function loadBoardData(board: BoardFull, viewerName: string): Promi
     if (safeWidgetConfig("calendar", w.config).icsSecret) calendars[id] ??= { events: [], syncedAt: null, error: null };
   }
 
-  return { viewerName, photoSrcs: loginPhotoSet().map(largestSrc), weather, calendars, linkPhotos, now: new Date() };
+  return { viewerName, photoSrcs: loginPhotoSet().map(largestSrc), weather, calendars, linkPhotos, now: new Date(), seasonalDecor: board.style.seasonalDecor !== false };
 }
 
 /** Data + backdrop + token overrides — the full scene for one board. */
