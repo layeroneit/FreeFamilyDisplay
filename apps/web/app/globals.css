@@ -97,12 +97,18 @@ body {
  * with per-piece custom properties; a negative delay puts every piece mid-fall
  * on first paint, so a page refresh resumes the sky instead of restarting it.
  * Fireflies are summer's version: they hold position and pulse. */
-@keyframes season-fall {
-  0% { transform: translate3d(0, 0, 0) rotate(0deg); }
-  50% { transform: translate3d(var(--sf-wobble, 20px), calc(var(--sf-fall, 600px) * 0.5), 0) rotate(calc(var(--sf-spin, 360deg) * 0.5)); }
-  100% { transform: translate3d(var(--sf-drift, 0px), var(--sf-fall, 600px), 0) rotate(var(--sf-spin, 360deg)); }
+@keyframes season-descend {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(var(--sf-drift, 60px), var(--sf-fall, 600px), 0); }
 }
-.season-fall-piece { animation: season-fall linear infinite; }
+.season-descend { animation: season-descend linear infinite; }
+/* The pendulum: sway and rock together, alternating, never a full rotation -
+ * a flat shape spinning like a wheel reads as glinting on the wall. */
+@keyframes season-flutter {
+  from { transform: translateX(calc(var(--sf-sway, 16px) * -1)) rotate(calc(var(--sf-rock, 28deg) * -1)); }
+  to { transform: translateX(var(--sf-sway, 16px)) rotate(var(--sf-rock, 28deg)); }
+}
+.season-flutter { animation: season-flutter ease-in-out infinite alternate; }
 @keyframes firefly-pulse {
   0%, 100% { opacity: 0.12; }
   50% { opacity: 0.8; }

@@ -196,7 +196,7 @@ export const SEASON_DECOR: Record<Season, SeasonDecor> = {
  */
 export type FallingPiece = {
   kind: "glyph" | "firefly";
-  /** Index into the season's glyph list. Unused for fireflies. */
+  /** Index into the season's glyph list; -1 is spring's loose petal. */
   glyph: number;
   x: number;
   /** Fireflies only: resting y position. Fallers start above the card. */
@@ -208,11 +208,18 @@ export type FallingPiece = {
   dur: number;
   /** Negative start offset, so the sky is already busy on first paint. */
   delay: number;
-  /** Sideways wander at the halfway point and at the bottom, in px. */
-  wobble: number;
+  /**
+   * Wind: total sideways displacement over one traverse, px. Every faller in
+   * a card shares the wind's SIGN, so the whole sky leans one way - that is
+   * what makes it read as a breeze instead of particles.
+   */
   drift: number;
-  /** Total rotation over one traverse, degrees. Fireflies: 0. */
-  spin: number;
+  /** The pendulum: sideways sway amplitude (px) and rocking angle (deg). */
+  sway: number;
+  rock: number;
+  /** One half-swing of the pendulum, seconds, with its own start offset. */
+  flutterDur: number;
+  flutterDelay: number;
 };
 
 /** Deterministic PRNG - the same card must animate identically on every
@@ -228,24 +235,42 @@ function seedOf(season: Season, w: number, h: number): number {
   return s;
 }
 
-/** How many pieces a card of this area carries. ~14 on the default calendar;
- *  the Pi animates ninety rain particles full-screen, so this is light. */
-function countFor(w: number, h: number): number {
-  return Math.max(8, Math.min(22, Math.round((w * h) / 42_000)));
-}
+/**
+ * Per-season physics. Numbers are the operator's picks (2026-08-31): BIG
+ * leaves - 45-75px is most of an inch on the glass - carried on a steady
+ * gentle breeze, rocking side to side, NEVER spinning like a pinwheel. The
+ * first cut spun each piece 360-720 degrees per fall, and on the wall that
+ * flat rotation read as glinting ("they are shining"). Real leaves rock.
+ */
+const FALL_PHYSICS: Record<Exclude<Season, "summer">, {
+  count: [number, number];
+  size: [number, number];
+  dur: [number, number];
+  rock: [number, number];
+  sway: [number, number];
+}> = {
+  // Few, large, unhurried: statement leaves.
+  fall: { count: [7, 9], size: [45, 75], dur: [35, 60], rock: [22, 38], sway: [14, 30] },
+  // More and smaller - a flurry is many flakes, and a 75px snowflake is a prop.
+  winter: { count: [12, 16], size: [24, 44], dur: [40, 70], rock: [8, 16], sway: [18, 40] },
+  // Petals are light: quicker pendulum, gentler size.
+  spring: { count: [10, 13], size: [24, 42], dur: [30, 55], rock: [16, 28], sway: [12, 26] },
+};
+
+const between = (rand: () => number, [a, b]: [number, number]) => a + rand() * (b - a);
 
 /**
  * The season falling through a card of w x h (the card's own units).
- * Fall/winter/spring drop their glyphs top to bottom on long, slow loops;
- * summer scatters fireflies that stay put and glow.
+ * Fall/winter/spring drop their glyphs on slow wind-blown pendulums; summer
+ * scatters fireflies that stay put and glow.
  */
 export function seasonalFall(season: Season, w: number, h: number): FallingPiece[] {
   const decor = SEASON_DECOR[season];
   const rand = rng(seedOf(season, w, h));
-  const n = countFor(w, h);
   const pieces: FallingPiece[] = [];
 
   if (season === "summer") {
+    const n = Math.max(8, Math.min(16, Math.round((w * h) / 52_000)));
     for (let i = 0; i < n; i++) {
       pieces.push({
         kind: "firefly",
@@ -257,35 +282,38 @@ export function seasonalFall(season: Season, w: number, h: number): FallingPiece
         opacity: 1, // the pulse animation owns the opacity
         dur: +(2.6 + rand() * 3.4).toFixed(1),
         delay: +(rand() * 6).toFixed(1),
-        wobble: Math.round(8 + rand() * 18),
         drift: Math.round((rand() - 0.5) * 30),
-        spin: 0,
+        sway: Math.round(8 + rand() * 18),
+        rock: 0,
+        flutterDur: +(4 + rand() * 4).toFixed(1),
+        flutterDelay: +(rand() * 4).toFixed(1),
       });
     }
     return pieces;
   }
 
-  // Winter falls slow and swings wide; autumn tumbles; spring flutters.
-  const speed = season === "winter" ? 1.25 : season === "spring" ? 1.1 : 1;
+  const phys = FALL_PHYSICS[season];
+  // One wind per card: every leaf leans the same way. Seeded, so the wind
+  // holds its direction across refreshes instead of gusting at random.
+  const windSign = rand() < 0.5 ? -1 : 1;
+  const n = Math.round(between(rand, phys.count));
   for (let i = 0; i < n; i++) {
-    // Spring drops loose petals four times out of five, whole blossoms rarely.
     const glyph = season === "spring" && rand() < 0.8 ? -1 : Math.floor(rand() * decor.glyphs.length);
-    // Big enough to read from a couch. The first cut was 16-34px and even the
-    // still frames looked like specks.
-    const size = Math.round(22 + rand() * 20);
     pieces.push({
       kind: "glyph",
       glyph,
       x: Math.round(w * (0.02 + rand() * 0.96)),
       y: 0,
-      size,
+      size: Math.round(between(rand, phys.size)),
       color: decor.palette[Math.floor(rand() * decor.palette.length)]!,
-      opacity: +(0.35 + rand() * 0.2).toFixed(2),
-      dur: +((20 + rand() * 18) * speed).toFixed(1),
-      delay: +(rand() * 38).toFixed(1),
-      wobble: Math.round((rand() - 0.5) * 2 * (season === "winter" ? 70 : 45)),
-      drift: Math.round((rand() - 0.5) * 90),
-      spin: season === "winter" ? Math.round((rand() - 0.5) * 240) : Math.round((rand() - 0.5) * 2 * (360 + rand() * 360)),
+      opacity: +(0.4 + rand() * 0.2).toFixed(2),
+      dur: +between(rand, phys.dur).toFixed(1),
+      delay: +(rand() * 60).toFixed(1),
+      drift: Math.round(windSign * (30 + rand() * 90)),
+      sway: Math.round(between(rand, phys.sway)),
+      rock: Math.round(between(rand, phys.rock)),
+      flutterDur: +(2.8 + rand() * 3).toFixed(1),
+      flutterDelay: +(rand() * 5).toFixed(1),
     });
   }
   return pieces;

@@ -187,8 +187,11 @@ function decor(w: number, h: number): string {
       const pr = (p.delay % p.dur) / p.dur;
       const y = -p.size * 1.5 + pr * (h + p.size * 3);
       if (y > h) return "";
-      const x = p.x + (pr < 0.5 ? p.wobble * pr * 2 : p.wobble + (p.drift - p.wobble) * (pr - 0.5) * 2);
-      const rot = pr * p.spin;
+      // Descent drifts linearly with the wind; the flutter pendulum is at
+      // whatever phase its own clock puts it at.
+      const phase = ((p.delay % p.flutterDur) / p.flutterDur) * Math.PI * 2;
+      const x = p.x + pr * p.drift + Math.sin(phase) * p.sway;
+      const rot = Math.sin(phase) * p.rock;
       const k = p.size / 24;
       const body = [
         ...(g.paths ?? []).map((path) => `<path d="${path}"/>`),
@@ -205,7 +208,10 @@ function decor(w: number, h: number): string {
 /** Wraps decor in the card's interior, in the card's own zoomed units. */
 function cardDecor(x: number, y: number, w: number, h: number): string {
   const scale = Math.min(4, Math.max(0.5, Math.sqrt((w * h) / (1300 * 560))));
-  return `<g transform="translate(${x + 24} ${y + 24}) scale(${scale.toFixed(4)})">${decor((w - 48) / scale, (h - 48) / scale)}</g>`;
+  // Clipped to the card, because the real widget clips: a leaf mid-entry must
+  // not float above the card in the still.
+  const id = `clip${x}x${y}`;
+  return `<clipPath id="${id}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14"/></clipPath><g clip-path="url(#${id})"><g transform="translate(${x + 24} ${y + 24}) scale(${scale.toFixed(4)})">${decor((w - 48) / scale, (h - 48) / scale)}</g></g>`;
 }
 
 // ------------------------------------------------------------------- build

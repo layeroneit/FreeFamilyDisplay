@@ -56,9 +56,9 @@ export function SeasonalFrame({
                   borderRadius: "50%",
                   background: p.color,
                   boxShadow: `0 0 ${p.size * 1.6}px ${p.size * 0.6}px ${p.color}44`,
-                  animationDuration: `${p.dur}s, ${p.dur * 4.2}s`,
-                  animationDelay: `-${p.delay}s, -${p.delay}s`,
-                  "--sf-wobble": `${p.wobble}px`,
+                  animationDuration: `${p.dur}s, ${p.flutterDur * 4.2}s`,
+                  animationDelay: `-${p.delay}s, -${p.flutterDelay}s`,
+                  "--sf-wobble": `${p.sway}px`,
                   "--sf-drift": `${p.drift}px`,
                 } as React.CSSProperties
               }
@@ -68,9 +68,15 @@ export function SeasonalFrame({
         const g: SeasonGlyph = p.glyph < 0 ? PETAL_GLYPH : decor.glyphs[p.glyph]!;
         const filled = Boolean(g.paths?.length || g.circles?.length);
         return (
+          // Two animations that must not share a transform: the outer span
+          // DESCENDS - a straight linear drop plus the wind's sideways lean -
+          // while the inner svg FLUTTERS, an ease-in-out pendulum of sway and
+          // rock. Together they trace the lazy zigzag of a real falling leaf.
+          // The first cut instead spun each piece like a pinwheel, which on
+          // the wall read as glinting - leaves rock, they do not rotate.
           <span
             key={i}
-            className="season-fall-piece"
+            className="season-descend"
             style={
               {
                 position: "absolute",
@@ -82,13 +88,26 @@ export function SeasonalFrame({
                 animationDuration: `${p.dur}s`,
                 animationDelay: `-${p.delay}s`,
                 "--sf-fall": `${boxH + p.size * 3}px`,
-                "--sf-wobble": `${p.wobble}px`,
                 "--sf-drift": `${p.drift}px`,
-                "--sf-spin": `${p.spin}deg`,
               } as React.CSSProperties
             }
           >
-            <svg viewBox="0 0 24 24" width="100%" height="100%" style={{ display: "block", color: p.color }}>
+            <svg
+              viewBox="0 0 24 24"
+              width="100%"
+              height="100%"
+              className="season-flutter"
+              style={
+                {
+                  display: "block",
+                  color: p.color,
+                  animationDuration: `${p.flutterDur}s`,
+                  animationDelay: `-${p.flutterDelay}s`,
+                  "--sf-sway": `${p.sway}px`,
+                  "--sf-rock": `${p.rock}deg`,
+                } as React.CSSProperties
+              }
+            >
               <g fill="currentColor">
                 {g.paths?.map((d, j) => (
                   <path key={j} d={d} />

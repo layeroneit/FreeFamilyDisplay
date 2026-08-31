@@ -25,10 +25,11 @@ test("falling pieces stay inside the card and inside their season", () => {
     const w = 1126;
     const h = 558;
     const pieces = seasonalFall(s, w, h);
-    assert.ok(pieces.length >= 8 && pieces.length <= 22, `${s}: ${pieces.length} pieces`);
+    // Fall runs as few as 7 statement leaves by design.
+    assert.ok(pieces.length >= 6 && pieces.length <= 22, `${s}: ${pieces.length} pieces`);
     for (const p of pieces) {
       assert.ok(p.x >= 0 && p.x <= w, `${s}: x ${p.x}`);
-      assert.ok(p.size > 0 && p.size < 60, `${s}: size ${p.size}`);
+      assert.ok(p.size > 0 && p.size <= 80, `${s}: size ${p.size}`);
       assert.ok(p.dur > 0 && p.delay >= 0, `${s}: timing`);
       if (p.kind === "glyph") {
         // -1 is the loose petal; anything else must be a real glyph index.
@@ -37,7 +38,15 @@ test("falling pieces stay inside the card and inside their season", () => {
       } else {
         assert.ok(p.y >= 0 && p.y <= h, `${s}: firefly y ${p.y}`);
       }
+      assert.ok(p.flutterDur > 0, `${s}: flutter`);
     }
+  }
+});
+
+test("one wind per card - every faller leans the same way", () => {
+  for (const s of ["fall", "winter", "spring"] as const) {
+    const signs = new Set(seasonalFall(s, 1126, 558).map((p) => Math.sign(p.drift)));
+    assert.equal(signs.size, 1, `${s}: mixed wind directions`);
   }
 });
 
