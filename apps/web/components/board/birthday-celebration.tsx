@@ -91,7 +91,11 @@ export function BirthdayCelebration({
       h: 13 + r() * 18,
       color: CONFETTI[Math.floor(r() * CONFETTI.length)]!,
       dur: +(4.6 + r() * 4.2).toFixed(2),
-      delay: +(r() * Math.max(0, durationSec - 8)).toFixed(2),
+      // All confetti is airborne within the first four seconds. The first cut
+      // spread starts across twelve, which made the opening of a twenty-second
+      // celebration nearly empty - a few falling flecks read as flickering,
+      // not as confetti. Pieces loop, so the downpour then holds to the end.
+      delay: +(r() * 4).toFixed(2),
       drift: Math.round((r() - 0.5) * 200),
       spin: Math.round(360 + r() * 1080) * (r() < 0.5 ? -1 : 1),
       round: r() < 0.22,
