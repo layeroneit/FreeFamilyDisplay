@@ -23,3 +23,7 @@ packages/stockpile/images/
 
 # scratch
 .audit-tmp/
+
+# Next regenerates this on every build (and rewrites apps/web/tsconfig.json
+# alongside it). Committing it means every build shows up as a diff.
+apps/web/next-env.d.ts
