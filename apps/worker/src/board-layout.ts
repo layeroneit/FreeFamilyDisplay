@@ -112,14 +112,29 @@ async function main(): Promise<void> {
   log.info(`--- ${board.name} (${board.canvas}) — before ---`);
   draw(board.widgets, canvas);
 
-  // Anything starting at or below the widget's current bottom moves by the same
-  // delta, so the gaps the operator arranged are preserved rather than reflowed.
+  // Anything starting at or below the widget's current bottom AND sharing its
+  // column moves by the same delta, so the gaps the operator arranged are
+  // preserved. The x-test matters both ways: without it, growing a left-column
+  // calendar refuses because a right-column card "would fall off the bottom",
+  // and shrinking one silently drags the side column up over its neighbours.
   const oldBottom = target.y + target.h;
-  const moved = board.widgets.filter((x) => x.id !== target.id && x.y >= oldBottom);
+  const overlapsX = (a: Row, b: Row) => a.x < b.x + b.w && b.x < a.x + a.w;
+  const moved = board.widgets.filter((x) => x.id !== target.id && x.y >= oldBottom && overlapsX(x, target));
   const planned: Row[] = board.widgets.map((x) =>
     x.id === target.id ? { ...x, h: newH } : moved.some((m) => m.id === x.id) ? { ...x, y: snap(x.y + delta) } : x,
   );
 
+  // Bottom edge AND pairwise overlap: a shrink moves widgets UP, where the
+  // hazard is landing on a neighbour, not falling off the canvas.
+  const collides = planned.filter((a) =>
+    planned.some((b) => a.id < b.id && overlapsX(a, b) && a.y < b.y + b.h && b.y < a.y + a.h),
+  );
+  if (collides.length > 0) {
+    log.error(`That would stack widgets on top of each other:`);
+    for (const c of collides) log.error(`  ${c.type} at y=${c.y}`);
+    log.error("Nothing was written.");
+    process.exit(1);
+  }
   const spilled = planned.filter((x) => x.y + x.h > canvas.h);
   if (spilled.length > 0) {
     log.error(`That would push ${spilled.length} widget(s) off the bottom of a ${canvas.w}x${canvas.h} canvas:`);

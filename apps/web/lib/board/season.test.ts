@@ -50,6 +50,16 @@ test("one wind per card - every faller leans the same way", () => {
   }
 });
 
+test("the wind never carries a piece off the card", () => {
+  for (const s of ["fall", "winter", "spring"] as const) {
+    for (const p of seasonalFall(s, 1126, 558)) {
+      assert.ok(p.x >= 0 && p.x + p.size <= 1126, `${s}: starts on the card`);
+      const end = p.x + p.drift;
+      assert.ok(end >= 0 && end + p.size <= 1126, `${s}: lands on the card (x ${p.x} drift ${p.drift} size ${p.size})`);
+    }
+  }
+});
+
 test("summer glows in place; the other seasons fall", () => {
   assert.ok(seasonalFall("summer", 1126, 558).every((p) => p.kind === "firefly"));
   for (const s of ["fall", "winter", "spring"] as const) {

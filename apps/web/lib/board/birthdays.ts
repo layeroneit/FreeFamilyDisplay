@@ -42,6 +42,9 @@ const NEVER_A_NAME = new Set([
   "card", "cards", "reminder", "reminders", "list", "lists", "shopping",
   "lunch", "dinner", "brunch", "meeting", "meetings", "appointment",
   "planning", "plans", "celebration", "bash", "invite", "invites", "rsvp",
+  // Group words: "staff birthdays" and "team offsite birthday" are calendars
+  // talking about birthdays, not people having one.
+  "staff", "team", "teams", "everyone", "all", "office", "work", "school", "class",
 ]);
 
 /** Grammatical filler. Harmless beside a name, not a name on its own. */
@@ -68,6 +71,14 @@ function cleanName(captured: string): string | null {
   if (forIdx >= 0) n = n.slice(forIdx + 5).trim();
   if (!n || n.length > MAX_NAME) return null;
   if (TASK_VERB.test(n)) return null;
+  // "Happy Birthday to you" is a song, not a person.
+  if (/^to\b/i.test(n)) return null;
+  // Digits and ordinals mean the capture kept part of the event, not a name:
+  // "Grandma's 80th", "Ella turns 7".
+  if (/\d/.test(n)) return null;
+  // A trailing possessive is a fragment of a larger phrase ("Grandma's").
+  n = n.replace(/['\u2019]s$/i, "").trim();
+  if (!n) return null;
   const words = n.split(" ");
   // A real name is a word or a few. Four is "Mary Anne van Doren".
   if (words.length > 4) return null;
@@ -99,7 +110,10 @@ export function birthdayNameFromTitle(title: string): string | null {
 export function birthdaysOn(events: readonly BirthdaySource[], day: Date): string[] {
   const from = new Date(day);
   from.setHours(0, 0, 0, 0);
-  const to = new Date(from.getTime() + 86_400_000);
+  // End of the LOCAL day - a DST day is 23 or 25 hours, and +86,400,000ms
+  // would misfile a birthday party in the odd hour.
+  const to = new Date(from);
+  to.setDate(to.getDate() + 1);
   const seen = new Set<string>();
   const names: string[] = [];
   for (const e of events) {

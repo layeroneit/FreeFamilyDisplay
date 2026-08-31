@@ -92,7 +92,8 @@ export async function loadBoardScene(board: BoardFull, viewerName: string): Prom
 
   // Every calendar widget on the board feeds one list — a household often
   // keeps birthdays on a contacts calendar separate from the family one.
-  const birthdays = board.style.birthdayCheer
+  // !== false, matching every other reader of these flags: absent means on.
+  const birthdays = board.style.birthdayCheer !== false
     ? birthdaysOn(
         Object.values(data.calendars).flatMap((c) => c?.events ?? []),
         data.now,

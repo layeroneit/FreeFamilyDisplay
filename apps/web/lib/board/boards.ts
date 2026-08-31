@@ -103,7 +103,10 @@ const boardSelect = {
 };
 
 function readStyle(raw: unknown): BoardStyle {
-  if (!raw || typeof raw !== "object") return {};
+  // A board whose style JSON was never written must get the SAME defaults as
+  // one whose JSON simply lacks a key - the audit found birthday celebrations
+  // silently off on every fresh board because this early return skipped them.
+  if (!raw || typeof raw !== "object") return { seasonalDecor: true, birthdayCheer: true };
   const s = raw as Record<string, unknown>;
   return {
     wallpaperShown: Array.isArray(s["wallpaperShown"]) ? (s["wallpaperShown"] as string[]) : [],

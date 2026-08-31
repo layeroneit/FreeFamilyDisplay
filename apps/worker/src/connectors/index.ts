@@ -109,7 +109,18 @@ async function syncCalendars(): Promise<void> {
       const to = new Date(from);
       to.setDate(to.getDate() + 31);
       from.setDate(1);
-      const events = parseIcs(text, from, to);
+      let events = parseIcs(text, from, to);
+      // parseIcs caps its output in FILE order; on a busy feed that can keep
+      // last month's events and drop this week's. Keep the ones nearest to
+      // now instead - the wall cares about the week ahead far more than the
+      // month behind.
+      if (events.length >= 400) {
+        const nowMs = Date.now();
+        events = [...events]
+          .sort((a, b) => Math.abs(new Date(a.start).getTime() - nowMs) - Math.abs(new Date(b.start).getTime() - nowMs))
+          .slice(0, 400)
+          .sort((a, b) => a.start.localeCompare(b.start));
+      }
       await record("ics", r.id, { events, syncedAt: new Date().toISOString() }, null);
       log.info("calendar synced", { widgetId: r.id, events: events.length });
     } catch (err) {

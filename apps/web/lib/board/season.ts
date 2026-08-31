@@ -299,17 +299,23 @@ export function seasonalFall(season: Season, w: number, h: number): FallingPiece
   const n = Math.round(between(rand, phys.count));
   for (let i = 0; i < n; i++) {
     const glyph = season === "spring" && rand() < 0.8 ? -1 : Math.floor(rand() * decor.glyphs.length);
+    const drift = Math.round(windSign * (30 + rand() * 90));
+    const size = Math.round(between(rand, phys.size));
+    // A leaf must end its fall still on the card: its start column leaves room
+    // for the wind to carry it, or half of every cycle happens off the edge.
+    const lo = Math.max(0, -drift) + 4;
+    const hi = w - size - Math.max(0, drift) - 4;
     pieces.push({
       kind: "glyph",
       glyph,
-      x: Math.round(w * (0.02 + rand() * 0.96)),
+      x: Math.round(lo + rand() * Math.max(1, hi - lo)),
       y: 0,
-      size: Math.round(between(rand, phys.size)),
+      size,
       color: decor.palette[Math.floor(rand() * decor.palette.length)]!,
       opacity: +(0.4 + rand() * 0.2).toFixed(2),
       dur: +between(rand, phys.dur).toFixed(1),
       delay: +(rand() * 60).toFixed(1),
-      drift: Math.round(windSign * (30 + rand() * 90)),
+      drift,
       sway: Math.round(between(rand, phys.sway)),
       rock: Math.round(between(rand, phys.rock)),
       flutterDur: +(2.8 + rand() * 3).toFixed(1),

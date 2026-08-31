@@ -30,6 +30,12 @@ test("an errand about a birthday is not a birthday", () => {
     "birthdays this month",
     "The birthday",
     "my birthday list for the weekend and also groceries",
+    // The audit's probes: group calendars and phrases, not people.
+    "staff birthdays",
+    "Happy Birthday to you",
+    "Team offsite birthday",
+    "Grandma's 80th birthday",
+    "Ella turns 7 birthday",
   ]) {
     assert.equal(birthdayNameFromTitle(title), null, title);
   }

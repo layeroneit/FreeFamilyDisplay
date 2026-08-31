@@ -28,6 +28,10 @@ const ROW_EVENT_SIZE = 21;
 const ROW_EVENT_H = ROW_EVENT_SIZE * 1.25 + 4;
 /** A day row's own border and padding, which the event lines do not get. */
 const ROW_CHROME = 2 + 7 + 7;
+/** The "+n more" line and the gap above it, when a day overflows. */
+const MORE_LINE_H = 19 * 1.4 + 5;
+/** The date gutter (34px date, lineHeight 1) floors a row's height. */
+const GUTTER_H = 34;
 
 /**
  * The month, on a row of its own, big enough to read from the other side of
@@ -84,8 +88,14 @@ const startOfDay = (d: Date) => {
   x.setHours(0, 0, 0, 0);
   return x;
 };
-const eventsOn = (events: CalEvent[], d: Date) =>
-  events.filter((e) => new Date(e.start) < new Date(d.getTime() + 86_400_000) && new Date(e.end) > d);
+const eventsOn = (events: CalEvent[], d: Date) => {
+  // End of the LOCAL day, not d + 24h of milliseconds: on the 25-hour
+  // fall-back day the shortcut ends the window at 23:00 and a 23:15 event
+  // belongs to no day at all.
+  const end = new Date(d);
+  end.setDate(end.getDate() + 1);
+  return events.filter((e) => new Date(e.start) < end && new Date(e.end) > d);
+};
 
 function Footer({ feed, count }: { feed: CalendarFeed; count: number }) {
   return (
@@ -284,19 +294,31 @@ export function WeekView({
   });
 
   const colPx = (w - CARD_PAD - COL_GAP * (cols.length - 1)) / cols.length;
-  const dense = colPx < MIN_COLUMN_PX;
+  // Beyond seven, column mode would wrap onto an unlabeled second grid row
+  // that reads as a second week; day rows handle any count honestly.
+  const dense = colPx < MIN_COLUMN_PX || cols.length > 7;
 
   // Everything inside the card is drawn in zoomed units, so convert the real
   // card height into them before budgeting rows.
   const scale = textScale("calendar", w, h, fontScale);
   const boxH = (h - CARD_PAD) / scale;
   const rowH = (boxH - MONTH_BAND_H - FOOTER_H) / Math.max(1, cols.length);
-  // How many event lines actually FIT - after the row's own border and padding
-  // are taken out, and with no rounding up. Getting this wrong does not crop a
-  // line off a day, it pushes the last days of the week out of the bottom of
-  // the card, and a wall calendar that silently loses the weekend is worse
-  // than one that says "+2 more".
-  const perDay = Math.min(6, Math.max(1, Math.floor((rowH - ROW_CHROME) / ROW_EVENT_H)));
+  // How many event lines actually FIT. Third revision of this arithmetic, and
+  // the audit that forced it found the same failure both times: optimism here
+  // does not crop a line off a day, it pushes Saturday out of the bottom of
+  // the card. So the budget now charges for everything a busy row really
+  // renders - its border and padding, the event lines, AND the "+n more" line
+  // that appears exactly when a row is at its cap - and clamps to the date
+  // gutter's floor, which a row can never render below.
+  const budget = rowH - ROW_CHROME - MORE_LINE_H;
+  const perDay = Math.min(6, Math.max(1, Math.floor(budget / ROW_EVENT_H)));
+  // The worst case a row can render: its chrome, plus the larger of the date
+  // gutter and a full complement of lines with the overflow marker. If N such
+  // rows cannot fit, showing fewer days honestly beats clipping Saturday
+  // silently - the row budget shrinks the week before it loses any of it.
+  const worstRow = ROW_CHROME + Math.max(GUTTER_H, perDay * ROW_EVENT_H + MORE_LINE_H);
+  const fitDays = Math.max(1, Math.min(cols.length, Math.floor((boxH - MONTH_BAND_H - FOOTER_H) / worstRow)));
+  const shown = dense ? cols.slice(0, fitDays) : cols;
 
   return (
     <div
@@ -305,8 +327,8 @@ export function WeekView({
       data-layout={dense ? "rows" : "columns"}
       style={{ display: "flex", flexDirection: "column", height: "100%" }}
     >
-      <MonthBand from={cols[0]!} to={cols[cols.length - 1]!} />
-      {dense ? <WeekRows cols={cols} events={events} perDay={perDay} /> : <WeekColumns cols={cols} events={events} />}
+      <MonthBand from={shown[0]!} to={shown[shown.length - 1]!} />
+      {dense ? <WeekRows cols={shown} events={events} perDay={perDay} /> : <WeekColumns cols={cols} events={events} />}
       <Footer feed={feed} count={events.length} />
     </div>
   );
@@ -316,7 +338,10 @@ export function WeekView({
 export function DayView({ now, feed }: { now: Date; feed: CalendarFeed }) {
   const events = feed?.events ?? [];
   const today = startOfDay(now);
-  const tomorrow = new Date(today.getTime() + 86_400_000);
+  // Not +86,400,000ms: a DST-transition day is 23 or 25 hours long, and the
+  // millisecond shortcut makes an event in the odd hour vanish from every day.
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
   const todays = eventsOn(events, today);
   const next = eventsOn(events, tomorrow);
   return (

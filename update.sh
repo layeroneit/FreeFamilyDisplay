@@ -28,14 +28,22 @@ if [ ! -f .env ]; then
   exit 1
 fi
 
+if [ $# -gt 0 ] && [ "$1" != "--no-pull" ]; then
+  echo "Unknown option: $1" >&2
+  echo "Usage: ./update.sh [--no-pull]" >&2
+  exit 2
+fi
 if [ "${1-}" = "--no-pull" ]; then
   shift
-elif [ -d .git ]; then
+elif [ -e .git ]; then
   echo "==> Updating from origin"
   # --ff-only rather than a merge or a hard reset: on a box that only ever
   # deploys, a divergence means something unexpected happened locally, and
   # stopping to say so beats silently merging or silently destroying it.
-  git fetch --quiet origin
+  if ! git fetch --quiet origin; then
+    echo "Could not reach origin (offline?). Rebuilding what is checked out;" >&2
+    echo "run again later, or use --no-pull to skip this message." >&2
+  fi
   if ! git merge --ff-only origin/master; then
     echo >&2
     echo "Local history has diverged from origin/master." >&2
