@@ -6,7 +6,57 @@ export type CalendarMode = "day" | "week" | "month";
 
 const DAY = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const MONTH = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const DAY_FULL = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const MONTH_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const muted: CSSProperties = { color: "var(--hearth-text-muted)" };
+
+/**
+ * The month, on a row of its own, big enough to read from the other side of
+ * the kitchen. Every view gets one: the week view had no month anywhere on
+ * it at all, so a display parked on the default view never said what month
+ * it was (operator, 2026-08-31).
+ *
+ * A week that straddles two months says so ("OCT — NOV") rather than
+ * silently naming whichever end it started at.
+ */
+function MonthBand({ from, to }: { from: Date; to?: Date }) {
+  const spans = Boolean(to && (to.getMonth() !== from.getMonth() || to.getFullYear() !== from.getFullYear()));
+  const label = spans ? `${MONTH_SHORT[from.getMonth()]} — ${MONTH_SHORT[to!.getMonth()]}` : MONTH[from.getMonth()];
+  const year = spans && to!.getFullYear() !== from.getFullYear() ? `${from.getFullYear()}–${to!.getFullYear()}` : String(from.getFullYear());
+  return (
+    <div
+      data-part="month"
+      style={{
+        display: "flex",
+        alignItems: "baseline",
+        justifyContent: "space-between",
+        gap: 16,
+        borderBottom: "3px solid var(--hearth-accent-2)",
+        paddingBottom: 4,
+        marginBottom: 8,
+      }}
+    >
+      <span
+        style={{
+          fontSize: 72,
+          lineHeight: 1,
+          fontWeight: 600,
+          fontFamily: "var(--hearth-font-display)",
+          textTransform: "uppercase",
+          letterSpacing: 1,
+          whiteSpace: "nowrap",
+          // A long month on a narrow portrait board shrinks rather than clips.
+          minWidth: 0,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+        }}
+      >
+        {label}
+      </span>
+      <span style={{ ...muted, fontSize: 28, fontWeight: 500, whiteSpace: "nowrap" }}>{year}</span>
+    </div>
+  );
+}
 
 const sameDay = (a: Date, b: Date) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 const timeLabel = (d: Date) => d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }).replace(":00", "");
@@ -80,6 +130,7 @@ export function WeekView({ now, days, feed }: { now: Date; days: number; feed: C
   });
   return (
     <div data-part="calendar" data-mode="week" style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+      <MonthBand from={cols[0]!} to={cols[cols.length - 1]!} />
       <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(cols.length, 7)}, 1fr)`, gap: 8, flex: 1, minHeight: 0 }}>
         {cols.map((d, i) => (
           <div key={d.toISOString()} style={{ borderTop: `3px solid ${i === 0 ? "var(--hearth-accent-2)" : "var(--hearth-border)"}`, paddingTop: 10, minWidth: 0 }}>
@@ -109,12 +160,12 @@ export function DayView({ now, feed }: { now: Date; feed: CalendarFeed }) {
   const next = eventsOn(events, tomorrow);
   return (
     <div data-part="calendar" data-mode="day" style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      <div style={{ display: "flex", alignItems: "baseline", gap: 14, borderBottom: "3px solid var(--hearth-accent-2)", paddingBottom: 8 }}>
+      <MonthBand from={today} />
+      {/* The weekday came from DAY[i] + "day", which reads "Tueday" and
+          "Satday" three days a week. Spell them out. */}
+      <div style={{ display: "flex", alignItems: "baseline", gap: 14, paddingBottom: 8 }}>
         <div style={{ fontSize: 56, fontWeight: 600, lineHeight: 1, fontFamily: "var(--hearth-font-display)", color: "var(--hearth-accent-2)" }}>{today.getDate()}</div>
-        <div>
-          <div style={{ fontSize: 24, fontWeight: 600 }}>{DAY[today.getDay()]}day</div>
-          <div style={{ ...muted, fontSize: 18 }}>{MONTH[today.getMonth()]}</div>
-        </div>
+        <div style={{ fontSize: 24, fontWeight: 600 }}>{DAY_FULL[today.getDay()]}</div>
       </div>
       <ul style={{ listStyle: "none", margin: "12px 0 0", padding: 0, display: "flex", flexDirection: "column", gap: 10, flex: 1, minHeight: 0, overflow: "hidden" }}>
         {todays.length === 0 ? <li style={{ ...muted, fontSize: 22 }}>Nothing on the calendar today.</li> : null}
@@ -154,12 +205,8 @@ export function MonthView({ now, feed }: { now: Date; feed: CalendarFeed }) {
   const rows = cells[35]!.getMonth() === today.getMonth() ? 6 : 5;
   return (
     <div data-part="calendar" data-mode="month" style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-        <div style={{ fontSize: 30, fontWeight: 600, fontFamily: "var(--hearth-font-display)" }}>
-          {MONTH[today.getMonth()]} <span style={muted}>{today.getFullYear()}</span>
-        </div>
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 4, marginTop: 6 }}>
+      <MonthBand from={today} />
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 4 }}>
         {DAY.map((d) => (
           <div key={d} style={{ ...muted, fontSize: 13, textTransform: "uppercase", letterSpacing: 1, textAlign: "center" }}>
             {d}
