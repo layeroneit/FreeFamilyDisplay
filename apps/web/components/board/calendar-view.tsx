@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { textScale } from "@/lib/board/widgets";
 
 export type CalEvent = { uid: string; title: string; location: string | null; start: string; end: string; allDay: boolean };
 export type CalendarFeed = { events: CalEvent[]; syncedAt: Date | null; error: string | null } | undefined;
@@ -9,6 +10,20 @@ const MONTH = ["January", "February", "March", "April", "May", "June", "July", "
 const DAY_FULL = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const MONTH_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const muted: CSSProperties = { color: "var(--hearth-text-muted)" };
+
+/** Card padding (WidgetFrame) and the gap between day columns, in canvas px. */
+const CARD_PAD = 48;
+const COL_GAP = 8;
+/**
+ * Below this a day column is about nine characters wide, and no font size
+ * rescues that - the layout has to change instead. Seven columns give a
+ * portrait board ~129px and the default landscape calendar ~172px.
+ */
+const MIN_COLUMN_PX = 150;
+/** Heights of the fixed furniture, used to budget how many events a row holds. */
+const MONTH_BAND_H = 87;
+const FOOTER_H = 30;
+const ROW_EVENT_H = 24 * 1.28 + 5;
 
 /**
  * The month, on a row of its own, big enough to read from the other side of
@@ -101,10 +116,13 @@ function EventLine({ e, day, size = 17 }: { e: CalEvent; day: Date; size?: numbe
         WebkitBoxOrient: "vertical",
         WebkitLineClamp: 3,
         overflow: "hidden",
-        // Break inside a long word only when it genuinely cannot fit, so
-        // ordinary titles keep whole words on a line.
-        overflowWrap: "break-word",
-        hyphens: "auto",
+        // NEVER split a word. The old rule was break-word + hyphens:auto, on the
+        // theory that a word only breaks when it "genuinely cannot fit" - but in
+        // a 129px column almost nothing fits, so real boards rendered "Jaz z
+        // Band", "Roboti cs" and "Cro chet Club" (operator screenshot,
+        // 2026-08-31). A clipped whole word beats a broken one, and a column too
+        // narrow to hold a word at all is handled by switching layout instead.
+        overflowWrap: "normal",
         // Every pixel of a narrow column is a character, so the rule and its
         // gutter are as tight as they can be while still reading as a rule.
         borderLeft: "3px solid var(--hearth-accent-1)",
@@ -120,32 +138,160 @@ function EventLine({ e, day, size = 17 }: { e: CalEvent; day: Date; size?: numbe
   );
 }
 
-/** Week (the default): N columns starting today. */
-export function WeekView({ now, days, feed }: { now: Date; days: number; feed: CalendarFeed }) {
+/** Week as columns, for a card wide enough to give each day real room. */
+function WeekColumns({ cols, events }: { cols: Date[]; events: CalEvent[] }) {
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(cols.length, 7)}, 1fr)`, gap: COL_GAP, flex: 1, minHeight: 0 }}>
+      {cols.map((d, i) => (
+        <div
+          key={d.toISOString()}
+          style={{
+            borderTop: `3px solid ${i === 0 ? "var(--hearth-accent-2)" : "var(--hearth-border)"}`,
+            paddingTop: 10,
+            minWidth: 0,
+            // A grid item defaults to min-height:auto, so a busy column grew
+            // past its track and printed over the footer. Both are needed.
+            minHeight: 0,
+            overflow: "hidden",
+          }}
+        >
+          <div style={{ ...muted, fontSize: 18, textTransform: "uppercase", letterSpacing: 1 }}>{DAY[d.getDay()]}</div>
+          <div style={{ fontSize: 40, fontWeight: 600, fontFamily: "var(--hearth-font-display)", color: i === 0 ? "var(--hearth-accent-2)" : "inherit" }}>{d.getDate()}</div>
+          <ul style={{ listStyle: "none", margin: "8px 0 0", padding: 0, display: "flex", flexDirection: "column", gap: 6 }}>
+            {eventsOn(events, d)
+              .slice(0, 6)
+              .map((e) => (
+                <EventLine key={e.uid} e={e} day={d} />
+              ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Week as one row per day - the layout for a card too narrow to column up,
+ * which is every portrait board. The date sits in a fixed gutter and the event
+ * takes the whole remaining width, so a title gets ~800px instead of ~129 and
+ * never has to wrap at all.
+ *
+ * Rows are auto-sized rather than an equal N-way split: a day with nothing on
+ * it should hand its space to a day with three things on it, and that is what
+ * lets a busy week fit at a size you can read across a room.
+ */
+function WeekRows({ cols, events, perDay }: { cols: Date[]; events: CalEvent[]; perDay: number }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0, overflow: "hidden" }}>
+      {cols.map((d, i) => {
+        const evs = eventsOn(events, d);
+        const shown = evs.slice(0, perDay);
+        const rest = evs.length - shown.length;
+        const isFirst = i === 0;
+        return (
+          <div
+            key={d.toISOString()}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "128px 1fr",
+              gap: 16,
+              alignItems: "start",
+              borderTop: `2px solid ${isFirst ? "var(--hearth-accent-2)" : "var(--hearth-border)"}`,
+              padding: "7px 0",
+              minHeight: 0,
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+              <span style={{ fontSize: 34, fontWeight: 600, fontFamily: "var(--hearth-font-display)", lineHeight: 1, color: isFirst ? "var(--hearth-accent-2)" : "inherit" }}>
+                {d.getDate()}
+              </span>
+              <span style={{ ...muted, fontSize: 19, textTransform: "uppercase", letterSpacing: 1 }}>{DAY[d.getDay()]}</span>
+            </div>
+            <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 5, minWidth: 0 }}>
+              {shown.length === 0 ? <li style={{ ...muted, fontSize: 20, lineHeight: 1.2 }}>&mdash;</li> : null}
+              {shown.map((e) => {
+                const st = new Date(e.start);
+                const timed = !e.allDay && sameDay(st, d);
+                return (
+                  <li
+                    key={e.uid}
+                    data-part="event"
+                    title={e.title}
+                    style={{
+                      fontSize: 24,
+                      lineHeight: 1.28,
+                      // Full width means a title almost never runs out of room.
+                      // When one does, an ellipsis is honest; a mid-word split
+                      // is not.
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      borderLeft: "3px solid var(--hearth-accent-1)",
+                      paddingLeft: 9,
+                      minWidth: 0,
+                    }}
+                  >
+                    {timed ? <span style={{ ...muted, marginRight: 8 }}>{timeLabel(st)}</span> : null}
+                    {e.title}
+                  </li>
+                );
+              })}
+              {rest > 0 ? <li style={{ ...muted, fontSize: 19, paddingLeft: 12 }}>+{rest} more</li> : null}
+            </ul>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/**
+ * Week view. Chooses columns or day-rows from how wide a column would actually
+ * be on the physical screen - canvas pixels, not the card's zoomed internal
+ * units, because canvas pixels are what the eye across the room is given.
+ */
+export function WeekView({
+  now,
+  days,
+  feed,
+  w,
+  h,
+  fontScale = 1,
+}: {
+  now: Date;
+  days: number;
+  feed: CalendarFeed;
+  /** Widget size in canvas px, so the layout can answer to the real card. */
+  w: number;
+  h: number;
+  fontScale?: number;
+}) {
   const events = feed?.events ?? [];
   const cols = Array.from({ length: days }, (_, i) => {
     const d = startOfDay(now);
     d.setDate(d.getDate() + i);
     return d;
   });
+
+  const colPx = (w - CARD_PAD - COL_GAP * (cols.length - 1)) / cols.length;
+  const dense = colPx < MIN_COLUMN_PX;
+
+  // Everything inside the card is drawn in zoomed units, so convert the real
+  // card height into them before budgeting rows.
+  const scale = textScale("calendar", w, h, fontScale);
+  const boxH = (h - CARD_PAD) / scale;
+  const rowH = (boxH - MONTH_BAND_H - FOOTER_H) / Math.max(1, cols.length);
+  const perDay = Math.min(6, Math.max(2, Math.floor(rowH / ROW_EVENT_H) + 1));
+
   return (
-    <div data-part="calendar" data-mode="week" style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+    <div
+      data-part="calendar"
+      data-mode="week"
+      data-layout={dense ? "rows" : "columns"}
+      style={{ display: "flex", flexDirection: "column", height: "100%" }}
+    >
       <MonthBand from={cols[0]!} to={cols[cols.length - 1]!} />
-      <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(cols.length, 7)}, 1fr)`, gap: 8, flex: 1, minHeight: 0 }}>
-        {cols.map((d, i) => (
-          <div key={d.toISOString()} style={{ borderTop: `3px solid ${i === 0 ? "var(--hearth-accent-2)" : "var(--hearth-border)"}`, paddingTop: 10, minWidth: 0 }}>
-            <div style={{ ...muted, fontSize: 18, textTransform: "uppercase", letterSpacing: 1 }}>{DAY[d.getDay()]}</div>
-            <div style={{ fontSize: 40, fontWeight: 600, fontFamily: "var(--hearth-font-display)", color: i === 0 ? "var(--hearth-accent-2)" : "inherit" }}>{d.getDate()}</div>
-            <ul style={{ listStyle: "none", margin: "8px 0 0", padding: 0, display: "flex", flexDirection: "column", gap: 6 }}>
-              {eventsOn(events, d)
-                .slice(0, 6)
-                .map((e) => (
-                  <EventLine key={e.uid} e={e} day={d} />
-                ))}
-            </ul>
-          </div>
-        ))}
-      </div>
+      {dense ? <WeekRows cols={cols} events={events} perDay={perDay} /> : <WeekColumns cols={cols} events={events} />}
       <Footer feed={feed} count={events.length} />
     </div>
   );

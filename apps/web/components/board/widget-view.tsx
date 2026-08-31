@@ -81,7 +81,9 @@ export function WidgetView({ widget, data }: { widget: BoardWidgetRow; data: Boa
       const feed = data.calendars[widget.id];
       if (c.view === "day") return <DayView now={data.now} feed={feed} />;
       if (c.view === "month") return <MonthView now={data.now} feed={feed} />;
-      return <WeekView now={data.now} days={c.days} feed={feed} />;
+      // The week view picks its own layout from how wide a day column would
+      // really be, so it needs the card's size, not just its contents.
+      return <WeekView now={data.now} days={c.days} feed={feed} w={widget.w} h={widget.h} fontScale={c.fontScale} />;
     }
     case "photos": {
       const c = safeWidgetConfig("photos", widget.config);
