@@ -8,6 +8,19 @@ You run it. It lives on a computer in your house. Nothing is sold, nothing is tr
 
 ---
 
+![A Free Family Display board on a wall screen: October across the top of a
+week calendar, the weather for the next few days, a photo, a quote and a note
+for the household, with autumn leaves scattered down the
+edges](docs/images/demo-board.webp)
+
+<sub>Generated, not photographed. Every name, event and temperature above is
+invented; the photographs are ones this project already ships and credits. Your
+own board is a picture of your family beside a timetable of where your children
+are on which afternoons — think twice before posting a screenshot of it
+anywhere. Rebuild this image with `npm run demo:image`.</sub>
+
+---
+
 ## Table of contents
 
 - [Is this for you?](#is-this-for-you)

@@ -37,7 +37,8 @@
     "test:db": "tsx --conditions react-server --test apps/web/lib/board/boards.tenancy.test.ts",
     "test:bootstrap": "tsx --conditions react-server --test apps/web/lib/auth/bootstrap.db.test.ts",
     "wallpapers:ingest": "node scripts/ingest-wallpapers.mjs",
-    "attribution": "node scripts/gen-attribution.mjs"
+    "attribution": "node scripts/gen-attribution.mjs",
+    "demo:image": "tsx scripts/render-demo-board.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",
