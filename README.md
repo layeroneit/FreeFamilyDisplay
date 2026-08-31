@@ -358,6 +358,14 @@ Normal for the first minute or two on a first build. Judge after two minutes. `m
 
 ### "bind: address already in use" on 8443
 
+Animations stutter on the wall screen? Two things, in order. First check the
+Pi's browser is actually using its GPU: open `chrome://gpu` on the kiosk and
+look for "Hardware accelerated" next to Compositing — if it says Software,
+that's the whole problem and it's a browser-flags fix, not this app. Second,
+add `?effects=low` to the display URL: widget cards render as solid fills
+instead of live background blur (much cheaper to draw) and the weather keeps
+its tint but drops its particles.
+
 Something else on the machine owns that port. Find it with `sudo ss -ltnp 'sport = :8443'`, then either stop it or change the published port in `infra/compose.yaml` — and update `APP_URL` to match.
 
 ### It works on the server but not from my phone

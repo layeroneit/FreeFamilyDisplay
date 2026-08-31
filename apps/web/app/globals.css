@@ -121,6 +121,18 @@ body {
 }
 .season-firefly { animation: firefly-pulse ease-in-out infinite, firefly-wander ease-in-out infinite; }
 
+/* Ken Burns for the photo panel (components/board/photos): the showing frame
+ * drifts a few percent over its whole dwell, alternating direction per photo.
+ * Transform-only; disabled with everything else under prefers-reduced-motion. */
+@keyframes photo-drift-in {
+  from { transform: scale(1); }
+  to { transform: scale(1.045); }
+}
+@keyframes photo-drift-out {
+  from { transform: scale(1.045); }
+  to { transform: scale(1); }
+}
+
 /* Birthday celebration (components/board/birthday-celebration). Plays for
  * about twenty seconds on the hour and then removes itself from the tree —
  * unlike the mood layers this is never a standing animation. */

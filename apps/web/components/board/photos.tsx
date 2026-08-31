@@ -71,7 +71,20 @@ export function PhotosWidget({ srcs, intervalSec, note }: { srcs: string[]; inte
             height: "100%",
             objectFit: "cover",
             opacity: n === current ? 1 : 0,
-            transition: reduced ? "none" : "opacity 1200ms ease-in-out",
+            // 2.5s: the gallery-wall dissolve. At the 60s default dwell it
+            // reads as luxury; at the 5s minimum it still completes.
+            transition: reduced ? "none" : "opacity 2500ms ease-in-out",
+            // Ken Burns, the subtle kind: the showing photo drifts ~4.5% over
+            // its whole dwell, alternating in/out per photo so consecutive
+            // frames never move the same way. Transform-only, so the Pi
+            // composites it; keyed to `current`, so it restarts as each photo
+            // takes the stage; fill-mode both, so a photo that dwells past
+            // its keyframes holds the end pose instead of snapping back.
+            transformOrigin: "center",
+            animation:
+              !reduced && n === current
+                ? `${current % 2 ? "photo-drift-out" : "photo-drift-in"} ${period}ms ease-in-out both`
+                : undefined,
           }}
           draggable={false}
         />

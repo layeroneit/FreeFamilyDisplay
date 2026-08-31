@@ -27,8 +27,20 @@ export const metadata = {
   referrer: "no-referrer" as const,
 };
 
-export default async function DisplayPage({ params }: { params: Promise<{ token: string }> }) {
+export default async function DisplayPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ token: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const { token } = await params;
+  // ?effects=low is the low-power path the widget chrome was designed for and
+  // nothing previously activated: cards render as solid fills instead of live
+  // backdrop-blur - the most expensive paint a Raspberry Pi can be asked for -
+  // and the weather layer drops its particles for its tint. Edit the kiosk
+  // URL, no redeploy, no per-board setting to migrate.
+  const lowFx = (await searchParams)["effects"] === "low";
   const board = await boardForDisplayToken(token);
   if (!board) notFound();
 
@@ -42,7 +54,7 @@ export default async function DisplayPage({ params }: { params: Promise<{ token:
       <RefreshTimer intervalMs={5 * 60_000} />
       <div className="h-full w-full">
         <BoardCanvas vars={vars} width={size.w} height={size.h} className="h-full">
-          <BoardBackdrop wallpaper={scene.wallpaper} scrimOpacity={scene.scrimOpacity} mood={scene.mood} canvasW={size.w} effects rightsNote={scene.rightsNote} />
+          <BoardBackdrop wallpaper={scene.wallpaper} scrimOpacity={scene.scrimOpacity} mood={scene.mood} canvasW={size.w} effects={!lowFx} rightsNote={scene.rightsNote} />
           {board.widgets.map((w) => (
             <WidgetFrame
               key={w.id}
@@ -54,6 +66,7 @@ export default async function DisplayPage({ params }: { params: Promise<{ token:
               z={10 + w.z}
               plain={WIDGET_META[w.type].plain}
               translucent={scene.wallpaper !== null}
+              reduceEffects={lowFx}
               scale={textScale(w.type, w.w, w.h, (safeWidgetConfig(w.type, w.config) as { fontScale: number }).fontScale)}
             >
               <WidgetView widget={w} data={scene.data} />
