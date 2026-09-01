@@ -26,7 +26,11 @@ export type PlannedWeek = {
 
 /** One event line's height, and the type size it carries. */
 export const ROW_EVENT_SIZE = 21;
-export const ROW_EVENT_H = ROW_EVENT_SIZE * 1.25 + 4;
+/** The line box itself, and the flex gap between two of them. */
+export const ROW_LINE_H = ROW_EVENT_SIZE * 1.25;
+export const ROW_LINE_GAP = 5;
+/** What one MORE event costs: its line plus the gap that precedes it. */
+export const ROW_EVENT_H = ROW_LINE_H + ROW_LINE_GAP;
 /** A row's own border and padding. */
 export const ROW_CHROME = 2 + 7 + 7;
 /** The "+n more" line and the gap above it, only when a day overflows. */
@@ -38,16 +42,6 @@ export const GUTTER_H = 34;
 export const MIN_ROW_ZOOM = 0.62;
 /** Past this many lines a day row stops being a glance and becomes a list. */
 export const MAX_PER_DAY = 6;
-/**
- * What listing one more event per day is allowed to cost in type size.
- *
- * A tenth of the type is worth another event on the row; much more than that
- * and the family is squinting at a fuller week, which is the wrong trade on a
- * wall. Without this the allowance was taken only when it cost nothing at all,
- * so a card with room for the entire week at 96% size still showed one event a
- * day and sent everyone to find a phone.
- */
-export const PER_DAY_SHRINK_BUDGET = 0.9;
 
 /**
  * The fixed furniture above and below the day rows: the month band (72px type,
@@ -95,13 +89,19 @@ export function rowZoomFloor(fontScale: number): number {
  * marker's one, so columns slice plainly and must not use this.
  */
 export function shownOn(eventCount: number, perDay: number): number {
-  return eventCount === perDay + 1 ? eventCount : Math.min(eventCount, perDay);
+  // Never past MAX_PER_DAY, or the row stops being a glance: the bargain is
+  // worth taking on the sixth line, not on a seventh that breaks the cap.
+  if (eventCount === perDay + 1 && eventCount <= MAX_PER_DAY) return eventCount;
+  return Math.min(eventCount, perDay);
 }
 
 /** What one day's row really costs at zoom 1, given its event count. */
 export function dayRowCost(eventCount: number, perDay: number): number {
   const lines = shownOn(eventCount, perDay);
-  const body = lines * ROW_EVENT_H + (eventCount > lines ? MORE_LINE_H : 0);
+  // n lines are n line boxes and n-1 gaps, not n of each: folding the gap into
+  // every line under-charged a six-line row and shaved it off the card bottom.
+  let body = lines > 0 ? lines * ROW_LINE_H + (lines - 1) * ROW_LINE_GAP : 0;
+  if (eventCount > lines) body += MORE_LINE_H;
   return ROW_CHROME + Math.max(GUTTER_H, body);
 }
 
@@ -126,40 +126,44 @@ export function weekCost(eventCounts: number[], perDay: number): number {
  */
 export function planWeekRows(eventCounts: number[], boxH: number, fontScale = 1): PlannedWeek {
   const floor = rowZoomFloor(fontScale);
-  // Listing more events may cost a little type size, but never so much that it
-  // pushes the card below the floor - past there it costs whole days instead,
-  // and a day is worth more than a fourth line on Wednesday.
-  const comfort = Math.max(PER_DAY_SHRINK_BUDGET, floor);
+  /** Does this week, listed this generously, stay above the readability floor? */
+  const fits = (counts: number[], cap: number) => boxH / (FURNITURE_H + weekCost(counts, cap)) >= floor;
+  /** The largest scale that draws this week, never magnifying past 1. */
+  const fit = (counts: number[], cap: number) => Math.min(1, boxH / (FURNITURE_H + weekCost(counts, cap)));
 
-  // The most generous allowance the card can carry at that price. Falls back
-  // to 1: when even that overflows, the shrink and hide steps take over.
-  let perDay = 1;
-  for (let cap = MAX_PER_DAY; cap >= 1; cap--) {
-    if (boxH / (FURNITURE_H + weekCost(eventCounts, cap)) >= comfort) {
-      perDay = cap;
-      break;
-    }
+  /** The most this set of days can list and still be read across a room. */
+  const allowanceFor = (counts: number[]) => {
+    for (let cap = MAX_PER_DAY; cap > 1; cap--) if (fits(counts, cap)) return cap;
+    return 1;
+  };
+
+  // Days first. One floor governs both steps, which is the whole correction:
+  // the plan used to shrink to 62% to keep a day but refuse to go past 90% to
+  // list an event, so a card with room for the entire week at 77% showed one
+  // event a day and spent the difference on "+n more" lines that say nothing.
+  if (fits(eventCounts, 1)) {
+    const perDay = allowanceFor(eventCounts);
+    return { days: eventCounts.length, zoom: fit(eventCounts, perDay), perDay, hidden: 0 };
   }
 
-  // The furniture shrinks with the rows, so it is costed with them.
-  const total = FURNITURE_H + weekCost(eventCounts, perDay);
-  if (total <= boxH) return { days: eventCounts.length, zoom: 1, perDay, hidden: 0 };
-
-  const zoom = boxH / total;
-  if (zoom >= floor) return { days: eventCounts.length, zoom, perDay, hidden: 0 };
-
-  // Even at the floor the week overflows: keep days from the front while they
-  // fit at the floor scale. Today always shows.
+  // Even a single line a day overflows: drop from the tail. Today always shows.
   const budget = boxH / floor - FURNITURE_H;
   let used = 0;
   let days = 0;
   for (const n of eventCounts) {
-    const c = dayRowCost(n, perDay);
+    const c = dayRowCost(n, 1);
     if (days >= 1 && used + c > budget) break;
     used += c;
     days++;
   }
-  return { days, zoom: floor, perDay, hidden: eventCounts.length - days };
+
+  // What is left belongs to the days that survived: they usually afford a
+  // fuller listing and a larger scale than the whole week could. Returning the
+  // bare floor here left the card shrunken AND half empty at the same time,
+  // under a footer apologising for the days it had just dropped.
+  const kept = eventCounts.slice(0, days);
+  const perDay = allowanceFor(kept);
+  return { days, zoom: fit(kept, perDay), perDay, hidden: eventCounts.length - days };
 }
 
 /**
@@ -172,10 +176,24 @@ export function planWeekRows(eventCounts: number[], boxH: number, fontScale = 1)
  * column overrun its track and print over the footer.
  */
 export const COL_EVENT_SIZE = 17;
-export const COL_EVENT_H = COL_EVENT_SIZE * 1.25 * 2 + 6;
+/** Matches EventLine's WebkitLineClamp. The cost model and the renderer have
+ *  to agree on this number or the column silently drops its last events. */
+export const COL_LINE_CLAMP = 3;
+export const COL_EVENT_H = COL_EVENT_SIZE * 1.25 * COL_LINE_CLAMP + 6;
+/** The "+n more" marker, at COL_EVENT_SIZE - 2, and its gap. */
+export const COL_MORE_H = (COL_EVENT_SIZE - 2) * 1.2 + 6;
 /** Border, padding, weekday label, date numeral, and the list's top margin. */
 export const COL_HEAD_H = 3 + 10 + 22 + 48 + 8;
 
+/**
+ * How many events one day's column lists.
+ *
+ * Costed at the full clamp, and with room kept for the marker: an event that
+ * wraps to three lines is 30% dearer than a two-line estimate, and the marker
+ * whose whole job is to stop silent hiding was itself being hidden by the
+ * column's own overflow.
+ */
 export function columnCapacity(availH: number): number {
-  return Math.min(MAX_PER_DAY, Math.max(1, Math.floor((availH - COL_HEAD_H) / COL_EVENT_H)));
+  if (!Number.isFinite(availH)) return 1;
+  return Math.min(MAX_PER_DAY, Math.max(1, Math.floor((availH - COL_HEAD_H - COL_MORE_H) / COL_EVENT_H)));
 }

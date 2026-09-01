@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import { textScale } from "@/lib/board/widgets";
-import { COL_EVENT_SIZE, FURNITURE_H, ROW_EVENT_SIZE, columnCapacity, planWeekRows, shownOn } from "@/lib/board/week-plan";
+import { COL_EVENT_SIZE, COL_LINE_CLAMP, FURNITURE_H, ROW_EVENT_SIZE, columnCapacity, planWeekRows, shownOn } from "@/lib/board/week-plan";
 
 export type CalEvent = { uid: string; title: string; location: string | null; start: string; end: string; allDay: boolean };
 export type CalendarFeed = { events: CalEvent[]; syncedAt: Date | null; error: string | null } | undefined;
@@ -121,7 +121,9 @@ function EventLine({ e, day, size = COL_EVENT_SIZE }: { e: CalEvent; day: Date; 
         // is what turns a truncated fragment back into whole words.
         display: "-webkit-box",
         WebkitBoxOrient: "vertical",
-        WebkitLineClamp: 3,
+        // COL_LINE_CLAMP, not a literal: columnCapacity budgets each event at
+        // exactly this many lines, and the two must never drift apart.
+        WebkitLineClamp: COL_LINE_CLAMP,
         overflow: "hidden",
         // NEVER split a word. The old rule was break-word + hyphens:auto, on the
         // theory that a word only breaks when it "genuinely cannot fit" - but in
@@ -297,7 +299,9 @@ export function WeekView({
   fontScale?: number;
 }) {
   const events = feed?.events ?? [];
-  const cols = Array.from({ length: days }, (_, i) => {
+  // Math.max(1, ...): zod bounds days to 1..14, but a board is server-rendered
+  // and an empty column list would take the whole wall down on shown[0].
+  const cols = Array.from({ length: Math.max(1, days) }, (_, i) => {
     const d = startOfDay(now);
     d.setDate(d.getDate() + i);
     return d;
