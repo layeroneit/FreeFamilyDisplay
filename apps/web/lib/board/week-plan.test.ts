@@ -7,6 +7,8 @@ import {
   COL_LINE_CLAMP,
   COL_MORE_H,
   FURNITURE_H,
+  HARD_MIN_ZOOM,
+  MIN_DAYS_SHOWN,
   MIN_ROW_ZOOM,
   MONTH_BAND_H,
   MORE_LINE_H,
@@ -152,6 +154,25 @@ test("the '+1 more' bargain is a fact about rows, and does not hold in a column"
   // must slice plainly. Getting this backwards overruns the column.
   assert.ok(MORE_LINE_H > ROW_EVENT_H, "rows: the marker costs more than the event it hides");
   assert.ok(COL_EVENT_H > MORE_LINE_H, "columns: the event costs more than the marker");
+});
+
+test("a big text setting never shrinks the week below five days", () => {
+  // The 2026-08-31 19:19 screenshot: a 1040x595 card at a 1.6x text setting
+  // rendered TWO days and "+5 more days" over a fifth of a blank card. The
+  // setting buys type size by showing less, and left ungoverned it will spend
+  // the entire week to do it.
+  const scale = Math.sqrt((1040 * 595) / (1300 * 560)) * 1.6;
+  const plan = planWeekRows([1, 4, 3, 3, 2, 2, 1], (595 - 48) / scale, 1.6);
+  assert.ok(plan.days >= MIN_DAYS_SHOWN, `only ${plan.days} days at 1.6x`);
+  assert.ok(ROW_EVENT_SIZE * scale * plan.zoom >= 18, "and still readable across a room");
+});
+
+test("the minimum yields to a card that truly cannot hold it", () => {
+  // Five days is what a calendar is for, but not at any price: a card with no
+  // room shows fewer days rather than an illegible smear of all five.
+  const plan = planWeekRows([6, 6, 6, 6, 6, 6, 6], 10);
+  assert.equal(plan.days, 1);
+  assert.ok(plan.zoom >= HARD_MIN_ZOOM || plan.days === 1);
 });
 
 test("hiding days never also leaves the card half empty", () => {

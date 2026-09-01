@@ -42,6 +42,24 @@ export const GUTTER_H = 34;
 export const MIN_ROW_ZOOM = 0.62;
 /** Past this many lines a day row stops being a glance and becomes a list. */
 export const MAX_PER_DAY = 6;
+/**
+ * A calendar showing fewer days than this has stopped being a calendar.
+ *
+ * The text-size setting buys type size by showing less, and left to itself it
+ * will spend the whole week: at 1.6x the operator's board rendered TWO days
+ * and "+5 more days" over a fifth of a blank card. Nobody sets a family
+ * calendar to see Monday and Tuesday. Days come first now and the shrink pays
+ * for them - a week at 18px beats two days at 31px - and only a card too small
+ * to hold five rows at all gives any of them up.
+ */
+export const MIN_DAYS_SHOWN = 5;
+/**
+ * The point past which no setting makes the text readable across a room. The
+ * day minimum is honoured down to here and no further: a card too small to
+ * hold five days at a legible size shows fewer rather than shrinking them into
+ * a grey smear.
+ */
+export const HARD_MIN_ZOOM = 0.45;
 
 /**
  * The fixed furniture above and below the day rows: the month band (72px type,
@@ -154,6 +172,17 @@ export function planWeekRows(eventCounts: number[], boxH: number, fontScale = 1)
     const c = dayRowCost(n, 1);
     if (days >= 1 && used + c > budget) break;
     used += c;
+    days++;
+  }
+  // ...but a week is not a week at two days. The comfortable floor is what the
+  // text-size setting asks for; the day minimum is what the calendar is FOR,
+  // and it outranks the request. Each extra day is taken only while the type
+  // stays legible, so a card genuinely too small still gives days up rather
+  // than shrinking them into a smear.
+  const want = Math.min(eventCounts.length, MIN_DAYS_SHOWN);
+  while (days < want) {
+    const withNext = eventCounts.slice(0, days + 1);
+    if (boxH / (FURNITURE_H + weekCost(withNext, 1)) < HARD_MIN_ZOOM) break;
     days++;
   }
 
