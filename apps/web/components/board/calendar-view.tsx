@@ -202,18 +202,20 @@ function WeekColumns({ cols, events, perDay }: { cols: Date[]; events: CalEvent[
  * it should hand its space to a day with three things on it, and that is what
  * lets a busy week fit at a size you can read across a room.
  */
-function WeekRows({ cols, events, perDay }: { cols: Date[]; events: CalEvent[]; perDay: number }) {
+function WeekRows({ cols, events, perDay, today }: { cols: Date[]; events: CalEvent[]; perDay: number; today: number }) {
   return (
     // The shrink that keeps every day on the card lives on the calendar body,
     // one level up, so the month band gives up its share of the space too.
     <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0, overflow: "hidden" }}>
       {cols.map((d, i) => {
-        const evs = eventsOn(events, d);
-        // shownOn, not a plain slice: the budget this row was planned against
-        // never spends a "+1 more" line, so neither may the row.
-        const shown = evs.slice(0, shownOn(evs.length, perDay));
-        const rest = evs.length - shown.length;
         const isFirst = i === 0;
+        const evs = eventsOn(events, d);
+        // Today lists everything the plan paid for; the days behind it take
+        // the shared allowance. shownOn, not a plain slice, because the budget
+        // this row was planned against never spends a "+1 more" line.
+        const cap = isFirst ? Math.max(today, 1) : perDay;
+        const shown = evs.slice(0, shownOn(evs.length, cap));
+        const rest = evs.length - shown.length;
         return (
           <div
             key={d.toISOString()}
@@ -340,7 +342,7 @@ export function WeekView({
     >
       <MonthBand from={shown[0]!} to={shown[shown.length - 1]!} />
       {dense ? (
-        <WeekRows cols={shown} events={events} perDay={plan.perDay} />
+        <WeekRows cols={shown} events={events} perDay={plan.perDay} today={plan.today} />
       ) : (
         <WeekColumns cols={cols} events={events} perDay={columnCapacity(boxH - FURNITURE_H)} />
       )}

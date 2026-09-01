@@ -156,6 +156,28 @@ test("the '+1 more' bargain is a fact about rows, and does not hold in a column"
   assert.ok(COL_EVENT_H > MORE_LINE_H, "columns: the event costs more than the marker");
 });
 
+test("today lists every event it has, and the week behind it pays", () => {
+  // Today is the day the household acts on; the rest is a preview of it. A
+  // "+3 more" on today sends somebody to find a phone, which is the one thing
+  // a wall calendar exists to prevent.
+  const busyToday = [6, 2, 2, 2, 2, 2, 2];
+  const plan = planWeekRows(busyToday, PORTRAIT_BOX);
+  assert.equal(plan.today, 6, "today truncated");
+  // And it is genuinely paid for: the card holds what it promised.
+  const used =
+    FURNITURE_H +
+    busyToday.slice(0, plan.days).reduce((s, n, i) => s + dayRowCost(n, i === 0 ? plan.today : plan.perDay), 0);
+  assert.ok(used * plan.zoom <= PORTRAIT_BOX + 0.001, `overflows by ${(used * plan.zoom - PORTRAIT_BOX).toFixed(1)}`);
+});
+
+test("a day too busy to render legibly on its own is still capped", () => {
+  // "All of today's events" is a rule, not a suicide pact: twenty things on a
+  // Tuesday must not shrink the whole card into a smear.
+  const plan = planWeekRows([20, 1, 1, 1, 1, 1, 1], 260);
+  assert.ok(plan.today < 20, `today ${plan.today} kept the card illegible`);
+  assert.ok(plan.today >= 1);
+});
+
 test("a big text setting never shrinks the week below five days", () => {
   // The 2026-08-31 19:19 screenshot: a 1040x595 card at a 1.6x text setting
   // rendered TWO days and "+5 more days" over a fifth of a blank card. The

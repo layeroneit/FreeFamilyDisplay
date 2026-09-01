@@ -18,8 +18,17 @@ export type PlannedWeek = {
   days: number;
   /** Uniform scale for the rows block, rowZoomFloor()..1. */
   zoom: number;
-  /** How many events one day may list before it spends a "+n more" line. */
+  /** How many events a day BEHIND today may list before a "+n more" line. */
   perDay: number;
+  /**
+   * How many of today's own events to list — normally all of them.
+   *
+   * Today is the day the household acts on; the rest of the week is a preview
+   * of it. So today is served first and in full, and the days behind it are
+   * the currency that pays for it (operator, 2026-08-31). Only a card too
+   * small to render today legibly on its own claws any of it back.
+   */
+  today: number;
   /** Requested days that did not make the cut. */
   hidden: number;
 };
@@ -144,12 +153,23 @@ export function weekCost(eventCounts: number[], perDay: number): number {
  */
 export function planWeekRows(eventCounts: number[], boxH: number, fontScale = 1): PlannedWeek {
   const floor = rowZoomFloor(fontScale);
-  /** Does this week, listed this generously, stay above the readability floor? */
-  const fits = (counts: number[], cap: number) => boxH / (FURNITURE_H + weekCost(counts, cap)) >= floor;
-  /** The largest scale that draws this week, never magnifying past 1. */
-  const fit = (counts: number[], cap: number) => Math.min(1, boxH / (FURNITURE_H + weekCost(counts, cap)));
 
-  /** The most this set of days can list and still be read across a room. */
+  // Today lists everything it has - but only while today, on its own, still
+  // renders legibly. A day with twenty things on it cannot be allowed to
+  // shrink the card into a grey smear on the strength of a rule.
+  let today = eventCounts[0] ?? 0;
+  while (today > 1 && boxH / (FURNITURE_H + dayRowCost(eventCounts[0]!, today)) < HARD_MIN_ZOOM) today--;
+
+  /** Today is served in full; the days behind it share what is left. */
+  const costOf = (counts: number[], cap: number) =>
+    counts.reduce((sum, n, i) => sum + dayRowCost(n, i === 0 ? Math.max(today, 1) : cap), 0);
+  const raw = (counts: number[], cap: number) => boxH / (FURNITURE_H + costOf(counts, cap));
+  /** Does this week, listed this generously, stay above the readability floor? */
+  const fits = (counts: number[], cap: number) => raw(counts, cap) >= floor;
+  /** The largest scale that draws this week, never magnifying past 1. */
+  const fit = (counts: number[], cap: number) => Math.min(1, raw(counts, cap));
+
+  /** The most the days behind today can list and still be read across a room. */
   const allowanceFor = (counts: number[]) => {
     for (let cap = MAX_PER_DAY; cap > 1; cap--) if (fits(counts, cap)) return cap;
     return 1;
@@ -161,28 +181,30 @@ export function planWeekRows(eventCounts: number[], boxH: number, fontScale = 1)
   // event a day and spent the difference on "+n more" lines that say nothing.
   if (fits(eventCounts, 1)) {
     const perDay = allowanceFor(eventCounts);
-    return { days: eventCounts.length, zoom: fit(eventCounts, perDay), perDay, hidden: 0 };
+    return { days: eventCounts.length, zoom: fit(eventCounts, perDay), perDay, today, hidden: 0 };
   }
 
-  // Even a single line a day overflows: drop from the tail. Today always shows.
+  // Even a single line a day overflows: drop from the tail. Today always
+  // shows, and shows everything - the days behind it are what pays for that.
   const budget = boxH / floor - FURNITURE_H;
   let used = 0;
   let days = 0;
-  for (const n of eventCounts) {
-    const c = dayRowCost(n, 1);
+  for (let i = 0; i < eventCounts.length; i++) {
+    const c = dayRowCost(eventCounts[i]!, i === 0 ? Math.max(today, 1) : 1);
     if (days >= 1 && used + c > budget) break;
     used += c;
     days++;
   }
   // ...but a week is not a week at two days. The comfortable floor is what the
   // text-size setting asks for; the day minimum is what the calendar is FOR,
-  // and it outranks the request. Each extra day is taken only while the type
-  // stays legible, so a card genuinely too small still gives days up rather
-  // than shrinking them into a smear.
+  // and it outranks the request. It does NOT outrank today's own listing,
+  // which is already priced in above: five days is the target once today has
+  // been served, not a reason to truncate it. Each extra day is taken only
+  // while the type stays legible.
   const want = Math.min(eventCounts.length, MIN_DAYS_SHOWN);
   while (days < want) {
     const withNext = eventCounts.slice(0, days + 1);
-    if (boxH / (FURNITURE_H + weekCost(withNext, 1)) < HARD_MIN_ZOOM) break;
+    if (raw(withNext, 1) < HARD_MIN_ZOOM) break;
     days++;
   }
 
@@ -192,7 +214,7 @@ export function planWeekRows(eventCounts: number[], boxH: number, fontScale = 1)
   // under a footer apologising for the days it had just dropped.
   const kept = eventCounts.slice(0, days);
   const perDay = allowanceFor(kept);
-  return { days, zoom: fit(kept, perDay), perDay, hidden: eventCounts.length - days };
+  return { days, zoom: fit(kept, perDay), perDay, today, hidden: eventCounts.length - days };
 }
 
 /**
