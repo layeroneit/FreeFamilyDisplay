@@ -116,8 +116,12 @@ export function GameDaySky({
   );
 }
 
-/** The corner wordmark: "BEARS" big, "GAME DAY" whispered under it. */
-export function GameDayBadge({ nickname, accent, canvasW }: { nickname: string; accent: string; canvasW: number }) {
+/**
+ * The corner wordmark: "BEARS" big, "GAME DAY" whispered under it — and the
+ * household's own team art above both when they've added one (an operator-
+ * placed file in the media volume; never repo content).
+ */
+export function GameDayBadge({ nickname, accent, canvasW, artUrl }: { nickname: string; accent: string; canvasW: number; artUrl?: string | null }) {
   const word = nickname.toUpperCase();
   const unit = canvasW / 1920;
   // Long nicknames (BUCCANEERS, COMMANDERS) shrink instead of colliding with
@@ -129,20 +133,37 @@ export function GameDayBadge({ nickname, accent, canvasW }: { nickname: string; 
       aria-hidden
       style={{ position: "absolute", right: 44 * unit, bottom: 30 * unit, zIndex: 870, textAlign: "right", pointerEvents: "none" }}
     >
-      <div
-        style={{
-          fontFamily: "var(--hearth-font-display)",
-          fontStyle: "italic",
-          fontWeight: 800,
-          fontSize: Math.round(size),
-          lineHeight: 1,
-          letterSpacing: 1,
-          color: accent,
-          textShadow: "0 4px 26px rgb(0 0 0 / 0.5), 0 1px 0 rgb(255 255 255 / 0.22)",
-        }}
-      >
-        {word}
-      </div>
+      {artUrl ? (
+        // The household's own logo IS the wordmark — rendering both doubled
+        // the badge to ~365px and buried the scoreboard widget beneath it
+        // (audit). Art replaces the word; "GAME DAY" still whispers below.
+        <img
+          src={artUrl}
+          alt={word}
+          draggable={false}
+          style={{
+            height: Math.round(170 * unit),
+            maxWidth: Math.round(340 * unit),
+            objectFit: "contain",
+            filter: "drop-shadow(0 4px 18px rgb(0 0 0 / 0.5))",
+          }}
+        />
+      ) : (
+        <div
+          style={{
+            fontFamily: "var(--hearth-font-display)",
+            fontStyle: "italic",
+            fontWeight: 800,
+            fontSize: Math.round(size),
+            lineHeight: 1,
+            letterSpacing: 1,
+            color: accent,
+            textShadow: "0 4px 26px rgb(0 0 0 / 0.5), 0 1px 0 rgb(255 255 255 / 0.22)",
+          }}
+        >
+          {word}
+        </div>
+      )}
       <div
         style={{
           fontFamily: "var(--hearth-font-display)",

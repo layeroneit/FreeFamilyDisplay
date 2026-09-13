@@ -1,5 +1,9 @@
 import "server-only";
 import { cookies } from "next/headers";
+
+/** One definition: the route that serves media and the scene loader that
+ *  advertises it must never disagree about where the volume lives. */
+export const MEDIA_DIR = process.env.MEDIA_DIR ?? "/app/media";
 import { prisma } from "@ffd/db";
 import { getSessionUser } from "@/lib/auth/sessions";
 import { hashDisplayToken } from "./display-links";
@@ -33,6 +37,22 @@ export async function mayReadWidgetMedia(widgetId: string): Promise<boolean> {
   if (!boardId) return false;
   const onBoard = await prisma.boardWidget.findFirst({ where: { id: widgetId, boardId }, select: { id: true } });
   return onBoard !== null;
+}
+
+/**
+ * May the caller read the household's game-day art for this team? The file
+ * is operator-placed (docker compose cp into the media volume — it is never
+ * part of the repo or image, which is the trademark line: personal use on
+ * the household's own wall, no redistribution). Any signed-in member may see
+ * it; a wall screen only when its own board has that team picked.
+ */
+export async function mayReadGameDayArt(team: string): Promise<boolean> {
+  const user = await getSessionUser();
+  if (user) return true;
+  const boardId = await displayBoardId();
+  if (!boardId) return false;
+  const b = await prisma.board.findUnique({ where: { id: boardId }, select: { style: true } });
+  return (b?.style as { nflTeam?: unknown } | null)?.nflTeam === team;
 }
 
 /** May the caller read the renditions of this wallpaper collection? */

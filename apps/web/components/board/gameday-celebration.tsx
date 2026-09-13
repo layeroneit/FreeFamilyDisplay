@@ -109,6 +109,7 @@ export function GameDayCelebration({
   canvasW,
   canvasH,
   reduceEffects = false,
+  artUrl = null,
 }: {
   nickname: string;
   emoji: string;
@@ -120,6 +121,8 @@ export function GameDayCelebration({
   canvasH: number;
   /** Low-power kiosk path: fewer confetti pieces, everything else intact. */
   reduceEffects?: boolean;
+  /** The household's own team art (operator-placed; see gameday-frame). */
+  artUrl?: string | null;
 }) {
   const [show, setShow] = useState<{ line: HypeLine; durationSec: number; phase: "playing" | "leaving" } | null>(null);
   const linesRef = useRef(lines);
@@ -258,6 +261,21 @@ export function GameDayCelebration({
           textShadow: "0 4px 24px rgb(0 0 0 / 0.7)",
         }}
       >
+        {artUrl ? (
+          <img
+            src={artUrl}
+            alt=""
+            draggable={false}
+            className="bday-bob"
+            style={{
+              height: Math.round(Math.min(canvasH * 0.24, 300 * unit)),
+              maxWidth: "60%",
+              objectFit: "contain",
+              marginBottom: Math.round(18 * unit),
+              filter: "drop-shadow(0 6px 28px rgb(0 0 0 / 0.6))",
+            }}
+          />
+        ) : null}
         <PopLine text={top} fontSize={Math.round(topSize)} colors={letterColors} baseDelay={0} tilt italic letterSpacing={3} />
         {sub ? (
           <div style={{ marginTop: Math.round(16 * unit) }}>

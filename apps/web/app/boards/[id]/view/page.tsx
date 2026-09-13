@@ -42,7 +42,7 @@ export default async function BoardViewPage({ params }: { params: Promise<{ id: 
         <BoardCanvas vars={vars} width={size.w} height={size.h} className="h-full">
           <BoardBackdrop wallpaper={scene.wallpaper} scrimOpacity={scene.scrimOpacity} mood={scene.mood} canvasW={size.w} effects rightsNote={scene.rightsNote} />
           {scene.gameDay ? <GameDaySky team={scene.gameDay.teamAbbr} canvasW={size.w} canvasH={size.h} /> : null}
-          {scene.gameDay ? <GameDayBadge nickname={scene.gameDay.nickname} accent={scene.gameDay.accent} canvasW={size.w} /> : null}
+          {scene.gameDay ? <GameDayBadge nickname={scene.gameDay.nickname} accent={scene.gameDay.accent} canvasW={size.w} artUrl={scene.gameDay.artUrl} /> : null}
           {board.widgets.map((w) => (
             <WidgetFrame key={w.id} type={w.type} x={w.x} y={w.y} w={w.w} h={w.h} z={10 + w.z} plain={WIDGET_META[w.type].plain} translucent={scene.wallpaper !== null} scale={textScale(w.type, w.w, w.h, (safeWidgetConfig(w.type, w.config) as { fontScale: number }).fontScale)}>
               <WidgetView widget={w} data={scene.data} />
@@ -60,6 +60,7 @@ export default async function BoardViewPage({ params }: { params: Promise<{ id: 
               kickoffIso={scene.gameDay.kickoffIso}
               canvasW={size.w}
               canvasH={size.h}
+              artUrl={scene.gameDay.artUrl}
             />
           ) : null}
         </BoardCanvas>

@@ -1,8 +1,11 @@
 import "server-only";
+import { existsSync } from "node:fs";
+import path from "node:path";
 import { prisma } from "@ffd/db";
 import type { BoardFull } from "@/lib/board/boards";
 import { moodFor, type Mood } from "@/lib/board/mood";
 import { birthdaysOn } from "@/lib/board/birthdays";
+import { MEDIA_DIR } from "@/lib/board/media-access";
 import { largestSrc, loginPhotoSet } from "@/lib/board/photo-set";
 import { safeWidgetConfig } from "@/lib/board/widgets";
 import { WeatherPayloadSchema, weatherKey, type WeatherPayload } from "@/lib/board/weather-codes";
@@ -48,6 +51,10 @@ export type BoardScene = {
     accent2: string;
     kickoffIso: string;
     lines: HypeLine[];
+    /** Same-origin URL of operator-placed team art (media volume,
+     *  `gameday/<ABBR>.png`), or null when the household hasn't added one.
+     *  The art never ships in the repo — trademark line, see the route. */
+    artUrl: string | null;
   } | null;
 };
 
@@ -220,6 +227,7 @@ export async function loadBoardScene(board: BoardFull, viewerName: string): Prom
         accent2: gd.team.accent2,
         kickoffIso: gd.game.date,
         lines: hypeLines(gd.team),
+        artUrl: existsSync(path.join(MEDIA_DIR, "gameday", `${gd.team.abbr}.png`)) ? `/media/gameday/${gd.team.abbr}` : null,
       };
     }
   }
