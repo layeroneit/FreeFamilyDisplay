@@ -332,14 +332,19 @@ export function seasonalFall(season: Season, w: number, h: number): FallingPiece
  * physics: near a holiday, the household wants pumpkins the size of leaves,
  * not confetti. Seeded on the holiday's id, so each window brings its own
  * sky and the five-minute refresh still resumes rather than reshuffles.
+ *
+ * `physics` overrides the profile: the numbers above are tuned for a WIDGET
+ * CARD, and a caller drawing on the whole 1920×1080 canvas (the game-day sky)
+ * gets a near-empty board out of counts sized for a calendar.
  */
 export function holidayFall(
   holiday: { id: string; glyphs: SeasonGlyph[]; palette: string[] },
   w: number,
   h: number,
+  physics?: (typeof FALL_PHYSICS)["fall"],
 ): FallingPiece[] {
   const rand = rng(seedOf(`holiday:${holiday.id}`, w, h));
-  const phys = FALL_PHYSICS.fall;
+  const phys = physics ?? FALL_PHYSICS.fall;
   const windSign = rand() < 0.5 ? -1 : 1;
   const n = Math.round(between(rand, phys.count));
   const pieces: FallingPiece[] = [];

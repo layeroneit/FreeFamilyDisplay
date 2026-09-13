@@ -189,3 +189,10 @@ body {
 .bday-pop { animation: bday-pop 0.85s cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
 .bday-pop-2 { animation-delay: 0.28s; }
 .bday-pop-3 { animation-delay: 0.55s; }
+
+/* Scores widget (components/board/scores-view): the LIVE dot's heartbeat. */
+@keyframes scores-live-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.scores-live-dot { animation: scores-live-pulse 1.4s ease-in-out infinite; }

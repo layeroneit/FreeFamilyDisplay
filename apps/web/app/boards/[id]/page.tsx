@@ -44,6 +44,8 @@ export default async function BoardPage({ params }: { params: Promise<{ id: stri
         matchPaletteToWallpaper: board.matchPaletteToWallpaper,
         seasonalDecor: board.style.seasonalDecor !== false,
         birthdayCheer: board.style.birthdayCheer !== false,
+        nflTeam: board.style.nflTeam ?? null,
+        gameDayHype: board.style.gameDayHype !== false,
         weatherMood: board.weatherMood,
         weatherMoodStrength: board.weatherMoodStrength,
         pinned: board.style.wallpaperPinned === board.currentWallpaperId && board.currentWallpaperId !== null,

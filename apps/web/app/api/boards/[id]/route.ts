@@ -5,7 +5,8 @@ import { termsCurrent } from "@/lib/terms";
 import { deleteBoard, getBoard, patchBoardStyle, updateBoard, type BoardPatch, type BoardStyle } from "@/lib/board/boards";
 import { CANVAS_PRESET_IDS, publicWidgetConfig, type CanvasPreset } from "@/lib/board/widgets";
 import { canUseCollection, requestAdvance } from "@/lib/board/wallpapers";
-import { pokeWorkerConnectors } from "@/lib/board/worker-poke";
+import { pokeWorkerConnectors, pokeWorkerNfl } from "@/lib/board/worker-poke";
+import { NFL_TEAM_IDS } from "@/lib/board/nfl";
 import { isThemeId } from "@/lib/themes";
 import { audit } from "@/lib/audit";
 
@@ -28,6 +29,8 @@ const PatchInput = z
     /** Stored in the board's style JSON, not in a column of its own. */
     seasonalDecor: z.boolean().optional(),
     birthdayCheer: z.boolean().optional(),
+    nflTeam: z.enum(NFL_TEAM_IDS).nullable().optional(),
+    gameDayHype: z.boolean().optional(),
   })
   .refine((v) => Object.values(v).some((x) => x !== undefined), "Nothing to update.");
 
@@ -74,6 +77,8 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
   const stylePatch: Partial<BoardStyle> = {};
   if (d.seasonalDecor !== undefined) stylePatch.seasonalDecor = d.seasonalDecor;
   if (d.birthdayCheer !== undefined) stylePatch.birthdayCheer = d.birthdayCheer;
+  if (d.nflTeam !== undefined) stylePatch.nflTeam = d.nflTeam;
+  if (d.gameDayHype !== undefined) stylePatch.gameDayHype = d.gameDayHype;
 
   // A style-only request must not send an empty `data` to the column update.
   if (Object.keys(patch).length > 0) {
@@ -92,6 +97,9 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
     // broken; with it the images start landing immediately.
     pokeWorkerConnectors();
   }
+  // A newly picked team gets its schedule right away — game day should light
+  // up while the family is still standing at the settings screen.
+  if (d.nflTeam) pokeWorkerNfl();
   return NextResponse.json({ ok: true });
 }
 

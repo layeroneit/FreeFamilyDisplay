@@ -19,6 +19,7 @@ import { createLogger } from "@ffd/log";
 // import resolves to the module namespace, which is not constructable.
 import { Redis } from "ioredis";
 import { runWeatherCycle, startWeatherLoop } from "./weather.js";
+import { runNflCycle, startNflLoop } from "./nfl.js";
 import { advanceBoard, runWallpaperCycle, seedBuiltinWallpapers } from "./wallpapers.js";
 import { runConnectorCycle } from "./connectors/index.js";
 import { listDropFolders } from "./connectors/folder-collections.js";
@@ -140,6 +141,14 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     return;
   }
 
+  if (path === "/jobs/nfl" && req.method === "POST") {
+    // web pokes this when a household picks its team or adds a scores widget,
+    // so game day shows up in seconds rather than on the next tick.
+    void runNflCycle();
+    send(res, 202, { status: "started" });
+    return;
+  }
+
   if (path === "/jobs/wallpaper-advance" && req.method === "POST") {
     // Internal-network trigger from web: "next" / "skip" on a board.
     let body = "";
@@ -174,6 +183,7 @@ const server = createServer((req, res) => {
 });
 
 const stopWeather = startWeatherLoop();
+const stopNfl = startNflLoop();
 
 // Built-in wallpapers seed on boot (idempotent); rotation rides the same
 // 15-minute cadence as weather. BullMQ arrives when a job needs durability.
@@ -186,7 +196,7 @@ const connectorTimer = setInterval(() => void runConnectorCycle(), 15 * 60 * 100
 const connectorFirst = setTimeout(() => void runConnectorCycle(), 15_000);
 
 server.listen(HEALTH_PORT, () => {
-  log.info("worker started", { port: HEALTH_PORT, jobs: "weather,wallpapers,connectors" });
+  log.info("worker started", { port: HEALTH_PORT, jobs: "weather,wallpapers,connectors,nfl" });
 });
 
 let shuttingDown = false;
@@ -202,6 +212,7 @@ async function shutdown(signal: string): Promise<void> {
   deadline.unref();
 
   stopWeather();
+  stopNfl();
   clearInterval(wallpaperTimer);
   clearTimeout(wallpaperFirst);
   clearInterval(connectorTimer);

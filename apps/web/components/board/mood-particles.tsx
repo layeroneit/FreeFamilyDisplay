@@ -27,7 +27,7 @@ export function MoodParticles({ kind }: { kind: "rain" | "snow" | "fog" | "storm
 
   if (kind === "fog") {
     return (
-      <div data-part="mood-fog" style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none" }} aria-hidden>
+      <div data-part="mood-fog" style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none", zIndex: 2 }} aria-hidden>
         {[0, 1, 2].map((i) => (
           <div
             key={i}
@@ -50,7 +50,7 @@ export function MoodParticles({ kind }: { kind: "rain" | "snow" | "fog" | "storm
 
   const isSnow = kind === "snow";
   return (
-    <div data-part={`mood-${kind}`} style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none" }} aria-hidden>
+    <div data-part={`mood-${kind}`} style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none", zIndex: 2 }} aria-hidden>
       {drops.map((d, i) => (
         <span
           key={i}

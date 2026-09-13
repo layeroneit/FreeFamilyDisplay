@@ -7,6 +7,8 @@ import { WidgetFrame } from "@/components/board/widget-frame";
 import { loadBoardScene } from "@/components/board/render-data";
 import { WidgetView } from "@/components/board/widget-view";
 import { BirthdayCelebration } from "@/components/board/birthday-celebration";
+import { GameDayCelebration } from "@/components/board/gameday-celebration";
+import { GameDayBadge, GameDaySky } from "@/components/board/gameday-frame";
 import { RefreshTimer } from "@/app/status/refresh-timer";
 import { boardForDisplayToken } from "@/lib/board/display-links";
 
@@ -55,6 +57,8 @@ export default async function DisplayPage({
       <div className="h-full w-full">
         <BoardCanvas vars={vars} width={size.w} height={size.h} className="h-full">
           <BoardBackdrop wallpaper={scene.wallpaper} scrimOpacity={scene.scrimOpacity} mood={scene.mood} canvasW={size.w} effects={!lowFx} rightsNote={scene.rightsNote} />
+          {scene.gameDay && !lowFx ? <GameDaySky team={scene.gameDay.teamAbbr} accent={scene.gameDay.accent} accent2={scene.gameDay.accent2} canvasW={size.w} canvasH={size.h} /> : null}
+          {scene.gameDay ? <GameDayBadge nickname={scene.gameDay.nickname} accent={scene.gameDay.accent} canvasW={size.w} /> : null}
           {board.widgets.map((w) => (
             <WidgetFrame
               key={w.id}
@@ -73,6 +77,19 @@ export default async function DisplayPage({
             </WidgetFrame>
           ))}
           {scene.birthdays.length > 0 ? <BirthdayCelebration names={scene.birthdays} canvasW={size.w} canvasH={size.h} /> : null}
+          {/* A birthday outranks the team — one celebration a slot, the person's. */}
+          {scene.birthdays.length === 0 && scene.gameDay ? (
+            <GameDayCelebration
+              nickname={scene.gameDay.nickname}
+              emoji={scene.gameDay.emoji}
+              accent={scene.gameDay.accent}
+              accent2={scene.gameDay.accent2}
+              lines={scene.gameDay.lines}
+              kickoffIso={scene.gameDay.kickoffIso}
+              canvasW={size.w}
+              canvasH={size.h}
+            />
+          ) : null}
         </BoardCanvas>
       </div>
     </div>

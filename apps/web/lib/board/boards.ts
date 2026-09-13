@@ -16,7 +16,8 @@ import {
   type WidgetGeometry,
   type WidgetType,
 } from "./widgets";
-import { pokeWorkerConnectors, pokeWorkerWeather } from "./worker-poke";
+import { pokeWorkerConnectors, pokeWorkerNfl, pokeWorkerWeather } from "./worker-poke";
+import { isNflTeamId } from "./nfl";
 import { sealLinkFields } from "./secrets";
 
 /** Family scale; also the rail against one account fanning out weather fetches. */
@@ -56,6 +57,13 @@ export type BoardStyle = {
    */
   seasonalDecor?: boolean;
   birthdayCheer?: boolean;
+  /**
+   * NFL game day, same arrangement: the household's team (ESPN abbreviation,
+   * e.g. "CHI") and whether game days take the board over. Absent team means
+   * the whole feature is off; with a team picked, absent gameDayHype means on.
+   */
+  nflTeam?: string | null;
+  gameDayHype?: boolean;
 };
 
 export type BoardFull = {
@@ -106,7 +114,7 @@ function readStyle(raw: unknown): BoardStyle {
   // A board whose style JSON was never written must get the SAME defaults as
   // one whose JSON simply lacks a key - the audit found birthday celebrations
   // silently off on every fresh board because this early return skipped them.
-  if (!raw || typeof raw !== "object") return { seasonalDecor: true, birthdayCheer: true };
+  if (!raw || typeof raw !== "object") return { seasonalDecor: true, birthdayCheer: true, nflTeam: null, gameDayHype: true };
   const s = raw as Record<string, unknown>;
   return {
     wallpaperShown: Array.isArray(s["wallpaperShown"]) ? (s["wallpaperShown"] as string[]) : [],
@@ -114,6 +122,10 @@ function readStyle(raw: unknown): BoardStyle {
     wallpaperPinned: typeof s["wallpaperPinned"] === "string" ? (s["wallpaperPinned"] as string) : null,
     seasonalDecor: s["seasonalDecor"] !== false,
     birthdayCheer: s["birthdayCheer"] !== false,
+    // Unknown abbreviations (a relocated franchise, a hand-edited row) read as
+    // no team rather than crashing render.
+    nflTeam: typeof s["nflTeam"] === "string" && isNflTeamId(s["nflTeam"]) ? s["nflTeam"] : null,
+    gameDayHype: s["gameDayHype"] !== false,
   };
 }
 
@@ -196,6 +208,7 @@ export async function addWidget(userId: string, boardId: string, type: WidgetTyp
   });
   await prisma.board.update({ where: { id: boardId }, data: { updatedAt: new Date() } });
   if (type === "weather") pokeWorkerWeather();
+  if (type === "scores") pokeWorkerNfl();
   return { ...row, type };
 }
 

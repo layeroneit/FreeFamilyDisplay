@@ -17,6 +17,7 @@ import {
   Sparkles,
   StickyNote,
   Sun,
+  Trophy,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -47,6 +48,7 @@ const WIDGET_ICON: Record<WidgetType, LucideIcon> = {
   photos: Images,
   quote: Quote,
   notes: StickyNote,
+  scores: Trophy,
 };
 
 const ACTIVATION_LINES = [

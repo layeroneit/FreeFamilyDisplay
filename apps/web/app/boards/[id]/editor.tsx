@@ -11,6 +11,7 @@ import { CANVAS_PRESETS, CANVAS_PRESET_IDS, CLOCK_STYLES, GRID, WIDGET_META, WID
 import type { ThemeDef } from "@/lib/themes";
 import { SEASON_DECOR, seasonFor } from "@/lib/board/season";
 import { CELEBRATION_FROM_HOUR, CELEBRATION_TO_HOUR } from "@/lib/board/birthdays";
+import { NFL_TEAMS } from "@/lib/board/nfl";
 
 const field = { background: "var(--hearth-surface)", borderColor: "var(--hearth-border)", color: "var(--hearth-text)" };
 const primary = { background: "var(--hearth-accent-1)", color: "#1a1a1a" };
@@ -32,6 +33,8 @@ type EditorBoard = {
   weatherMoodStrength: number;
   seasonalDecor: boolean;
   birthdayCheer: boolean;
+  nflTeam: string | null;
+  gameDayHype: boolean;
   pinned: boolean;
   /** Whether a display link exists. The token itself never reaches the client. */
   hasDisplayLink: boolean;
@@ -524,6 +527,46 @@ function DisplaySettings({
           throws confetti across the screen on the hour, {formatHour(CELEBRATION_FROM_HOUR)} to {formatHour(CELEBRATION_TO_HOUR)}. Nothing happens
           on a day nobody has one.
         </p>
+      </section>
+
+      <section>
+        <span className={label} style={{ color: "var(--hearth-text-muted)" }}>Game day</span>
+        <p className="mt-1 text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
+          Tap your NFL team. Every day they play, this display dresses in their colors with footballs drifting by, cheers every half
+          hour ({formatHour(CELEBRATION_FROM_HOUR)} to {formatHour(CELEBRATION_TO_HOUR)}, biggest at kickoff), and the Live scores
+          widget pins their game on top. That&apos;s the whole setup.
+        </p>
+        <div className="mt-2 grid grid-cols-8 gap-1">
+          {NFL_TEAMS.map((t) => (
+            <button
+              key={t.abbr}
+              type="button"
+              onClick={() => onSave({ nflTeam: board.nflTeam === t.abbr ? null : t.abbr })}
+              title={`${t.city} ${t.nickname}`}
+              className="rounded-md border py-1.5 text-[10px] font-bold"
+              style={{
+                background: t.bg,
+                color: "#F5EFE6",
+                borderColor: board.nflTeam === t.abbr ? t.accent : "rgb(0 0 0 / 0.35)",
+                outline: board.nflTeam === t.abbr ? `2px solid ${t.accent}` : "none",
+                outlineOffset: 1,
+              }}
+            >
+              {t.abbr}
+            </button>
+          ))}
+        </div>
+        {board.nflTeam ? (
+          <>
+            <label className="mt-2 flex items-center gap-2">
+              <input type="checkbox" checked={board.gameDayHype} onChange={(e) => onSave({ gameDayHype: e.target.checked })} />
+              Take over the display on game days
+            </label>
+            <button type="button" onClick={() => onSave({ nflTeam: null })} className="mt-2 rounded-lg border px-2 py-1 text-[11px]" style={field}>
+              No team — turn game day off
+            </button>
+          </>
+        ) : null}
       </section>
 
       <section>

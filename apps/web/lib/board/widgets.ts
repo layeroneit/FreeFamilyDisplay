@@ -24,6 +24,7 @@ export const WIDGET_TYPES = [
   "photos",
   "quote",
   "notes",
+  "scores",
 ] as const;
 export type WidgetType = (typeof WIDGET_TYPES)[number];
 
@@ -78,6 +79,9 @@ const BASE_CONFIG = {
   }),
   quote: z.object({}),
   notes: z.object({ text: z.string().max(2000).default("") }),
+  /** The team comes from the board's game-day setting, not per-widget config —
+   *  one pick runs the takeover, the celebrations, and this card together. */
+  scores: z.object({}),
 } satisfies Record<WidgetType, z.ZodObject<z.ZodRawShape>>;
 
 function withFontScale<S extends z.ZodRawShape>(o: z.ZodObject<S>) {
@@ -92,6 +96,7 @@ export const WIDGET_CONFIG = {
   photos: withFontScale(BASE_CONFIG.photos),
   quote: withFontScale(BASE_CONFIG.quote),
   notes: withFontScale(BASE_CONFIG.notes),
+  scores: withFontScale(BASE_CONFIG.scores),
 } satisfies Record<WidgetType, z.ZodTypeAny>;
 
 /**
@@ -150,6 +155,7 @@ export const WIDGET_META: Record<WidgetType, WidgetMeta> = {
   photos: { label: "Photos", description: "A rotating photo panel. Paste a Google Photos album or Drive folder link.", defaultSize: { w: 480, h: 320 }, minSize: { w: 240, h: 180 }, starter: true, plain: false },
   quote: { label: "Quote of the day", description: "One warm line a day.", defaultSize: { w: 1300, h: 120 }, minSize: { w: 400, h: 80 }, starter: true, plain: false },
   notes: { label: "Notes", description: "A message for the household — “Dentist Thursday!”", defaultSize: { w: 1300, h: 120 }, minSize: { w: 300, h: 80 }, starter: false, plain: false },
+  scores: { label: "Live scores", description: "NFL scoreboard — three games at a time, your team pinned first. Pick your team in Display settings.", defaultSize: { w: 480, h: 360 }, minSize: { w: 300, h: 220 }, starter: false, plain: false },
 };
 
 type Geo = { x: number; y: number; w: number; h: number };
@@ -165,6 +171,9 @@ export const STARTER_LAYOUTS: Record<CanvasPreset, Record<WidgetType, Geo>> = {
     photos: { x: 1400, y: 720, w: 480, h: 320 },
     quote: { x: 40, y: 780, w: 1300, h: 120 },
     notes: { x: 40, y: 920, w: 1300, h: 120 },
+    // Shares the photos slot: not a starter widget, so the wizard only places
+    // it deliberately, and addWidget cascades anything added later.
+    scores: { x: 1400, y: 720, w: 480, h: 360 },
   },
   PORTRAIT: {
     greeting: { x: 40, y: 40, w: 1000, h: 120 },
@@ -175,6 +184,7 @@ export const STARTER_LAYOUTS: Record<CanvasPreset, Record<WidgetType, Geo>> = {
     photos: { x: 40, y: 1380, w: 1000, h: 300 },
     quote: { x: 40, y: 1700, w: 1000, h: 100 },
     notes: { x: 40, y: 1820, w: 1000, h: 80 },
+    scores: { x: 40, y: 1380, w: 1000, h: 360 },
   },
   ULTRAWIDE: {
     greeting: { x: 40, y: 40, w: 1200, h: 120 },
@@ -185,6 +195,7 @@ export const STARTER_LAYOUTS: Record<CanvasPreset, Record<WidgetType, Geo>> = {
     photos: { x: 2040, y: 720, w: 480, h: 320 },
     quote: { x: 40, y: 780, w: 1960, h: 120 },
     notes: { x: 40, y: 920, w: 1960, h: 120 },
+    scores: { x: 2040, y: 720, w: 480, h: 360 },
   },
 };
 

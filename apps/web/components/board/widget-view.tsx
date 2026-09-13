@@ -7,6 +7,8 @@ import { safeWidgetConfig, textScale } from "@/lib/board/widgets";
 import { ClockWidget } from "./clock";
 import { PhotosWidget } from "./photos";
 import { SeasonalFrame } from "./seasonal-frame";
+import { ScoresWidget } from "./scores-view";
+import type { NflGame } from "@/lib/board/nfl";
 
 export type CalendarEvent = { uid: string; title: string; location: string | null; start: string; end: string; allDay: boolean };
 export type CalendarFeed = { events: CalendarEvent[]; syncedAt: Date | null; error: string | null };
@@ -24,6 +26,11 @@ export type BoardData = {
   now: Date;
   /** Whether the calendar card wears the season. */
   seasonalDecor: boolean;
+  /** The worker's NFL scoreboard — present only when this board wants it
+   *  (a team is picked, or a scores widget is on the board). */
+  nfl: { games: NflGame[]; syncedAt: Date | null; error: string | null } | null;
+  /** The household's team abbreviation, from the board's game-day setting. */
+  nflTeam: string | null;
 };
 
 function greetingFor(hour: number): string {
@@ -126,6 +133,16 @@ export function WidgetView({ widget, data }: { widget: BoardWidgetRow; data: Boa
           <div style={{ fontSize: 30, fontStyle: "italic", lineHeight: 1.3 }}>“{q.text}”</div>
           <div style={{ ...muted, fontSize: 20, marginTop: 6 }}>— {q.by}</div>
         </div>
+      );
+    }
+    case "scores": {
+      return (
+        <ScoresWidget
+          games={data.nfl?.games ?? []}
+          syncedAtMs={data.nfl?.syncedAt?.getTime() ?? null}
+          error={data.nfl?.error ?? null}
+          team={data.nflTeam}
+        />
       );
     }
     case "notes": {

@@ -7,8 +7,12 @@ import { largestSrc, loginPhotoSet } from "@/lib/board/photo-set";
 import { safeWidgetConfig } from "@/lib/board/widgets";
 import { WeatherPayloadSchema, weatherKey, type WeatherPayload } from "@/lib/board/weather-codes";
 import { currentWallpaper, type WallpaperInfo } from "@/lib/board/wallpapers";
+import { NFL_CACHE_KEY, NFL_CACHE_KIND, gameDayFor, gameDayVars, hypeLines, parseNflPayload, type HypeLine } from "@/lib/board/nfl";
+import { createLogger } from "@ffd/log";
 import { collectionFontVars, hasCollectionFonts } from "@/lib/board/collection-fonts";
 import type { BoardData, CalendarFeed } from "./widget-view";
+
+const log = createLogger("web.render-data");
 
 /** The collection's slug, which selects its lettering. Null for no collection. */
 async function collectionMeta(
@@ -31,6 +35,19 @@ export type BoardScene = {
   /** Names the calendar says have a birthday today. Empty when the board has
    *  the celebration switched off, or when nobody does. */
   birthdays: string[];
+  /** Non-null exactly when the household's team plays today and game-day hype
+   *  is on: the takeover, the sky, and the celebrations all key off this.
+   *  Plain serializable values — the celebration is a client component. */
+  gameDay: {
+    teamAbbr: string;
+    nickname: string;
+    emoji: string;
+    bg: string;
+    accent: string;
+    accent2: string;
+    kickoffIso: string;
+    lines: HypeLine[];
+  } | null;
 };
 
 /** Everything the renderer needs, resolved from Postgres only (plan §4.2). */
@@ -40,6 +57,7 @@ export async function loadBoardData(board: BoardFull, viewerName: string): Promi
   ];
   const calendarIds = board.widgets.filter((w) => w.type === "calendar").map((w) => w.id);
   const photoIds = board.widgets.filter((w) => w.type === "photos" && safeWidgetConfig("photos", w.config).source === "link").map((w) => w.id);
+  const wantsNfl = Boolean(board.style.nflTeam) || board.widgets.some((w) => w.type === "scores");
 
   const rows = await prisma.cachedPayload.findMany({
     where: {
@@ -47,6 +65,7 @@ export async function loadBoardData(board: BoardFull, viewerName: string): Promi
         ...(weatherKeys.length ? [{ kind: "weather", key: { in: weatherKeys } }] : []),
         ...(calendarIds.length ? [{ kind: "ics", key: { in: calendarIds } }] : []),
         ...(photoIds.length ? [{ kind: "photos", key: { in: photoIds } }] : []),
+        ...(wantsNfl ? [{ kind: NFL_CACHE_KIND, key: NFL_CACHE_KEY }] : []),
       ],
     },
     select: { kind: true, key: true, payload: true, fetchedAt: true, lastError: true },
@@ -55,8 +74,28 @@ export async function loadBoardData(board: BoardFull, viewerName: string): Promi
   const weather: Record<string, WeatherPayload | undefined> = {};
   const calendars: Record<string, CalendarFeed> = {};
   const linkPhotos: Record<string, { srcs: string[]; error: string | null }> = {};
+  let nfl: BoardData["nfl"] = wantsNfl ? { games: [], syncedAt: null, error: null } : null;
   for (const r of rows) {
-    if (r.kind === "weather") {
+    if (r.kind === NFL_CACHE_KIND) {
+      // fetchedAt at epoch 0 is the worker's "never succeeded" placeholder
+      // (payload {}): not a parse failure, and not worth a warning per render.
+      const never = r.fetchedAt.getTime() <= 0;
+      // Salvaging parse: a single malformed game must not zero the slate (and
+      // silently un-theme game day). Dropping is logged — the worker accepted
+      // what we rejected, and that asymmetry is worth seeing in the logs.
+      const parsed = never ? null : parseNflPayload(r.payload);
+      const rejected = !never && (!parsed || (parsed.dropped > 0 && parsed.games.length === 0));
+      if (!never && (!parsed || parsed.dropped > 0)) {
+        log.warn("nfl payload rejected on read-back", { dropped: parsed ? parsed.dropped : "all", nothingSurvived: rejected });
+      }
+      nfl = {
+        games: parsed?.games ?? [],
+        syncedAt: never ? null : r.fetchedAt,
+        // A payload this side rejected wholesale must read as a fault on the
+        // widget, never as "warming up" — surface it as an error.
+        error: r.lastError ?? (rejected ? "scoreboard format not recognized" : null),
+      };
+    } else if (r.kind === "weather") {
       const parsed = WeatherPayloadSchema.safeParse(r.payload);
       if (parsed.success) weather[r.key] = parsed.data;
     } else if (r.kind === "ics") {
@@ -76,7 +115,17 @@ export async function loadBoardData(board: BoardFull, viewerName: string): Promi
     if (safeWidgetConfig("calendar", w.config).icsSecret) calendars[id] ??= { events: [], syncedAt: null, error: null };
   }
 
-  return { viewerName, photoSrcs: loginPhotoSet().map(largestSrc), weather, calendars, linkPhotos, now: new Date(), seasonalDecor: board.style.seasonalDecor !== false };
+  return {
+    viewerName,
+    photoSrcs: loginPhotoSet().map(largestSrc),
+    weather,
+    calendars,
+    linkPhotos,
+    now: new Date(),
+    seasonalDecor: board.style.seasonalDecor !== false,
+    nfl,
+    nflTeam: board.style.nflTeam ?? null,
+  };
 }
 
 /** Data + backdrop + token overrides — the full scene for one board. */
@@ -123,5 +172,38 @@ export async function loadBoardScene(board: BoardFull, viewerName: string): Prom
     Object.assign(varOverrides, collectionFontVars(fontKey));
   }
 
-  return { data, wallpaper, scrimOpacity, mood, varOverrides, rightsNote, birthdays };
+  // Game day: the household's team plays today, so the board wears its colors.
+  // Layered LAST — over the wallpaper's text/palette picks — because on game
+  // day the takeover IS the look; the wallpaper keeps only its photo.
+  let gameDay: BoardScene["gameDay"] = null;
+  if (board.style.gameDayHype !== false) {
+    const gd = gameDayFor(data.nfl?.games ?? [], board.style.nflTeam ?? null, data.now);
+    if (gd) {
+      const teamVars = gameDayVars(gd.team);
+      if (wallpaper) {
+        // A wallpaper covers --hearth-bg entirely, and the wallpaper branch
+        // above already chose text ink FOR THE PHOTO (dark over a bright
+        // image). Swapping surfaces to team navy under that ink — through the
+        // 72%-translucent card treatment — breaks both choices at once. Over
+        // a photo the takeover therefore contributes ACCENTS only; the sky,
+        // badge and celebrations still make game day unmistakable.
+        for (const k of Object.keys(teamVars)) {
+          if (!k.startsWith("--hearth-accent-")) delete teamVars[k];
+        }
+      }
+      Object.assign(varOverrides, teamVars);
+      gameDay = {
+        teamAbbr: gd.team.abbr,
+        nickname: gd.team.nickname,
+        emoji: gd.team.emoji,
+        bg: gd.team.bg,
+        accent: gd.team.accent,
+        accent2: gd.team.accent2,
+        kickoffIso: gd.game.date,
+        lines: hypeLines(gd.team),
+      };
+    }
+  }
+
+  return { data, wallpaper, scrimOpacity, mood, varOverrides, rightsNote, birthdays, gameDay };
 }
