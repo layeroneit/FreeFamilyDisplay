@@ -22,8 +22,23 @@ import { createLogger } from "@ffd/log";
 
 const log = createLogger("worker.nfl");
 
-export const NFL_TICK_MS = 3 * 60 * 1000;
-const LIVE_REFETCH_MS = 2 * 60 * 1000;
+/**
+ * 30s tick / 25s live threshold: live scores refresh every ~30 seconds,
+ * which is the cadence ESPN's own site polls its scoreboard at — "as fast
+ * as ESPN allows" without being a bad citizen from a family kitchen
+ * (operator, 2026-09-13: 2-3 minutes read as "taking too long" during the
+ * Bears game). The fast rate applies ONLY while a game is actually in
+ * play; the hour-long pre-kickoff lead, where every score is a guaranteed
+ * zero and only a flex/time change can be observed, stays at 3 minutes —
+ * this repo is public, and a thousand installs polling an unofficial
+ * keyless endpoint through a dead hour is how it gets rate-limited for
+ * everyone. The tick's own DB reads are tiny table scans at family scale,
+ * and anyoneWatching memoizes for a minute besides; dueForFetch rations
+ * the actual HTTP so idle days stay at ~1 request/hour.
+ */
+export const NFL_TICK_MS = 30 * 1000;
+const LIVE_REFETCH_MS = 25 * 1000;
+const PRE_LEAD_REFETCH_MS = 3 * 60 * 1000;
 const IDLE_REFETCH_MS = 55 * 60 * 1000;
 /**
  * The active window opens a full hour before kickoff (operator, 2026-09-13):
@@ -152,15 +167,25 @@ function normalize(raw: unknown): { games: NflGame[] } {
   return { games };
 }
 
-/** Any board with a team picked, or any scores widget, keeps the feed warm. */
+/** Any board with a team picked, or any scores widget, keeps the feed warm.
+ *  Memoized for a minute: the answer only changes when a household picks a
+ *  team or adds the widget, and both of those poke the worker anyway, so
+ *  the 30s tick doesn't table-scan boards twice a minute for nothing. */
+let watchingCache: { at: number; value: boolean } | null = null;
+
 async function anyoneWatching(): Promise<boolean> {
+  if (watchingCache && Date.now() - watchingCache.at < 60_000 && watchingCache.value) return true;
   const widget = await prisma.boardWidget.findFirst({ where: { type: "scores" }, select: { id: true } });
-  if (widget) return true;
-  const boards = await prisma.board.findMany({ select: { style: true } });
-  return boards.some((b) => {
-    const team = (b.style as { nflTeam?: unknown } | null)?.nflTeam;
-    return typeof team === "string" && team.length > 0;
-  });
+  let value = widget !== null;
+  if (!value) {
+    const boards = await prisma.board.findMany({ select: { style: true } });
+    value = boards.some((b) => {
+      const team = (b.style as { nflTeam?: unknown } | null)?.nflTeam;
+      return typeof team === "string" && team.length > 0;
+    });
+  }
+  watchingCache = { at: Date.now(), value };
+  return value;
 }
 
 function dueForFetch(cached: { fetchedAt: Date; payload: unknown } | null, now: Date): boolean {
@@ -169,13 +194,14 @@ function dueForFetch(cached: { fetchedAt: Date; payload: unknown } | null, now: 
   if (age >= IDLE_REFETCH_MS) return true;
   const games = (cached.payload as { games?: NflGame[] } | null)?.games;
   if (!Array.isArray(games)) return true;
-  const liveOrImminent = games.some((g) => {
-    if (g.state === "in") return true;
+  const anyLive = games.some((g) => g.state === "in");
+  if (anyLive) return age >= LIVE_REFETCH_MS;
+  const imminent = games.some((g) => {
     if (g.state !== "pre") return false;
     const untilKickoff = new Date(g.date).getTime() - now.getTime();
     return untilKickoff <= KICKOFF_LEAD_MS && untilKickoff >= -DELAY_GRACE_MS;
   });
-  return liveOrImminent && age >= LIVE_REFETCH_MS;
+  return imminent && age >= PRE_LEAD_REFETCH_MS;
 }
 
 async function fetchScoreboard(): Promise<unknown> {

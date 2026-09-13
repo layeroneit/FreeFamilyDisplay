@@ -79,9 +79,9 @@ function GameRow({ g }: { g: NflGame }) {
 }
 
 export function ScoresWidget({
-  games,
-  syncedAtMs,
-  error,
+  games: initialGames,
+  syncedAtMs: initialSyncedAtMs,
+  error: initialError,
   team,
 }: {
   games: NflGame[];
@@ -89,6 +89,41 @@ export function ScoresWidget({
   error: string | null;
   team: string | null;
 }) {
+  // The server-rendered props are the opening state; from there the widget
+  // polls /media/scores every 30s, because the kiosk page itself only
+  // re-renders every five minutes and a live score five minutes stale read
+  // as broken on the wall (operator, 2026-09-13). The route reads Postgres
+  // only — the worker still owns the ESPN fetch — and a failed poll keeps
+  // the last good state: the server refresh remains the backstop.
+  const [live, setLive] = useState({ games: initialGames, syncedAtMs: initialSyncedAtMs, error: initialError });
+  useEffect(() => {
+    let stop = false;
+    const poll = async () => {
+      try {
+        const res = await fetch("/media/scores", { cache: "no-store" });
+        if (!res.ok) return;
+        const body = (await res.json()) as { games?: NflGame[]; syncedAtMs?: number | null; error?: string | null };
+        if (!stop && Array.isArray(body.games)) {
+          setLive({ games: body.games, syncedAtMs: body.syncedAtMs ?? null, error: body.error ?? null });
+        }
+      } catch {
+        /* keep the last good state */
+      }
+    };
+    const id = setInterval(() => void poll(), 30_000);
+    return () => {
+      stop = true;
+      clearInterval(id);
+    };
+  }, []);
+  // The 5-minute server refresh hands fresh props, but useState keeps its
+  // first value — adopt the server's copy whenever it is NEWER than what
+  // polling holds, so the backstop is real even if the poll path dies.
+  useEffect(() => {
+    setLive((prev) => ((initialSyncedAtMs ?? 0) > (prev.syncedAtMs ?? 0) ? { games: initialGames, syncedAtMs: initialSyncedAtMs, error: initialError } : prev));
+  }, [initialGames, initialSyncedAtMs, initialError]);
+  const { games, syncedAtMs, error } = live;
+
   // Wall-clock page index, corrected on mount (server renders page 0).
   const [tick, setTick] = useState(0);
   useEffect(() => {

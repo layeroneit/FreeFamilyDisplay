@@ -15,6 +15,7 @@ import {
   nextGame,
   nflTeam,
   parseNflPayload,
+  readNflRow,
   todaysGames,
   type NflGame,
 } from "./nfl";
@@ -208,6 +209,34 @@ test("festive ink is chosen against the surface, never white-on-white", () => {
   }
   assert.ok(contrastRatio("#FFFFFF", "#000000") > 20);
   assert.ok(Math.abs(contrastRatio("#888888", "#888888") - 1) < 0.001);
+});
+
+test("readNflRow: one interpretation for both data paths", () => {
+  const good = {
+    id: "401",
+    date: "2026-09-13T17:00Z",
+    state: "post",
+    period: 4,
+    clock: "",
+    note: "Final",
+    home: { abbr: "CAR", score: 10 },
+    away: { abbr: "CHI", score: 17 },
+  };
+  // Never-succeeded placeholder: no games, null sync, worker's error passes through.
+  const never = readNflRow({ payload: {}, fetchedAt: new Date(0), lastError: "HTTP 503" });
+  assert.deepEqual([never.games.length, never.syncedAtMs, never.error, never.dropped], [0, null, "HTTP 503", 0]);
+  // Healthy row.
+  const ok = readNflRow({ payload: { games: [good] }, fetchedAt: new Date(1000), lastError: null });
+  assert.deepEqual([ok.games.length, ok.syncedAtMs, ok.error, ok.dropped], [1, 1000, null, 0]);
+  // Partial salvage: survivors kept, dropped counted, no synthesized error.
+  const part = readNflRow({ payload: { games: [good, { id: "" }] }, fetchedAt: new Date(1000), lastError: null });
+  assert.deepEqual([part.games.length, part.error, part.dropped], [1, null, 1]);
+  // Wholesale rejection reads as a FAULT, never as warming up.
+  const rej = readNflRow({ payload: { games: [{ id: "" }] }, fetchedAt: new Date(1000), lastError: null });
+  assert.deepEqual([rej.games.length, rej.error, rej.dropped], [0, "scoreboard format not recognized", 1]);
+  // A real worker error outranks the synthesized one.
+  const both = readNflRow({ payload: { nope: true }, fetchedAt: new Date(1000), lastError: "HTTP 500" });
+  assert.deepEqual([both.games.length, both.error, both.dropped], [0, "HTTP 500", -1]);
 });
 
 test("the football glyph follows the season.ts rules", () => {

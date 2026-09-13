@@ -134,6 +134,33 @@ export function parseNflPayload(raw: unknown): { games: NflGame[]; dropped: numb
 export const NFL_CACHE_KIND = "nfl";
 export const NFL_CACHE_KEY = "scoreboard";
 
+/**
+ * ONE interpretation of the cached row, shared by the page render and the
+ * widget's 30-second poll. These are two halves of the same widget's state,
+ * reconciled by timestamp — if their never/rejected/error derivations ever
+ * drifted, the wall would alternate between two readings every few minutes,
+ * which is the nastiest possible bug to diagnose from a couch (audit).
+ */
+export function readNflRow(row: { payload: unknown; fetchedAt: Date; lastError: string | null }): {
+  games: NflGame[];
+  syncedAtMs: number | null;
+  error: string | null;
+  /** How many entries validation dropped: 0 clean (or never-synced),
+   *  n > 0 dropped that many, -1 the container itself was unparseable. */
+  dropped: number;
+} {
+  // fetchedAt at epoch 0 is the worker's "never succeeded" placeholder.
+  const never = row.fetchedAt.getTime() <= 0;
+  const parsed = never ? null : parseNflPayload(row.payload);
+  const rejected = !never && (!parsed || (parsed.dropped > 0 && parsed.games.length === 0));
+  return {
+    games: parsed?.games ?? [],
+    syncedAtMs: never ? null : row.fetchedAt.getTime(),
+    error: row.lastError ?? (rejected ? "scoreboard format not recognized" : null),
+    dropped: never ? 0 : (parsed?.dropped ?? -1),
+  };
+}
+
 /* --------------------------------------------------------------- game day */
 
 const sameLocalDay = (a: Date, b: Date) =>

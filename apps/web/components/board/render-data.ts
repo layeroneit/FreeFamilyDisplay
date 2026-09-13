@@ -11,7 +11,7 @@ import { largestSrc, loginPhotoSet } from "@/lib/board/photo-set";
 import { safeWidgetConfig } from "@/lib/board/widgets";
 import { WeatherPayloadSchema, weatherKey, type WeatherPayload } from "@/lib/board/weather-codes";
 import { currentWallpaper, type WallpaperInfo } from "@/lib/board/wallpapers";
-import { NFL_CACHE_KEY, NFL_CACHE_KIND, festiveInk, gameDayFor, gameDayVars, hypeLines, parseNflPayload, type HypeLine } from "@/lib/board/nfl";
+import { NFL_CACHE_KEY, NFL_CACHE_KIND, festiveInk, gameDayFor, gameDayVars, hypeLines, readNflRow, type HypeLine } from "@/lib/board/nfl";
 import { themeById } from "@/lib/themes";
 import { createLogger } from "@ffd/log";
 import { collectionFontVars, hasCollectionFonts } from "@/lib/board/collection-fonts";
@@ -89,23 +89,17 @@ export async function loadBoardData(board: BoardFull, viewerName: string): Promi
   let nfl: BoardData["nfl"] = wantsNfl ? { games: [], syncedAt: null, error: null } : null;
   for (const r of rows) {
     if (r.kind === NFL_CACHE_KIND) {
-      // fetchedAt at epoch 0 is the worker's "never succeeded" placeholder
-      // (payload {}): not a parse failure, and not worth a warning per render.
-      const never = r.fetchedAt.getTime() <= 0;
-      // Salvaging parse: a single malformed game must not zero the slate (and
-      // silently un-theme game day). Dropping is logged — the worker accepted
-      // what we rejected, and that asymmetry is worth seeing in the logs.
-      const parsed = never ? null : parseNflPayload(r.payload);
-      const rejected = !never && (!parsed || (parsed.dropped > 0 && parsed.games.length === 0));
-      if (!never && (!parsed || parsed.dropped > 0)) {
-        log.warn("nfl payload rejected on read-back", { dropped: parsed ? parsed.dropped : "all", nothingSurvived: rejected });
+      // Shared interpretation (readNflRow) — the /media/scores poll route
+      // reads the same row and MUST agree with this render, or the widget
+      // alternates readings as the two data paths take turns.
+      const read = readNflRow(r);
+      if (read.dropped !== 0) {
+        log.warn("nfl payload rejected on read-back", { dropped: read.dropped === -1 ? "all" : read.dropped, nothingSurvived: read.games.length === 0 });
       }
       nfl = {
-        games: parsed?.games ?? [],
-        syncedAt: never ? null : r.fetchedAt,
-        // A payload this side rejected wholesale must read as a fault on the
-        // widget, never as "warming up" — surface it as an error.
-        error: r.lastError ?? (rejected ? "scoreboard format not recognized" : null),
+        games: read.games,
+        syncedAt: read.syncedAtMs === null ? null : new Date(read.syncedAtMs),
+        error: read.error,
       };
     } else if (r.kind === "weather") {
       const parsed = WeatherPayloadSchema.safeParse(r.payload);

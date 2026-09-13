@@ -19,7 +19,7 @@ import { DISPLAY_COOKIE } from "@/middleware";
  * widget on a different board — even though both belong to the same account.
  */
 
-async function displayBoardId(): Promise<string | null> {
+export async function displayBoardId(): Promise<string | null> {
   const token = (await cookies()).get(DISPLAY_COOKIE)?.value;
   if (!token || !/^[A-Za-z0-9_-]{43}$/.test(token)) return null;
   const b = await prisma.board.findUnique({ where: { displayTokenHash: hashDisplayToken(token) }, select: { id: true } });
