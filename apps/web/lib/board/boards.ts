@@ -195,13 +195,22 @@ export async function deleteBoard(userId: string, boardId: string): Promise<bool
   return r.count > 0;
 }
 
-export async function addWidget(userId: string, boardId: string, type: WidgetType, rawConfig: unknown): Promise<BoardWidgetRow | null> {
+export async function addWidget(
+  userId: string,
+  boardId: string,
+  type: WidgetType,
+  rawConfig: unknown,
+  /** Deliberate placement (e.g. the game-day auto-add, which must never land
+   *  on the calendar). Without it, the manual-add cascade below applies —
+   *  fine there, because a person is about to drag the card anyway. */
+  at?: { x: number; y: number; w: number; h: number },
+): Promise<BoardWidgetRow | null> {
   const owned = await prisma.board.findFirst({ where: { id: boardId, userId }, select: { id: true, canvas: true } });
   if (!owned) return null;
   const size = WIDGET_META[type].defaultSize;
   const count = await prisma.boardWidget.count({ where: { boardId } });
   // Cascade new widgets down the canvas so they do not stack invisibly.
-  const g = normalizeGeometry(type, { x: 40 + (count % 5) * 40, y: 40 + (count % 5) * 40, ...size, z: count }, owned.canvas);
+  const g = normalizeGeometry(type, at ? { ...at, z: count } : { x: 40 + (count % 5) * 40, y: 40 + (count % 5) * 40, ...size, z: count }, owned.canvas);
   const row = await prisma.boardWidget.create({
     data: { boardId, type, ...g, config: parseWidgetConfig(type, rawConfig) as object },
     select: { id: true, type: true, x: true, y: true, w: true, h: true, z: true, config: true },

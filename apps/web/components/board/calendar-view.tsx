@@ -31,7 +31,7 @@ const MIN_COLUMN_PX = 150;
  * A week that straddles two months says so ("OCT — NOV") rather than
  * silently naming whichever end it started at.
  */
-function MonthBand({ from, to }: { from: Date; to?: Date }) {
+function MonthBand({ from, to, festive }: { from: Date; to?: Date; festive?: string | undefined }) {
   const spans = Boolean(to && (to.getMonth() !== from.getMonth() || to.getFullYear() !== from.getFullYear()));
   const label = spans ? `${MONTH_SHORT[from.getMonth()]} — ${MONTH_SHORT[to!.getMonth()]}` : MONTH[from.getMonth()];
   const year = spans && to!.getFullYear() !== from.getFullYear() ? `${from.getFullYear()}–${to!.getFullYear()}` : String(from.getFullYear());
@@ -57,6 +57,9 @@ function MonthBand({ from, to }: { from: Date; to?: Date }) {
           textTransform: "uppercase",
           letterSpacing: 1,
           whiteSpace: "nowrap",
+          // Game day wears the team: the ink arrives pre-checked for contrast
+          // against this card's actual surface (see render-data festiveInk).
+          color: festive,
           // A long month on a narrow portrait board shrinks rather than clips.
           minWidth: 0,
           overflow: "hidden",
@@ -148,7 +151,7 @@ function EventLine({ e, day, size = COL_EVENT_SIZE }: { e: CalEvent; day: Date; 
 }
 
 /** Week as columns, for a card wide enough to give each day real room. */
-function WeekColumns({ cols, events, perDay }: { cols: Date[]; events: CalEvent[]; perDay: number }) {
+function WeekColumns({ cols, events, perDay, festive }: { cols: Date[]; events: CalEvent[]; perDay: number; festive?: string | undefined }) {
   return (
     <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(cols.length, 7)}, 1fr)`, gap: COL_GAP, flex: 1, minHeight: 0 }}>
       {cols.map((d, i) => (
@@ -164,7 +167,7 @@ function WeekColumns({ cols, events, perDay }: { cols: Date[]; events: CalEvent[
             overflow: "hidden",
           }}
         >
-          <div style={{ ...muted, fontSize: 18, textTransform: "uppercase", letterSpacing: 1 }}>{DAY[d.getDay()]}</div>
+          <div style={{ ...(festive ? { color: festive } : muted), fontSize: 18, textTransform: "uppercase", letterSpacing: 1 }}>{DAY[d.getDay()]}</div>
           <div style={{ fontSize: 40, fontWeight: 600, fontFamily: "var(--hearth-font-display)", color: i === 0 ? "var(--hearth-accent-2)" : "inherit" }}>{d.getDate()}</div>
           <ul style={{ listStyle: "none", margin: "8px 0 0", padding: 0, display: "flex", flexDirection: "column", gap: 6 }}>
             {(() => {
@@ -202,7 +205,7 @@ function WeekColumns({ cols, events, perDay }: { cols: Date[]; events: CalEvent[
  * it should hand its space to a day with three things on it, and that is what
  * lets a busy week fit at a size you can read across a room.
  */
-function WeekRows({ cols, events, perDay, today }: { cols: Date[]; events: CalEvent[]; perDay: number; today: number }) {
+function WeekRows({ cols, events, perDay, today, festive }: { cols: Date[]; events: CalEvent[]; perDay: number; today: number; festive?: string | undefined }) {
   return (
     // The shrink that keeps every day on the card lives on the calendar body,
     // one level up, so the month band gives up its share of the space too.
@@ -239,7 +242,7 @@ function WeekRows({ cols, events, perDay, today }: { cols: Date[]; events: CalEv
               <span style={{ fontSize: 34, fontWeight: 600, fontFamily: "var(--hearth-font-display)", lineHeight: 1, color: isFirst ? "var(--hearth-accent-2)" : "inherit" }}>
                 {d.getDate()}
               </span>
-              <span style={{ ...muted, fontSize: 19, textTransform: "uppercase", letterSpacing: 1 }}>{DAY[d.getDay()]}</span>
+              <span style={{ ...(festive ? { color: festive } : muted), fontSize: 19, textTransform: "uppercase", letterSpacing: 1 }}>{DAY[d.getDay()]}</span>
             </div>
             <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 5, minWidth: 0 }}>
               {shown.length === 0 ? <li style={{ ...muted, fontSize: 20, lineHeight: 1.2 }}>&mdash;</li> : null}
@@ -291,6 +294,7 @@ export function WeekView({
   w,
   h,
   fontScale = 1,
+  festive,
 }: {
   now: Date;
   days: number;
@@ -299,6 +303,8 @@ export function WeekView({
   w: number;
   h: number;
   fontScale?: number;
+  /** Game day: contrast-checked team ink for the month and weekday labels. */
+  festive?: string | undefined;
 }) {
   const events = feed?.events ?? [];
   // Math.max(1, ...): zod bounds days to 1..14, but a board is server-rendered
@@ -340,11 +346,11 @@ export function WeekView({
       // merely small.
       style={{ display: "flex", flexDirection: "column", height: "100%", zoom: zoom === 1 ? undefined : zoom }}
     >
-      <MonthBand from={shown[0]!} to={shown[shown.length - 1]!} />
+      <MonthBand from={shown[0]!} to={shown[shown.length - 1]!} festive={festive} />
       {dense ? (
-        <WeekRows cols={shown} events={events} perDay={plan.perDay} today={plan.today} />
+        <WeekRows cols={shown} events={events} perDay={plan.perDay} today={plan.today} festive={festive} />
       ) : (
-        <WeekColumns cols={cols} events={events} perDay={columnCapacity(boxH - FURNITURE_H)} />
+        <WeekColumns cols={cols} events={events} perDay={columnCapacity(boxH - FURNITURE_H)} festive={festive} />
       )}
       <Footer feed={feed} count={events.length} note={note} />
     </div>
@@ -352,7 +358,7 @@ export function WeekView({
 }
 
 /** Today as an agenda, with tomorrow as a smaller "up next". */
-export function DayView({ now, feed }: { now: Date; feed: CalendarFeed }) {
+export function DayView({ now, feed, festive }: { now: Date; feed: CalendarFeed; festive?: string | undefined }) {
   const events = feed?.events ?? [];
   const today = startOfDay(now);
   // Not +86,400,000ms: a DST-transition day is 23 or 25 hours long, and the
@@ -363,12 +369,12 @@ export function DayView({ now, feed }: { now: Date; feed: CalendarFeed }) {
   const next = eventsOn(events, tomorrow);
   return (
     <div data-part="calendar" data-mode="day" style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      <MonthBand from={today} />
+      <MonthBand from={today} festive={festive} />
       {/* The weekday came from DAY[i] + "day", which reads "Tueday" and
           "Satday" three days a week. Spell them out. */}
       <div style={{ display: "flex", alignItems: "baseline", gap: 14, paddingBottom: 8 }}>
         <div style={{ fontSize: 56, fontWeight: 600, lineHeight: 1, fontFamily: "var(--hearth-font-display)", color: "var(--hearth-accent-2)" }}>{today.getDate()}</div>
-        <div style={{ fontSize: 24, fontWeight: 600 }}>{DAY_FULL[today.getDay()]}</div>
+        <div style={{ fontSize: 24, fontWeight: 600, color: festive }}>{DAY_FULL[today.getDay()]}</div>
       </div>
       <ul style={{ listStyle: "none", margin: "12px 0 0", padding: 0, display: "flex", flexDirection: "column", gap: 10, flex: 1, minHeight: 0, overflow: "hidden" }}>
         {todays.length === 0 ? <li style={{ ...muted, fontSize: 22 }}>Nothing on the calendar today.</li> : null}
@@ -392,7 +398,7 @@ export function DayView({ now, feed }: { now: Date; feed: CalendarFeed }) {
 }
 
 /** Month grid: 5–6 rows of 7, with up to two event titles per cell and a "+n". */
-export function MonthView({ now, feed }: { now: Date; feed: CalendarFeed }) {
+export function MonthView({ now, feed, festive }: { now: Date; feed: CalendarFeed; festive?: string | undefined }) {
   const events = feed?.events ?? [];
   const today = startOfDay(now);
   const first = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -408,10 +414,10 @@ export function MonthView({ now, feed }: { now: Date; feed: CalendarFeed }) {
   const rows = cells[35]!.getMonth() === today.getMonth() ? 6 : 5;
   return (
     <div data-part="calendar" data-mode="month" style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      <MonthBand from={today} />
+      <MonthBand from={today} festive={festive} />
       <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 4 }}>
         {DAY.map((d) => (
-          <div key={d} style={{ ...muted, fontSize: 13, textTransform: "uppercase", letterSpacing: 1, textAlign: "center" }}>
+          <div key={d} style={{ ...(festive ? { color: festive } : muted), fontSize: 13, textTransform: "uppercase", letterSpacing: 1, textAlign: "center" }}>
             {d}
           </div>
         ))}

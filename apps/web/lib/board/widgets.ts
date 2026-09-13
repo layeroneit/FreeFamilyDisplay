@@ -184,7 +184,10 @@ export const STARTER_LAYOUTS: Record<CanvasPreset, Record<WidgetType, Geo>> = {
     photos: { x: 40, y: 1380, w: 1000, h: 300 },
     quote: { x: 40, y: 1700, w: 1000, h: 100 },
     notes: { x: 40, y: 1820, w: 1000, h: 80 },
-    scores: { x: 40, y: 1380, w: 1000, h: 360 },
+    // h 300, matching the photos rectangle EXACTLY: at 360 the slot's bottom
+    // 40px ran into the quote card below (audit). The auto-add fallback's
+    // covers-photos-only promise depends on this.
+    scores: { x: 40, y: 1380, w: 1000, h: 300 },
   },
   ULTRAWIDE: {
     greeting: { x: 40, y: 40, w: 1200, h: 120 },
@@ -203,6 +206,33 @@ export const STARTER_LAYOUTS: Record<CanvasPreset, Record<WidgetType, Geo>> = {
 export const STARTER_LAYOUT = STARTER_LAYOUTS.LANDSCAPE;
 
 export type WidgetGeometry = { x: number; y: number; w: number; h: number; z: number };
+
+const overlaps = (a: Geo, b: { x: number; y: number; w: number; h: number }) =>
+  a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+
+/**
+ * A place the widget can actually go: its starter slot if that's free, else
+ * the first grid position where it fits without covering anything, at its
+ * default size and then at its minimum. Null when the board is genuinely
+ * full — the caller should NOT add rather than drop a card on the calendar,
+ * which is what the blind add-cascade did to auto-added widgets.
+ */
+export function freeGeometry(type: WidgetType, existing: ReadonlyArray<{ x: number; y: number; w: number; h: number }>, preset: CanvasPreset): Geo | null {
+  const { w: CW, h: CH } = canvasSize(preset);
+  const fits = (g: Geo) => g.x >= 0 && g.y >= 0 && g.x + g.w <= CW && g.y + g.h <= CH && !existing.some((e) => overlaps(g, e));
+  const starter = STARTER_LAYOUTS[preset][type];
+  if (fits(starter)) return starter;
+  const sizes = [WIDGET_META[type].defaultSize, WIDGET_META[type].minSize];
+  for (const s of sizes) {
+    for (let y = GRID * 2; y + s.h <= CH; y += GRID * 2) {
+      for (let x = GRID * 2; x + s.w <= CW; x += GRID * 2) {
+        const g = { x, y, w: s.w, h: s.h };
+        if (fits(g)) return g;
+      }
+    }
+  }
+  return null;
+}
 
 /** Clamp to the canvas and snap to the grid. Pure; unit-tested. */
 export function normalizeGeometry(type: WidgetType, g: WidgetGeometry, preset: CanvasPreset = "LANDSCAPE"): WidgetGeometry {

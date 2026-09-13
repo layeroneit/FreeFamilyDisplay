@@ -2,8 +2,8 @@ import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { getSessionUser } from "@/lib/auth/sessions";
 import { termsCurrent } from "@/lib/terms";
-import { deleteBoard, getBoard, patchBoardStyle, updateBoard, type BoardPatch, type BoardStyle } from "@/lib/board/boards";
-import { CANVAS_PRESET_IDS, publicWidgetConfig, type CanvasPreset } from "@/lib/board/widgets";
+import { addWidget, deleteBoard, getBoard, patchBoardStyle, updateBoard, type BoardPatch, type BoardStyle } from "@/lib/board/boards";
+import { CANVAS_PRESET_IDS, freeGeometry, publicWidgetConfig, STARTER_LAYOUTS, type CanvasPreset } from "@/lib/board/widgets";
 import { canUseCollection, requestAdvance } from "@/lib/board/wallpapers";
 import { pokeWorkerConnectors, pokeWorkerNfl } from "@/lib/board/worker-poke";
 import { NFL_TEAM_IDS } from "@/lib/board/nfl";
@@ -80,6 +80,26 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
   if (d.nflTeam !== undefined) stylePatch.nflTeam = d.nflTeam;
   if (d.gameDayHype !== undefined) stylePatch.gameDayHype = d.gameDayHype;
 
+  // "Two taps, done forever": a board's FIRST team pick brings the scoreboard
+  // widget with it. Read the prior state before the patch lands — a household
+  // that later deletes the widget but keeps (or switches) its team is
+  // respected, because this only fires on the never-had-a-team transition.
+  // The placement is deliberate (freeGeometry): a silent add must never cover
+  // the calendar, and on a genuinely full board it declines instead.
+  let autoAddAt: { x: number; y: number; w: number; h: number } | null = null;
+  if (d.nflTeam) {
+    const prior = await getBoard(user.id, id);
+    if (prior && !prior.style.nflTeam && !prior.widgets.some((w) => w.type === "scores")) {
+      // The default starter board has no free rectangle at all, and "the
+      // widget silently never appears" breaks the feature's whole premise —
+      // so when the search declines, fall back to the designed slot, which
+      // was reserved on top of the photos panel for exactly this moment.
+      // Covering photos (a rotating panel, z-below, easily dragged) is the
+      // least surprising honest outcome; covering the calendar was the bug.
+      autoAddAt = freeGeometry("scores", prior.widgets, prior.canvas) ?? STARTER_LAYOUTS[prior.canvas].scores;
+    }
+  }
+
   // A style-only request must not send an empty `data` to the column update.
   if (Object.keys(patch).length > 0) {
     const ok = await updateBoard(user.id, id, patch);
@@ -99,7 +119,10 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
   }
   // A newly picked team gets its schedule right away — game day should light
   // up while the family is still standing at the settings screen.
-  if (d.nflTeam) pokeWorkerNfl();
+  if (d.nflTeam) {
+    if (autoAddAt) await addWidget(user.id, id, "scores", {}, autoAddAt);
+    pokeWorkerNfl();
+  }
   return NextResponse.json({ ok: true });
 }
 

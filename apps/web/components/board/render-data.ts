@@ -7,7 +7,8 @@ import { largestSrc, loginPhotoSet } from "@/lib/board/photo-set";
 import { safeWidgetConfig } from "@/lib/board/widgets";
 import { WeatherPayloadSchema, weatherKey, type WeatherPayload } from "@/lib/board/weather-codes";
 import { currentWallpaper, type WallpaperInfo } from "@/lib/board/wallpapers";
-import { NFL_CACHE_KEY, NFL_CACHE_KIND, gameDayFor, gameDayVars, hypeLines, parseNflPayload, type HypeLine } from "@/lib/board/nfl";
+import { NFL_CACHE_KEY, NFL_CACHE_KIND, festiveInk, gameDayFor, gameDayVars, hypeLines, parseNflPayload, type HypeLine } from "@/lib/board/nfl";
+import { themeById } from "@/lib/themes";
 import { createLogger } from "@ffd/log";
 import { collectionFontVars, hasCollectionFonts } from "@/lib/board/collection-fonts";
 import type { BoardData, CalendarFeed } from "./widget-view";
@@ -125,6 +126,9 @@ export async function loadBoardData(board: BoardFull, viewerName: string): Promi
     seasonalDecor: board.style.seasonalDecor !== false,
     nfl,
     nflTeam: board.style.nflTeam ?? null,
+    // Provisional: the real value needs the wallpaper, which only the scene
+    // loader resolves — it fills this in (see loadBoardScene).
+    festiveInk: null,
   };
 }
 
@@ -180,6 +184,21 @@ export async function loadBoardScene(board: BoardFull, viewerName: string): Prom
     const gd = gameDayFor(data.nfl?.games ?? [], board.style.nflTeam ?? null, data.now);
     if (gd) {
       const teamVars = gameDayVars(gd.team);
+      // Festive widget ink (month band, weekday names, clock numerals, the
+      // headline temperature) — chosen against every surface the text will
+      // actually sit on. On a takeover that's the team surface. Under a
+      // wallpaper it's the THEME's card surface AND the photo itself: the
+      // clock is a plain widget with no card, so the ink must also read
+      // against the same bright-or-dark proxy the wallpaper branch used for
+      // its own text decision above. No accent survives both → no festive
+      // ink, and the widgets keep the text the wallpaper chose.
+      data.festiveInk = wallpaper
+        ? festiveInk(
+            gd.team,
+            themeById(board.theme).surface,
+            wallpaper.meanLuminance > 0.5 && scrimOpacity < 0.35 ? "#FFFFFF" : "#111111",
+          )
+        : festiveInk(gd.team, teamVars["--hearth-surface"]!);
       if (wallpaper) {
         // A wallpaper covers --hearth-bg entirely, and the wallpaper branch
         // above already chose text ink FOR THE PHOTO (dark over a bright

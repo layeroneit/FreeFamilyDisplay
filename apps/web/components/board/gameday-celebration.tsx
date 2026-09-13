@@ -24,6 +24,8 @@ import { hypeForSlot, isKickoffSlot, type HypeLine } from "@/lib/board/nfl";
  */
 
 const PIECES = 110;
+/** The ?effects=low kiosk path: same party, a fraction of the paint. */
+const PIECES_LOW = 32;
 
 type Flake = { x: number; w: number; h: number; color: string; dur: number; delay: number; drift: number; tumble: number; round: boolean };
 
@@ -36,6 +38,7 @@ export function GameDayCelebration({
   kickoffIso,
   canvasW,
   canvasH,
+  reduceEffects = false,
 }: {
   nickname: string;
   emoji: string;
@@ -45,6 +48,8 @@ export function GameDayCelebration({
   kickoffIso: string;
   canvasW: number;
   canvasH: number;
+  /** Low-power kiosk path: fewer confetti pieces, everything else intact. */
+  reduceEffects?: boolean;
 }) {
   const [show, setShow] = useState<{ line: HypeLine; durationSec: number; phase: "playing" | "leaving" } | null>(null);
   const linesRef = useRef(lines);
@@ -74,7 +79,11 @@ export function GameDayCelebration({
             const line: HypeLine = kickoff
               ? { top: "KICKOFF!", sub: `GO ${nickRef.current.toUpperCase()}!` }
               : hypeForSlot(linesRef.current, at);
-            const durationSec = kickoff ? 32 : 20;
+            // Minutes, not a flash — the operator watched the 20-second cut
+            // vanish before anyone could call the kids over (2026-09-13).
+            // Confetti and the emoji row loop, so the scene stays alive for
+            // the whole dwell.
+            const durationSec = kickoff ? 300 : 180;
             setShow({ line, durationSec, phase: "playing" });
             clearTimeout(fade);
             clearTimeout(end);
@@ -100,7 +109,7 @@ export function GameDayCelebration({
     const colors = [accent, accent2, "#FFFFFF"];
     let s = 0x600d;
     const r = () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296);
-    return Array.from({ length: PIECES }, () => ({
+    return Array.from({ length: reduceEffects ? PIECES_LOW : PIECES }, () => ({
       x: r() * 100,
       w: 9 + r() * 11,
       h: 13 + r() * 18,
@@ -111,7 +120,7 @@ export function GameDayCelebration({
       tumble: +(0.9 + r() * 1.6).toFixed(2),
       round: r() < 0.22,
     }));
-  }, [accent, accent2]);
+  }, [accent, accent2, reduceEffects]);
 
   if (!show) return null;
 

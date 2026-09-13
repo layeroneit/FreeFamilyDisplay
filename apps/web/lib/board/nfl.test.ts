@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  contrastRatio,
+  festiveInk,
   FOOTBALL_GLYPH,
   NFL_TEAMS,
   NflPayloadSchema,
@@ -180,6 +182,32 @@ test("cached payload schema accepts the worker's shape and rejects junk", () => 
   assert.ok(NflPayloadSchema.safeParse(good).success);
   assert.ok(!NflPayloadSchema.safeParse({ games: [{ id: "x" }] }).success);
   assert.ok(!NflPayloadSchema.safeParse({}).success);
+});
+
+test("festive ink is chosen against the surface, never white-on-white", () => {
+  const bears = nflTeam("CHI")!;
+  const cowboys = nflTeam("DAL")!; // accent #FFFFFF — the audit's case
+  const colts = nflTeam("IND")!; // accent #FFFFFF, accent2 a light grey
+  // On the team's own dark takeover surface the first accent reads.
+  assert.equal(festiveInk(bears, "#16294E"), bears.accent);
+  // On a white theme surface (nordic/spring under a wallpaper), a white
+  // accent must fall back to the second color…
+  assert.equal(festiveInk(cowboys, "#FFFFFF"), cowboys.accent2);
+  // …and when neither reads, the honest answer is no festive ink at all.
+  assert.equal(festiveInk(colts, "#FFFFFF"), null);
+  // Under a wallpaper the ink must read on the card AND on the photo proxy:
+  // Bears orange survives both; a Cowboys white accent dies on the bright
+  // photo and falls through to silver, which reads on both.
+  assert.equal(festiveInk(bears, "#1B2745", "#FFFFFF"), bears.accent);
+  assert.equal(festiveInk(cowboys, "#1B2745", "#FFFFFF"), cowboys.accent2);
+  // Every team produces SOME ink on its own game-day surface — the takeover
+  // case must never lose the feature.
+  for (const t of NFL_TEAMS) {
+    const vars = gameDayVars(t);
+    assert.ok(festiveInk(t, vars["--hearth-surface"]!) !== null, t.abbr);
+  }
+  assert.ok(contrastRatio("#FFFFFF", "#000000") > 20);
+  assert.ok(Math.abs(contrastRatio("#888888", "#888888") - 1) < 0.001);
 });
 
 test("the football glyph follows the season.ts rules", () => {

@@ -178,6 +178,39 @@ function lighten(hex: string, t: number): string {
   return `#${[ch(0), ch(1), ch(2)].map((v) => v.toString(16).padStart(2, "0")).join("")}`;
 }
 
+/** sRGB relative luminance, same math as themes.ts bgLuminance. */
+function relLuminance(hex: string): number {
+  const ch = (i: number) => {
+    const v = parseInt(hex.slice(1 + i * 2, 3 + i * 2), 16) / 255;
+    return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * ch(0) + 0.7152 * ch(1) + 0.0722 * ch(2);
+}
+
+/** WCAG contrast ratio between two #RRGGBB colors. */
+export function contrastRatio(a: string, b: string): number {
+  const la = relLuminance(a);
+  const lb = relLuminance(b);
+  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+}
+
+/**
+ * The ink the widgets' festive text wears on game day, chosen against EVERY
+ * surface it will sit on — the card surface for calendar and weather, and,
+ * under a wallpaper, the photo itself for plain widgets like the clock. The
+ * team table only guarantees its accents read on the team's own dark
+ * background; four shipped themes have white card surfaces, and a bright
+ * photo is its own hazard. First accent with honest contrast against ALL of
+ * them wins; null means "no festive ink today" and the widgets keep their
+ * normal text.
+ */
+export function festiveInk(team: NflTeam, ...surfaces: string[]): string | null {
+  for (const c of [team.accent, team.accent2]) {
+    if (surfaces.every((s) => contrastRatio(c, s) >= 3)) return c;
+  }
+  return null;
+}
+
 /**
  * The full-takeover overrides (the operator's pick A3): every board token
  * swaps to team colors for the day, layered over the theme the same way the

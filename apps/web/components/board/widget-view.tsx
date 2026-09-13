@@ -31,6 +31,10 @@ export type BoardData = {
   nfl: { games: NflGame[]; syncedAt: Date | null; error: string | null } | null;
   /** The household's team abbreviation, from the board's game-day setting. */
   nflTeam: string | null;
+  /** Game-day ink for widget headline text (month, weekdays, clock numerals,
+   *  temperature) — a team accent PRE-CHECKED for contrast against the actual
+   *  surface, or null when no accent reads honestly (or it isn't game day). */
+  festiveInk: string | null;
 };
 
 function greetingFor(hour: number): string {
@@ -59,7 +63,7 @@ export function WidgetView({ widget, data }: { widget: BoardWidgetRow; data: Boa
     }
     case "clock": {
       const c = safeWidgetConfig("clock", widget.config);
-      return <ClockWidget format={c.format} showSeconds={c.showSeconds} style={c.style} />;
+      return <ClockWidget format={c.format} showSeconds={c.showSeconds} style={c.style} festive={data.festiveInk ?? undefined} />;
     }
     case "date": {
       const c = safeWidgetConfig("date", widget.config);
@@ -84,21 +88,21 @@ export function WidgetView({ widget, data }: { widget: BoardWidgetRow; data: Boa
           </div>
         );
       }
-      return <WeatherView w={w} units={c.units} mode={c.view} />;
+      return <WeatherView w={w} units={c.units} mode={c.view} festive={data.festiveInk ?? undefined} />;
     }
     case "calendar": {
       const c = safeWidgetConfig("calendar", widget.config);
       const feed = data.calendars[widget.id];
       const body =
         c.view === "day" ? (
-          <DayView now={data.now} feed={feed} />
+          <DayView now={data.now} feed={feed} festive={data.festiveInk ?? undefined} />
         ) : c.view === "month" ? (
-          <MonthView now={data.now} feed={feed} />
+          <MonthView now={data.now} feed={feed} festive={data.festiveInk ?? undefined} />
         ) : (
           // The week view picks its own layout from how wide a day column
           // would really be, so it needs the card's size, not just its
           // contents.
-          <WeekView now={data.now} days={c.days} feed={feed} w={widget.w} h={widget.h} fontScale={c.fontScale} />
+          <WeekView now={data.now} days={c.days} feed={feed} w={widget.w} h={widget.h} fontScale={c.fontScale} festive={data.festiveInk ?? undefined} />
         );
       if (!data.seasonalDecor) return body;
       // The card's interior in the widget's own (zoomed) units, which is the

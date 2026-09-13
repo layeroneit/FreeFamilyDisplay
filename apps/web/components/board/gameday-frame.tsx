@@ -1,6 +1,10 @@
 import { holidayFall } from "@/lib/board/season";
 import { FOOTBALL_GLYPH } from "@/lib/board/nfl";
 
+/** Pigskin browns — three close shades so the sky has depth, none of them
+ *  anywhere near an autumn palette's oranges. */
+const LEATHER = ["#7B3F1D", "#8B4A21", "#5E2F14"];
+
 /**
  * Game day's board dressing, the operator's pick A3: footballs drifting down
  * the whole board on the seasonal-fall physics, and the team wordmark parked
@@ -18,23 +22,24 @@ import { FOOTBALL_GLYPH } from "@/lib/board/nfl";
  */
 export function GameDaySky({
   team,
-  accent,
-  accent2,
   canvasW,
   canvasH,
 }: {
   /** Team abbreviation — the seed, so every refresh resumes the same sky. */
   team: string;
-  accent: string;
-  accent2: string;
   canvasW: number;
   canvasH: number;
 }) {
   // The football glyph on statement-piece physics scaled for a FULL canvas —
   // the shared holiday profile is tuned for a calendar card and put ~8 small
-  // glyphs on a 1920×1080 wall, which read as dust, not a sky. No gold in the
-  // palette: on the specimen sheet a yellow football reads as a lemon.
-  const pieces = holidayFall({ id: `gameday:${team}`, glyphs: [FOOTBALL_GLYPH], palette: [accent, accent2] }, canvasW, canvasH, {
+  // glyphs on a 1920×1080 wall, which read as dust, not a sky.
+  //
+  // LEATHER, not team colors: in September the autumn leaves are already
+  // falling in oranges, and team-colored footballs read as more leaves
+  // (operator, on the wall, 2026-09-13). A brown ball with white laces is the
+  // one thing that cannot be mistaken for foliage — the team identity lives
+  // in the takeover, the badge, and the celebrations.
+  const pieces = holidayFall({ id: `gameday:${team}`, glyphs: [FOOTBALL_GLYPH], palette: LEATHER }, canvasW, canvasH, {
     count: [11, 14],
     size: [52, 88],
     dur: [35, 60],
@@ -58,7 +63,10 @@ export function GameDaySky({
               top: -p.size * 1.5,
               width: p.size,
               height: p.size,
-              opacity: p.opacity,
+              // Remap the generator's ambient 0.4–0.6 into 0.7–0.9: solid
+              // enough to be seen (a 0.4 football fades into the wallpaper)
+              // while keeping the per-piece variance that reads as depth.
+              opacity: +(0.3 + p.opacity).toFixed(2),
               animationDuration: `${p.dur}s`,
               animationDelay: `-${p.delay}s`,
               "--sf-fall": `${canvasH + p.size * 3}px`,
@@ -88,7 +96,9 @@ export function GameDaySky({
               ))}
             </g>
             {FOOTBALL_GLYPH.veins ? (
-              <path d={FOOTBALL_GLYPH.veins} fill="none" stroke="rgb(0 0 0 / 0.38)" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round" />
+              // White laces on brown leather — the real object, and the detail
+              // that makes it a football at a glance instead of one more leaf.
+              <path d={FOOTBALL_GLYPH.veins} fill="none" stroke="rgb(255 255 255 / 0.9)" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
             ) : null}
           </svg>
         </span>

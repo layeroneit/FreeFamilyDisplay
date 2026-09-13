@@ -10,13 +10,14 @@ const muted: CSSProperties = { color: "var(--hearth-text-muted)" };
 const windLabel = (kmh: number, units: Units) => (units === "f" ? `${Math.round(kmh * 0.621)} mph` : `${Math.round(kmh)} km/h`);
 const hourLabel = (iso: string) => new Date(iso).toLocaleTimeString("en-US", { hour: "numeric" }).replace(" ", "");
 
-function Now({ w, units, big }: { w: WeatherPayload; units: Units; big: boolean }) {
+function Now({ w, units, big, festive }: { w: WeatherPayload; units: Units; big: boolean; festive?: string | undefined }) {
   const cur = describeWeatherCode(w.current.code, w.current.isDay);
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
       <span style={{ fontSize: big ? 72 : 52, lineHeight: 1 }}>{cur.glyph}</span>
       <div>
-        <div style={{ fontSize: big ? 64 : 48, fontWeight: 600, lineHeight: 1, fontFamily: "var(--hearth-font-display)" }}>{cToUnits(w.current.tempC, units)}°</div>
+        {/* Game day: the headline temperature wears the contrast-checked team ink. */}
+        <div style={{ fontSize: big ? 64 : 48, fontWeight: 600, lineHeight: 1, fontFamily: "var(--hearth-font-display)", color: festive }}>{cToUnits(w.current.tempC, units)}°</div>
         <div style={{ ...muted, fontSize: big ? 22 : 18 }}>
           {cur.label} · {w.place.name}
         </div>
@@ -87,19 +88,19 @@ function Details({ w, units }: { w: WeatherPayload; units: Units }) {
   );
 }
 
-export function WeatherView({ w, units, mode }: { w: WeatherPayload; units: Units; mode: WeatherMode }) {
+export function WeatherView({ w, units, mode, festive }: { w: WeatherPayload; units: Units; mode: WeatherMode; festive?: string | undefined }) {
   const col: CSSProperties = { display: "flex", flexDirection: "column", height: "100%", gap: 12 };
   switch (mode) {
     case "compact":
       return (
         <div data-part="weather" data-mode="compact" style={{ ...col, justifyContent: "center" }}>
-          <Now w={w} units={units} big />
+          <Now w={w} units={units} big festive={festive} />
         </div>
       );
     case "daily":
       return (
         <div data-part="weather" data-mode="daily" style={col}>
-          <Now w={w} units={units} big={false} />
+          <Now w={w} units={units} big={false} festive={festive} />
           <div style={{ marginTop: "auto" }}>
             <DailyStrip w={w} units={units} count={7} />
           </div>
@@ -108,7 +109,7 @@ export function WeatherView({ w, units, mode }: { w: WeatherPayload; units: Unit
     case "hourly":
       return (
         <div data-part="weather" data-mode="hourly" style={col}>
-          <Now w={w} units={units} big={false} />
+          <Now w={w} units={units} big={false} festive={festive} />
           <div style={{ marginTop: "auto" }}>
             <HourlyStrip w={w} units={units} count={12} />
           </div>
@@ -117,7 +118,7 @@ export function WeatherView({ w, units, mode }: { w: WeatherPayload; units: Unit
     default:
       return (
         <div data-part="weather" data-mode="detailed" style={col}>
-          <Now w={w} units={units} big />
+          <Now w={w} units={units} big festive={festive} />
           <Details w={w} units={units} />
           <div style={{ marginTop: "auto" }}>
             <DailyStrip w={w} units={units} count={5} />

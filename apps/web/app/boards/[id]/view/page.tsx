@@ -41,7 +41,7 @@ export default async function BoardViewPage({ params }: { params: Promise<{ id: 
       <div className="h-full w-full">
         <BoardCanvas vars={vars} width={size.w} height={size.h} className="h-full">
           <BoardBackdrop wallpaper={scene.wallpaper} scrimOpacity={scene.scrimOpacity} mood={scene.mood} canvasW={size.w} effects rightsNote={scene.rightsNote} />
-          {scene.gameDay ? <GameDaySky team={scene.gameDay.teamAbbr} accent={scene.gameDay.accent} accent2={scene.gameDay.accent2} canvasW={size.w} canvasH={size.h} /> : null}
+          {scene.gameDay ? <GameDaySky team={scene.gameDay.teamAbbr} canvasW={size.w} canvasH={size.h} /> : null}
           {scene.gameDay ? <GameDayBadge nickname={scene.gameDay.nickname} accent={scene.gameDay.accent} canvasW={size.w} /> : null}
           {board.widgets.map((w) => (
             <WidgetFrame key={w.id} type={w.type} x={w.x} y={w.y} w={w.w} h={w.h} z={10 + w.z} plain={WIDGET_META[w.type].plain} translucent={scene.wallpaper !== null} scale={textScale(w.type, w.w, w.h, (safeWidgetConfig(w.type, w.config) as { fontScale: number }).fontScale)}>
