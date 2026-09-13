@@ -7,9 +7,7 @@ export type CalendarFeed = { events: CalEvent[]; syncedAt: Date | null; error: s
 export type CalendarMode = "day" | "week" | "month";
 
 const DAY = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-const MONTH = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const DAY_FULL = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-const MONTH_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const muted: CSSProperties = { color: "var(--hearth-text-muted)" };
 
 /** Card padding (WidgetFrame) and the gap between day columns, in canvas px. */
@@ -23,56 +21,11 @@ const COL_GAP = 8;
 const MIN_COLUMN_PX = 150;
 
 /**
- * The month, on a row of its own, big enough to read from the other side of
- * the kitchen. Every view gets one: the week view had no month anywhere on
- * it at all, so a display parked on the default view never said what month
- * it was (operator, 2026-08-31).
- *
- * A week that straddles two months says so ("OCT — NOV") rather than
- * silently naming whichever end it started at.
+ * There is deliberately no month header on any view. The band added on
+ * 2026-08-31 lasted two weeks: the date widget already names the month, and
+ * seeing both on the wall the operator called it a duplicate (2026-09-13).
+ * Its 87px went back to the events, and the year moved to the clock widget.
  */
-function MonthBand({ from, to, festive }: { from: Date; to?: Date; festive?: string | undefined }) {
-  const spans = Boolean(to && (to.getMonth() !== from.getMonth() || to.getFullYear() !== from.getFullYear()));
-  const label = spans ? `${MONTH_SHORT[from.getMonth()]} — ${MONTH_SHORT[to!.getMonth()]}` : MONTH[from.getMonth()];
-  const year = spans && to!.getFullYear() !== from.getFullYear() ? `${from.getFullYear()}–${to!.getFullYear()}` : String(from.getFullYear());
-  return (
-    <div
-      data-part="month"
-      style={{
-        display: "flex",
-        alignItems: "baseline",
-        justifyContent: "space-between",
-        gap: 16,
-        borderBottom: "3px solid var(--hearth-accent-2)",
-        paddingBottom: 4,
-        marginBottom: 8,
-      }}
-    >
-      <span
-        style={{
-          fontSize: 72,
-          lineHeight: 1,
-          fontWeight: 600,
-          fontFamily: "var(--hearth-font-display)",
-          textTransform: "uppercase",
-          letterSpacing: 1,
-          whiteSpace: "nowrap",
-          // Game day wears the team: the ink arrives pre-checked for contrast
-          // against this card's actual surface (see render-data festiveInk).
-          color: festive,
-          // A long month on a narrow portrait board shrinks rather than clips.
-          minWidth: 0,
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-        }}
-      >
-        {label}
-      </span>
-      <span style={{ ...muted, fontSize: 28, fontWeight: 500, whiteSpace: "nowrap" }}>{year}</span>
-    </div>
-  );
-}
-
 const sameDay = (a: Date, b: Date) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 const timeLabel = (d: Date) => d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }).replace(":00", "");
 const startOfDay = (d: Date) => {
@@ -346,7 +299,6 @@ export function WeekView({
       // merely small.
       style={{ display: "flex", flexDirection: "column", height: "100%", zoom: zoom === 1 ? undefined : zoom }}
     >
-      <MonthBand from={shown[0]!} to={shown[shown.length - 1]!} festive={festive} />
       {dense ? (
         <WeekRows cols={shown} events={events} perDay={plan.perDay} today={plan.today} festive={festive} />
       ) : (
@@ -369,7 +321,6 @@ export function DayView({ now, feed, festive }: { now: Date; feed: CalendarFeed;
   const next = eventsOn(events, tomorrow);
   return (
     <div data-part="calendar" data-mode="day" style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      <MonthBand from={today} festive={festive} />
       {/* The weekday came from DAY[i] + "day", which reads "Tueday" and
           "Satday" three days a week. Spell them out. */}
       <div style={{ display: "flex", alignItems: "baseline", gap: 14, paddingBottom: 8 }}>
@@ -414,7 +365,6 @@ export function MonthView({ now, feed, festive }: { now: Date; feed: CalendarFee
   const rows = cells[35]!.getMonth() === today.getMonth() ? 6 : 5;
   return (
     <div data-part="calendar" data-mode="month" style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      <MonthBand from={today} festive={festive} />
       <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 4 }}>
         {DAY.map((d) => (
           <div key={d} style={{ ...(festive ? { color: festive } : muted), fontSize: 13, textTransform: "uppercase", letterSpacing: 1, textAlign: "center" }}>

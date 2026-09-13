@@ -10,11 +10,20 @@ const LEATHER = ["#7B3F1D", "#8B4A21", "#5E2F14"];
  * the whole board on the seasonal-fall physics, and the team wordmark parked
  * in the bottom-right corner.
  *
- * The sky sits at z-index 1 — UNDER the weather layer's rain (z 2) and every
- * widget (z 10+). The seasonal decor learned this the hard way (2026-08-31):
- * ambient pieces drawn OVER the rain read as a bug. Down here the footballs
- * drift behind the cards like the wallpaper breathing, and the rain, if the
- * household has weather mood on, still owns the foreground.
+ * The sky rides ABOVE the widgets (z 850, under the celebration's 900): the
+ * first cut put it at z 1 behind the cards, and on a board with any real
+ * widget coverage the footballs were simply invisible — "hiding behind the
+ * widgets" (operator, on the wall, 2026-09-13). Game day is allowed to be in
+ * the way; the pieces are few, translucent, pointer-inert, and drifting, so
+ * text is only ever grazed for a moment. This deliberately overrides the
+ * seasonal-decor lesson about ambient layers — that rule was about the
+ * EVERYDAY board; one afternoon a week is the point.
+ *
+ * The wallpaper credit (z 5) stays under the sky knowingly: widgets (z 10+)
+ * already outrank it, so a card parked on that corner covers it permanently —
+ * a football drifting past for a second is strictly less occlusion than the
+ * shipped baseline. The badge, though, rides at 870: the sky must not paint
+ * over the very identity it exists to celebrate.
  *
  * The wordmark is our own display type, deliberately not league artwork —
  * this repo is public Apache-2.0 and team logos are trademarked. The word in
@@ -50,7 +59,7 @@ export function GameDaySky({
     <div
       data-part="gameday-sky"
       aria-hidden
-      style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none", zIndex: 1 }}
+      style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none", zIndex: 850 }}
     >
       {pieces.map((p, i) => (
         <span
@@ -118,7 +127,7 @@ export function GameDayBadge({ nickname, accent, canvasW }: { nickname: string; 
     <div
       data-part="gameday-badge"
       aria-hidden
-      style={{ position: "absolute", right: 44 * unit, bottom: 30 * unit, zIndex: 6, textAlign: "right", pointerEvents: "none" }}
+      style={{ position: "absolute", right: 44 * unit, bottom: 30 * unit, zIndex: 870, textAlign: "right", pointerEvents: "none" }}
     >
       <div
         style={{

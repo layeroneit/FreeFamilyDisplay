@@ -81,9 +81,15 @@ export const HARD_MIN_ZOOM = 0.45;
  * against the 3.4:1 the card was drawn at. The furniture shrinks with the rows
  * now, which holds the proportion and hands most of the saving back as room.
  */
-export const MONTH_BAND_H = 72 + 4 + 3 + 8;
 export const FOOTER_H = 30;
-export const FURNITURE_H = MONTH_BAND_H + FOOTER_H;
+/**
+ * The card's non-event furniture. The month band's 87px left this budget on
+ * 2026-09-13: the date widget already names the month, and after two weeks of
+ * both on the wall the operator called it a duplicate — the space goes back
+ * to the events, which is what a calendar is for. (The year moved to the
+ * clock widget in the same change.)
+ */
+export const FURNITURE_H = FOOTER_H;
 
 /**
  * How far the rows may shrink, given the household's own text-size setting.

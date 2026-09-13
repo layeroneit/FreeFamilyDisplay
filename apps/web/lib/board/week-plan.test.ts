@@ -10,7 +10,6 @@ import {
   HARD_MIN_ZOOM,
   MIN_DAYS_SHOWN,
   MIN_ROW_ZOOM,
-  MONTH_BAND_H,
   MORE_LINE_H,
   ROW_EVENT_H,
   ROW_EVENT_SIZE,
@@ -64,7 +63,12 @@ test("the operator's real week keeps all seven days", () => {
 });
 
 test("below the readability floor, days drop from the tail and are counted", () => {
-  const plan = planWeekRows(REAL_WEEK, 190 + FURNITURE_H);
+  // 210px of row room. The band's removal shrank FURNITURE_H by 87, and the
+  // old 190px fixture landed in the regime where MIN_DAYS_SHOWN deliberately
+  // outranks the soft floor (5 days held down to HARD_MIN_ZOOM) — correct
+  // behaviour, but a different rule than this test exists to pin.
+  const plan = planWeekRows(REAL_WEEK, 210 + FURNITURE_H);
+  assert.ok(plan.hidden > 0, "this fixture exists to exercise the drop-days path");
   // At or above the floor, never below it - but not pinned TO the floor
   // either: the days that survive are re-fitted to the room they inherit.
   assert.ok(plan.zoom >= MIN_ROW_ZOOM, `zoom ${plan.zoom}`);
@@ -123,20 +127,6 @@ test("the shrink floor rises with the text size, so big text stays big", () => {
   assert.ok(rowZoomFloor(1.5) > MIN_ROW_ZOOM);
   assert.equal(rowZoomFloor(2), 1, "at 2x the rows do not shrink at all, days hide instead");
   assert.equal(rowZoomFloor(3), 1, "never above 1: the plan may shrink, never magnify");
-});
-
-test("the month band shrinks with the events, holding the designed proportion", () => {
-  // The band used to sit outside the zoomed rows, so only the events shrank
-  // under it: at the floor the wall showed a 61px month over 11px events, a
-  // 5.5:1 ratio against the 3.4:1 the card was drawn at. One zoom over the
-  // whole body means the ratio is fixed by construction, at every scale.
-  const designed = MONTH_BAND_H / ROW_EVENT_SIZE;
-  for (const box of [PORTRAIT_BOX, 300, 200 + FURNITURE_H, 1200]) {
-    const plan = planWeekRows(REAL_WEEK, box);
-    const band = MONTH_BAND_H * plan.zoom;
-    const event = ROW_EVENT_SIZE * plan.zoom;
-    assert.ok(Math.abs(band / event - designed) < 1e-9, `box ${box} skewed the proportion`);
-  }
 });
 
 test("the whole card is costed, furniture included, so nothing overflows it", () => {

@@ -23,11 +23,81 @@ import { hypeForSlot, isKickoffSlot, type HypeLine } from "@/lib/board/nfl";
  * outranks the team, even on game day.
  */
 
-const PIECES = 110;
+/**
+ * 60, down from the birthday's 110, and slower (see the durations below):
+ * on the wall the dense fast confetti stuttered while the dozen lazy
+ * footballs sailed ("glitchy, not smooth" — operator, 2026-09-13). Fewer
+ * pieces is less paint per frame, and slow motion hides the frames a Pi
+ * drops; the birthday keeps its 20-second downpour, but a three-minute
+ * dwell wants weather, not a blizzard.
+ */
+const PIECES = 60;
 /** The ?effects=low kiosk path: same party, a fraction of the paint. */
 const PIECES_LOW = 32;
 
 type Flake = { x: number; w: number; h: number; color: string; dur: number; delay: number; drift: number; tumble: number; round: boolean };
+
+/**
+ * A hype line that WRAPS: words are unbreakable, spaces are honest break
+ * points, letters still pop in one by one across the whole phrase. The first
+ * cut sized the font from the full phrase length and set nowrap — on a
+ * portrait wall "MONSTERS OF THE MIDWAY" walked off both edges (operator,
+ * 2026-09-13). Sizing now answers to the longest WORD; the phrase takes the
+ * lines it needs.
+ */
+export function PopLine({
+  text,
+  fontSize,
+  colors,
+  baseDelay,
+  tilt,
+  italic,
+  letterSpacing,
+}: {
+  text: string;
+  fontSize: number;
+  /** Per-letter color cycle, or null to inherit. */
+  colors: string[] | null;
+  baseDelay: number;
+  tilt: boolean;
+  italic: boolean;
+  letterSpacing: number;
+}) {
+  let idx = 0;
+  return (
+    <div style={{ fontSize, fontStyle: italic ? "italic" : undefined, fontWeight: 800, lineHeight: 1.08, letterSpacing, maxWidth: "100%" }} aria-label={text}>
+      {text.split(" ").map((word, wi) => (
+        <span key={wi}>
+          {wi > 0 ? " " : null}
+          {/* inline-block without nowrap: shrink-to-fit keeps a fitting word
+              on one line, and a word wider than the container (a chant in a
+              wide display face) degrades to an in-word break instead of
+              walking off the edge under the overlay's overflow clip. */}
+          <span style={{ display: "inline-block" }}>
+            {word.split("").map((ch) => {
+              const i = idx++;
+              return (
+                <span
+                  key={i}
+                  className="bday-letter"
+                  style={
+                    {
+                      ...(colors ? { color: colors[i % colors.length] } : null),
+                      animationDelay: `${(baseDelay + i * 0.07).toFixed(2)}s`,
+                      ...(tilt ? { "--tilt": `${i % 2 ? 4 : -4}deg` } : null),
+                    } as CSSProperties
+                  }
+                >
+                  {ch}
+                </span>
+              );
+            })}
+          </span>
+        </span>
+      ))}
+    </div>
+  );
+}
 
 export function GameDayCelebration({
   nickname,
@@ -114,10 +184,10 @@ export function GameDayCelebration({
       w: 9 + r() * 11,
       h: 13 + r() * 18,
       color: colors[Math.floor(r() * colors.length)]!,
-      dur: +(4.6 + r() * 4.2).toFixed(2),
+      dur: +(7 + r() * 5).toFixed(2),
       delay: +(r() * 4).toFixed(2),
       drift: Math.round((r() - 0.5) * 200),
-      tumble: +(0.9 + r() * 1.6).toFixed(2),
+      tumble: +(1.8 + r() * 1.8).toFixed(2),
       round: r() < 0.22,
     }));
   }, [accent, accent2, reduceEffects]);
@@ -127,15 +197,19 @@ export function GameDayCelebration({
   const unit = canvasW / 1920;
   const top = show.line.top.toUpperCase();
   const sub = show.line.sub?.toUpperCase();
-  const topSize = Math.max(48, Math.min(190 * unit, (canvasW * 0.86) / (Math.max(4, top.length) * 0.56)));
+  // The longest word is the width constraint now that the line wraps; 0.68
+  // per glyph because a chant is all caps and heavy on the wide letters.
+  const longestWord = Math.max(4, ...top.split(" ").map((w) => w.length));
+  const topSize = Math.max(44, Math.min(190 * unit, (canvasW * 0.9) / (longestWord * 0.68)));
+  const subSize = Math.round(Math.max(34, topSize * 0.42));
   const letterColors = [accent, "#FFFFFF", accent2];
-  const subDelayBase = top.length * 0.07 + 0.25;
+  const subDelayBase = top.replace(/ /g, "").length * 0.07 + 0.25;
 
   return (
     <div
       data-part="gameday"
       className={show.phase === "leaving" ? "bday-overlay bday-out" : "bday-overlay"}
-      style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none", zIndex: 900 }}
+      style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none", zIndex: 900, contain: "layout style paint" }}
     >
       <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at center, rgb(0 0 0 / 0.5), rgb(0 0 0 / 0.8))" }} />
 
@@ -184,38 +258,10 @@ export function GameDayCelebration({
           textShadow: "0 4px 24px rgb(0 0 0 / 0.7)",
         }}
       >
-        <div
-          style={{ fontSize: Math.round(topSize), fontStyle: "italic", fontWeight: 800, lineHeight: 1.05, letterSpacing: 3, whiteSpace: "nowrap" }}
-          aria-label={top}
-        >
-          {top.split("").map((ch, i) =>
-            ch === " " ? (
-              <span key={i}>&nbsp;&nbsp;</span>
-            ) : (
-              <span
-                key={i}
-                className="bday-letter"
-                style={{ color: letterColors[i % letterColors.length], animationDelay: `${(i * 0.07).toFixed(2)}s`, "--tilt": `${i % 2 ? 4 : -4}deg` } as CSSProperties}
-              >
-                {ch}
-              </span>
-            ),
-          )}
-        </div>
+        <PopLine text={top} fontSize={Math.round(topSize)} colors={letterColors} baseDelay={0} tilt italic letterSpacing={3} />
         {sub ? (
-          <div
-            style={{ fontSize: Math.round(Math.max(40, topSize * 0.42)), fontWeight: 800, lineHeight: 1.05, marginTop: Math.round(16 * unit), letterSpacing: 4 }}
-            aria-label={sub}
-          >
-            {sub.split("").map((ch, i) =>
-              ch === " " ? (
-                <span key={i}>&nbsp;</span>
-              ) : (
-                <span key={i} className="bday-letter" style={{ animationDelay: `${(subDelayBase + i * 0.06).toFixed(2)}s` } as CSSProperties}>
-                  {ch}
-                </span>
-              ),
-            )}
+          <div style={{ marginTop: Math.round(16 * unit) }}>
+            <PopLine text={sub} fontSize={subSize} colors={null} baseDelay={subDelayBase} tilt={false} italic={false} letterSpacing={4} />
           </div>
         ) : null}
         <div style={{ fontSize: Math.round(104 * unit), marginTop: Math.round(22 * unit), lineHeight: 1, display: "flex", gap: Math.round(36 * unit) }} aria-hidden>

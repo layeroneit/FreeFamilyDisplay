@@ -47,6 +47,12 @@ export function ClockWidget({
   const ampm = format === "12h" ? (h24 < 12 ? "AM" : "PM") : "";
   const display = "var(--hearth-font-display)";
   const numerals = festive;
+  // The year lives here now — the calendar's month band carried it until the
+  // operator called the band a duplicate of the date widget (2026-09-13),
+  // and nothing else on the board says the year. Muted on an ordinary day,
+  // team ink on game day, like the calendar's labels.
+  const year = String(now.getFullYear());
+  const yearStyle = { fontSize: 22, fontWeight: 500, letterSpacing: 2, color: festive ?? "var(--hearth-text-muted)" } as const;
 
   if (style === "analog") {
     const sec = now.getSeconds();
@@ -56,8 +62,8 @@ export function ClockWidget({
       <line x1="50" y1="50" x2="50" y2={50 - len} stroke={color} strokeWidth={w} strokeLinecap="round" transform={`rotate(${deg} 50 50)`} />
     );
     return (
-      <div data-part="analog" style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
-        <svg viewBox="0 0 100 100" style={{ height: "100%", aspectRatio: "1" }} aria-label={`${hh}:${mm}${ampm ? " " + ampm : ""}`}>
+      <div data-part="analog" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", gap: 4 }}>
+        <svg viewBox="0 0 100 100" style={{ minHeight: 0, flex: 1, aspectRatio: "1" }} aria-label={`${hh}:${mm}${ampm ? " " + ampm : ""}`}>
           <circle cx="50" cy="50" r="47" fill="var(--hearth-surface)" stroke="var(--hearth-border)" strokeWidth="2" />
           {Array.from({ length: 12 }, (_, i) => (
             <line key={i} x1="50" y1="6" x2="50" y2={i % 3 === 0 ? 13 : 10} stroke={i % 3 === 0 ? "var(--hearth-accent-1)" : "var(--hearth-text-muted)"} strokeWidth={i % 3 === 0 ? 2.5 : 1.5} transform={`rotate(${i * 30} 50 50)`} />
@@ -67,6 +73,7 @@ export function ClockWidget({
           {showSeconds ? hand(sec * 6, 38, 1, "var(--hearth-accent-1)") : null}
           <circle cx="50" cy="50" r="3" fill="var(--hearth-accent-1)" />
         </svg>
+        <span data-part="year" style={{ ...yearStyle, fontSize: 16 }}>{year}</span>
       </div>
     );
   }
@@ -77,29 +84,36 @@ export function ClockWidget({
         <span style={{ fontSize: 120, letterSpacing: -3, color: numerals }}>{hh}</span>
         <span style={{ fontSize: 120, letterSpacing: -3, color: "var(--hearth-accent-1)" }}>{mm}</span>
         {ampm ? <span style={{ fontSize: 24, color: "var(--hearth-text-muted)", marginTop: 8 }}>{ampm}</span> : null}
+        <span data-part="year" style={{ ...yearStyle, marginTop: 6 }}>{year}</span>
       </div>
     );
   }
 
   if (style === "minimal") {
     return (
-      <div data-part="time" style={{ display: "flex", alignItems: "baseline", justifyContent: "flex-end", gap: 8, height: "100%", fontFamily: display }}>
-        <span style={{ fontSize: 56, fontWeight: 500, letterSpacing: -1, color: numerals }}>
-          {hh}:{mm}
-        </span>
-        {showSeconds ? <span style={{ fontSize: 24, color: "var(--hearth-text-muted)" }}>{ss}</span> : null}
-        {ampm ? <span style={{ fontSize: 18, color: "var(--hearth-text-muted)" }}>{ampm}</span> : null}
+      <div data-part="time" style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", justifyContent: "center", height: "100%", fontFamily: display }}>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+          <span style={{ fontSize: 56, fontWeight: 500, letterSpacing: -1, color: numerals }}>
+            {hh}:{mm}
+          </span>
+          {showSeconds ? <span style={{ fontSize: 24, color: "var(--hearth-text-muted)" }}>{ss}</span> : null}
+          {ampm ? <span style={{ fontSize: 18, color: "var(--hearth-text-muted)" }}>{ampm}</span> : null}
+        </div>
+        <span data-part="year" style={{ ...yearStyle, fontSize: 16 }}>{year}</span>
       </div>
     );
   }
 
   return (
-    <div data-part="time" style={{ display: "flex", alignItems: "baseline", gap: 12, height: "100%", justifyContent: "flex-end" }}>
-      <span style={{ fontSize: 112, fontWeight: 600, lineHeight: 1, fontFamily: display, letterSpacing: -2, color: numerals }}>
-        {hh}:{mm}
-        {showSeconds ? <span style={{ fontSize: 48, color: "var(--hearth-text-muted)" }}>:{ss}</span> : null}
-      </span>
-      {ampm ? <span style={{ fontSize: 32, color: "var(--hearth-text-muted)", fontWeight: 500 }}>{ampm}</span> : null}
+    <div data-part="time" style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", justifyContent: "center", height: "100%" }}>
+      <div style={{ display: "flex", alignItems: "baseline", gap: 12, justifyContent: "flex-end" }}>
+        <span style={{ fontSize: 112, fontWeight: 600, lineHeight: 1, fontFamily: display, letterSpacing: -2, color: numerals }}>
+          {hh}:{mm}
+          {showSeconds ? <span style={{ fontSize: 48, color: "var(--hearth-text-muted)" }}>:{ss}</span> : null}
+        </span>
+        {ampm ? <span style={{ fontSize: 32, color: "var(--hearth-text-muted)", fontWeight: 500 }}>{ampm}</span> : null}
+      </div>
+      <span data-part="year" style={{ ...yearStyle, marginTop: 2 }}>{year}</span>
     </div>
   );
 }

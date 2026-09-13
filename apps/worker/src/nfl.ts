@@ -10,7 +10,7 @@
  *
  * Cadence: the tick is cheap and frequent; the FETCH is what's rationed.
  * - nobody has picked a team and no scores widget exists → never fetch
- * - a game is live, or kickoff is minutes away → every tick (3 min)
+ * - a game is live, or within the hour before a kickoff → every tick (3 min)
  * - otherwise → hourly, which keeps "do they play today" a day fresh
  * The endpoint is unofficial: on failure the stale payload stays (stale-but-
  * labeled beats blank, plan §3) and the error is recorded beside it.
@@ -25,7 +25,23 @@ const log = createLogger("worker.nfl");
 export const NFL_TICK_MS = 3 * 60 * 1000;
 const LIVE_REFETCH_MS = 2 * 60 * 1000;
 const IDLE_REFETCH_MS = 55 * 60 * 1000;
-const KICKOFF_SOON_MS = 20 * 60 * 1000;
+/**
+ * The active window opens a full hour before kickoff (operator, 2026-09-13):
+ * flexed games, moved kickoff times and delays need to land BEFORE the
+ * family is looking at the widget, and an hourly cadence could miss a change
+ * made minutes earlier. Signed (not a window around kickoff): a game whose
+ * kickoff has passed while the feed still says "pre" is a delay, and a delay
+ * is exactly when the household wants fresh data.
+ */
+const KICKOFF_LEAD_MS = 60 * 60 * 1000;
+/**
+ * How long a passed-kickoff game still counts as "delayed" rather than
+ * "stuck": a real weather delay resolves within hours, while a feed anomaly
+ * that leaves last Sunday's game in "pre" would otherwise hold the 2-minute
+ * cadence for the rest of the week — thousands of silent requests against an
+ * unofficial endpoint.
+ */
+const DELAY_GRACE_MS = 6 * 60 * 60 * 1000;
 const FETCH_TIMEOUT_MS = 15_000;
 /** Sundays run ~200 KB; anything near this is not a scoreboard. */
 const MAX_BYTES = 3_000_000;
@@ -153,11 +169,12 @@ function dueForFetch(cached: { fetchedAt: Date; payload: unknown } | null, now: 
   if (age >= IDLE_REFETCH_MS) return true;
   const games = (cached.payload as { games?: NflGame[] } | null)?.games;
   if (!Array.isArray(games)) return true;
-  const liveOrImminent = games.some(
-    (g) =>
-      g.state === "in" ||
-      (g.state === "pre" && Math.abs(new Date(g.date).getTime() - now.getTime()) <= KICKOFF_SOON_MS),
-  );
+  const liveOrImminent = games.some((g) => {
+    if (g.state === "in") return true;
+    if (g.state !== "pre") return false;
+    const untilKickoff = new Date(g.date).getTime() - now.getTime();
+    return untilKickoff <= KICKOFF_LEAD_MS && untilKickoff >= -DELAY_GRACE_MS;
+  });
   return liveOrImminent && age >= LIVE_REFETCH_MS;
 }
 
