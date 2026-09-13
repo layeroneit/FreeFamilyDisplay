@@ -6,6 +6,7 @@ import type { BoardFull } from "@/lib/board/boards";
 import { moodFor, type Mood } from "@/lib/board/mood";
 import { birthdaysOn } from "@/lib/board/birthdays";
 import { MEDIA_DIR } from "@/lib/board/media-access";
+import { NIGHT_FROM_DEFAULT, NIGHT_TO_DEFAULT, isNightAt } from "@/lib/board/night";
 import { largestSrc, loginPhotoSet } from "@/lib/board/photo-set";
 import { safeWidgetConfig } from "@/lib/board/widgets";
 import { WeatherPayloadSchema, weatherKey, type WeatherPayload } from "@/lib/board/weather-codes";
@@ -56,6 +57,9 @@ export type BoardScene = {
      *  The art never ships in the repo — trademark line, see the route. */
     artUrl: string | null;
   } | null;
+  /** Night mode is on and the local clock is inside the window: the pages
+   *  render the wallpaper alone — no widgets, no overlays, a nightlight. */
+  night: boolean;
 };
 
 /** Everything the renderer needs, resolved from Postgres only (plan §4.2). */
@@ -236,5 +240,9 @@ export async function loadBoardScene(board: BoardFull, viewerName: string): Prom
     }
   }
 
-  return { data, wallpaper, scrimOpacity, mood, varOverrides, rightsNote, birthdays, gameDay };
+  const night =
+    board.style.nightMode === true &&
+    isNightAt(data.now, board.style.nightFrom ?? NIGHT_FROM_DEFAULT, board.style.nightTo ?? NIGHT_TO_DEFAULT);
+
+  return { data, wallpaper, scrimOpacity, mood, varOverrides, rightsNote, birthdays, gameDay, night };
 }

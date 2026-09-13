@@ -18,6 +18,7 @@ import {
 } from "./widgets";
 import { pokeWorkerConnectors, pokeWorkerNfl, pokeWorkerWeather } from "./worker-poke";
 import { isNflTeamId } from "./nfl";
+import { NIGHT_FROM_DEFAULT, NIGHT_TO_DEFAULT, parseHHMM } from "./night";
 import { sealLinkFields } from "./secrets";
 
 /** Family scale; also the rail against one account fanning out weather fetches. */
@@ -64,6 +65,15 @@ export type BoardStyle = {
    */
   nflTeam?: string | null;
   gameDayHype?: boolean;
+  /**
+   * Night mode: inside the window the board shows only the wallpaper — a
+   * nightlight. OPT-IN (absent means off), unlike the celebration toggles:
+   * hiding every widget all night is a behavior change nobody should get by
+   * surprise. Times are "HH:MM" local; the default window wraps midnight.
+   */
+  nightMode?: boolean;
+  nightFrom?: string;
+  nightTo?: string;
 };
 
 export type BoardFull = {
@@ -114,7 +124,9 @@ function readStyle(raw: unknown): BoardStyle {
   // A board whose style JSON was never written must get the SAME defaults as
   // one whose JSON simply lacks a key - the audit found birthday celebrations
   // silently off on every fresh board because this early return skipped them.
-  if (!raw || typeof raw !== "object") return { seasonalDecor: true, birthdayCheer: true, nflTeam: null, gameDayHype: true };
+  if (!raw || typeof raw !== "object") {
+    return { seasonalDecor: true, birthdayCheer: true, nflTeam: null, gameDayHype: true, nightMode: false, nightFrom: NIGHT_FROM_DEFAULT, nightTo: NIGHT_TO_DEFAULT };
+  }
   const s = raw as Record<string, unknown>;
   return {
     wallpaperShown: Array.isArray(s["wallpaperShown"]) ? (s["wallpaperShown"] as string[]) : [],
@@ -126,6 +138,9 @@ function readStyle(raw: unknown): BoardStyle {
     // no team rather than crashing render.
     nflTeam: typeof s["nflTeam"] === "string" && isNflTeamId(s["nflTeam"]) ? s["nflTeam"] : null,
     gameDayHype: s["gameDayHype"] !== false,
+    nightMode: s["nightMode"] === true,
+    nightFrom: typeof s["nightFrom"] === "string" && parseHHMM(s["nightFrom"]) !== null ? s["nightFrom"] : NIGHT_FROM_DEFAULT,
+    nightTo: typeof s["nightTo"] === "string" && parseHHMM(s["nightTo"]) !== null ? s["nightTo"] : NIGHT_TO_DEFAULT,
   };
 }
 

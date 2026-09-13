@@ -14,6 +14,7 @@ import { GameDayCelebration } from "@/components/board/gameday-celebration";
 import { GameDayBadge, GameDaySky } from "@/components/board/gameday-frame";
 import { RefreshTimer } from "@/app/status/refresh-timer";
 import { KioskControls } from "./kiosk-controls";
+import { NIGHT_FROM_DEFAULT, NIGHT_TO_DEFAULT } from "@/lib/board/night";
 
 export const dynamic = "force-dynamic";
 
@@ -32,6 +33,7 @@ export default async function BoardViewPage({ params }: { params: Promise<{ id: 
   if (!board) notFound();
   const scene = await loadBoardScene(board, user.displayName);
   const size = canvasSize(board.canvas);
+  const nightWindow = board.style.nightMode === true ? { from: board.style.nightFrom ?? NIGHT_FROM_DEFAULT, to: board.style.nightTo ?? NIGHT_TO_DEFAULT } : null;
   const vars = { ...themeVars(themeById(board.theme)), ...scene.varOverrides };
 
   return (
@@ -40,7 +42,10 @@ export default async function BoardViewPage({ params }: { params: Promise<{ id: 
       <KioskControls boardId={board.id} canvas={board.canvas} />
       <div className="h-full w-full">
         <BoardCanvas vars={vars} width={size.w} height={size.h} className="h-full">
-          <BoardBackdrop wallpaper={scene.wallpaper} scrimOpacity={scene.scrimOpacity} mood={scene.mood} canvasW={size.w} effects rightsNote={scene.rightsNote} />
+          {/* Night mode: wallpaper only — see the kiosk page. */}
+          <BoardBackdrop wallpaper={scene.wallpaper} scrimOpacity={scene.scrimOpacity} mood={scene.night ? null : scene.mood} canvasW={size.w} effects rightsNote={scene.rightsNote} />
+          {scene.night ? null : (
+            <>
           {scene.gameDay ? <GameDaySky team={scene.gameDay.teamAbbr} canvasW={size.w} canvasH={size.h} /> : null}
           {scene.gameDay ? <GameDayBadge nickname={scene.gameDay.nickname} accent={scene.gameDay.accent} canvasW={size.w} canvasH={size.h} artUrl={scene.gameDay.artUrl} /> : null}
           {board.widgets.map((w) => (
@@ -48,7 +53,7 @@ export default async function BoardViewPage({ params }: { params: Promise<{ id: 
               <WidgetView widget={w} data={scene.data} />
             </WidgetFrame>
           ))}
-          {scene.birthdays.length > 0 ? <BirthdayCelebration names={scene.birthdays} canvasW={size.w} canvasH={size.h} /> : null}
+          {scene.birthdays.length > 0 ? <BirthdayCelebration names={scene.birthdays} canvasW={size.w} canvasH={size.h} nightWindow={nightWindow} /> : null}
           {/* A birthday outranks the team — one celebration a slot, the person's. */}
           {scene.birthdays.length === 0 && scene.gameDay ? (
             <GameDayCelebration
@@ -61,8 +66,11 @@ export default async function BoardViewPage({ params }: { params: Promise<{ id: 
               canvasW={size.w}
               canvasH={size.h}
               artUrl={scene.gameDay.artUrl}
+              nightWindow={nightWindow}
             />
           ) : null}
+            </>
+          )}
         </BoardCanvas>
       </div>
     </div>

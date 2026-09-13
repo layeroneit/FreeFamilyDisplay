@@ -11,6 +11,7 @@ import { GameDayCelebration } from "@/components/board/gameday-celebration";
 import { GameDayBadge, GameDaySky } from "@/components/board/gameday-frame";
 import { RefreshTimer } from "@/app/status/refresh-timer";
 import { boardForDisplayToken } from "@/lib/board/display-links";
+import { NIGHT_FROM_DEFAULT, NIGHT_TO_DEFAULT } from "@/lib/board/night";
 
 export const dynamic = "force-dynamic";
 
@@ -48,6 +49,7 @@ export default async function DisplayPage({
 
   // The greeting says the household's name, not a viewer's — nobody is signed in.
   const scene = await loadBoardScene(board, board.name);
+  const nightWindow = board.style.nightMode === true ? { from: board.style.nightFrom ?? NIGHT_FROM_DEFAULT, to: board.style.nightTo ?? NIGHT_TO_DEFAULT } : null;
   const size = canvasSize(board.canvas);
   const vars = { ...themeVars(themeById(board.theme)), ...scene.varOverrides };
 
@@ -56,7 +58,12 @@ export default async function DisplayPage({
       <RefreshTimer intervalMs={5 * 60_000} />
       <div className="h-full w-full">
         <BoardCanvas vars={vars} width={size.w} height={size.h} className="h-full">
-          <BoardBackdrop wallpaper={scene.wallpaper} scrimOpacity={scene.scrimOpacity} mood={scene.mood} canvasW={size.w} effects={!lowFx} rightsNote={scene.rightsNote} />
+          {/* Night mode: the wallpaper has the room to itself — no widgets, no
+              overlays, no weather effects, a nightlight. The 5-minute refresh
+              wakes the board within minutes of the window's edge. */}
+          <BoardBackdrop wallpaper={scene.wallpaper} scrimOpacity={scene.scrimOpacity} mood={scene.night ? null : scene.mood} canvasW={size.w} effects={!lowFx} rightsNote={scene.rightsNote} />
+          {scene.night ? null : (
+            <>
           {scene.gameDay && !lowFx ? <GameDaySky team={scene.gameDay.teamAbbr} canvasW={size.w} canvasH={size.h} /> : null}
           {scene.gameDay ? <GameDayBadge nickname={scene.gameDay.nickname} accent={scene.gameDay.accent} canvasW={size.w} canvasH={size.h} artUrl={scene.gameDay.artUrl} /> : null}
           {board.widgets.map((w) => (
@@ -76,7 +83,7 @@ export default async function DisplayPage({
               <WidgetView widget={w} data={scene.data} />
             </WidgetFrame>
           ))}
-          {scene.birthdays.length > 0 ? <BirthdayCelebration names={scene.birthdays} canvasW={size.w} canvasH={size.h} /> : null}
+          {scene.birthdays.length > 0 ? <BirthdayCelebration names={scene.birthdays} canvasW={size.w} canvasH={size.h} nightWindow={nightWindow} /> : null}
           {/* A birthday outranks the team — one celebration a slot, the person's. */}
           {scene.birthdays.length === 0 && scene.gameDay ? (
             <GameDayCelebration
@@ -90,8 +97,11 @@ export default async function DisplayPage({
               canvasH={size.h}
               reduceEffects={lowFx}
               artUrl={scene.gameDay.artUrl}
+              nightWindow={nightWindow}
             />
           ) : null}
+            </>
+          )}
         </BoardCanvas>
       </div>
     </div>

@@ -7,6 +7,7 @@ import { CANVAS_PRESET_IDS, freeGeometry, publicWidgetConfig, STARTER_LAYOUTS, t
 import { canUseCollection, requestAdvance } from "@/lib/board/wallpapers";
 import { pokeWorkerConnectors, pokeWorkerNfl } from "@/lib/board/worker-poke";
 import { NFL_TEAM_IDS } from "@/lib/board/nfl";
+import { parseHHMM } from "@/lib/board/night";
 import { isThemeId } from "@/lib/themes";
 import { audit } from "@/lib/audit";
 
@@ -31,6 +32,9 @@ const PatchInput = z
     birthdayCheer: z.boolean().optional(),
     nflTeam: z.enum(NFL_TEAM_IDS).nullable().optional(),
     gameDayHype: z.boolean().optional(),
+    nightMode: z.boolean().optional(),
+    nightFrom: z.string().refine((v) => parseHHMM(v) !== null, "Times look like 22:00.").optional(),
+    nightTo: z.string().refine((v) => parseHHMM(v) !== null, "Times look like 05:30.").optional(),
   })
   .refine((v) => Object.values(v).some((x) => x !== undefined), "Nothing to update.");
 
@@ -79,6 +83,9 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
   if (d.birthdayCheer !== undefined) stylePatch.birthdayCheer = d.birthdayCheer;
   if (d.nflTeam !== undefined) stylePatch.nflTeam = d.nflTeam;
   if (d.gameDayHype !== undefined) stylePatch.gameDayHype = d.gameDayHype;
+  if (d.nightMode !== undefined) stylePatch.nightMode = d.nightMode;
+  if (d.nightFrom !== undefined) stylePatch.nightFrom = d.nightFrom;
+  if (d.nightTo !== undefined) stylePatch.nightTo = d.nightTo;
 
   // "Two taps, done forever": a board's FIRST team pick brings the scoreboard
   // widget with it. Read the prior state before the patch lands — a household

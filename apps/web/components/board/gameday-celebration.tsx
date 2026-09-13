@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react"
 import { isCelebrationHour } from "@/lib/board/birthdays";
 import { useCelebrationStage } from "./celebration-stage";
 import { hypeForSlot, isKickoffSlot, type HypeLine } from "@/lib/board/nfl";
+import { isNightAt } from "@/lib/board/night";
 
 /**
  * The game-day party, the operator's pick B1: the birthday celebration's DNA
@@ -116,6 +117,7 @@ export function GameDayCelebration({
   canvasH,
   reduceEffects = false,
   artUrl = null,
+  nightWindow = null,
 }: {
   nickname: string;
   emoji: string;
@@ -129,15 +131,22 @@ export function GameDayCelebration({
   reduceEffects?: boolean;
   /** The household's own team art (operator-placed; see gameday-frame). */
   artUrl?: string | null;
+  /** The board's night window, when night mode is on. The celebration hours
+   *  (7–22) and the default night (22:00–) overlap at the 22:00 boundary,
+   *  and a page mounted just before ten would otherwise throw a party over
+   *  the nightlight (audit) — so the handler checks at fire time. */
+  nightWindow?: { from: string; to: string } | null;
 }) {
   const [show, setShow] = useState<{ line: HypeLine; durationSec: number; phase: "playing" | "leaving" } | null>(null);
   const linesRef = useRef(lines);
   const kickoffRef = useRef(kickoffIso);
   const nickRef = useRef(nickname);
+  const nightRef = useRef(nightWindow);
   useEffect(() => {
     linesRef.current = lines;
     kickoffRef.current = kickoffIso;
     nickRef.current = nickname;
+    nightRef.current = nightWindow;
   });
 
   useEffect(() => {
@@ -153,7 +162,8 @@ export function GameDayCelebration({
       boundary = setTimeout(
         () => {
           const at = new Date();
-          if (isCelebrationHour(at.getHours())) {
+          const nw = nightRef.current;
+          if (isCelebrationHour(at.getHours()) && !(nw && isNightAt(at, nw.from, nw.to))) {
             const kickoff = isKickoffSlot(new Date(kickoffRef.current), at);
             const line: HypeLine = kickoff
               ? { top: "KICKOFF!", sub: `GO ${nickRef.current.toUpperCase()}!` }

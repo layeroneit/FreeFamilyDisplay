@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { birthdayGreeting, isCelebrationHour } from "@/lib/board/birthdays";
+import { isNightAt } from "@/lib/board/night";
 import { useCelebrationStage } from "./celebration-stage";
 
 /** Party colours. Fixed, not the theme accents — a birthday looks the same on
@@ -35,16 +36,22 @@ export function BirthdayCelebration({
   canvasW,
   canvasH,
   durationSec = 20,
+  nightWindow = null,
 }: {
   names: string[];
   canvasW: number;
   canvasH: number;
   durationSec?: number;
+  /** The board's night window — no party over the nightlight (see the
+   *  game-day celebration's prop for the boundary-overlap story). */
+  nightWindow?: { from: string; to: string } | null;
 }) {
   const [phase, setPhase] = useState<"idle" | "playing" | "leaving">("idle");
   const namesRef = useRef(names);
+  const nightRef = useRef(nightWindow);
   useEffect(() => {
     namesRef.current = names;
+    nightRef.current = nightWindow;
   });
 
   useEffect(() => {
@@ -61,7 +68,9 @@ export function BirthdayCelebration({
       next.setMinutes(now.getMinutes() < 30 ? 30 : 60);
       boundary = setTimeout(
         () => {
-          if (namesRef.current.length > 0 && isCelebrationHour(new Date().getHours())) {
+          const at = new Date();
+          const nw = nightRef.current;
+          if (namesRef.current.length > 0 && isCelebrationHour(at.getHours()) && !(nw && isNightAt(at, nw.from, nw.to))) {
             setPhase("playing");
             clearTimeout(fade);
             clearTimeout(end);

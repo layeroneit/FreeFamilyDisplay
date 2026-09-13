@@ -35,6 +35,9 @@ type EditorBoard = {
   birthdayCheer: boolean;
   nflTeam: string | null;
   gameDayHype: boolean;
+  nightMode: boolean;
+  nightFrom: string;
+  nightTo: string;
   pinned: boolean;
   /** Whether a display link exists. The token itself never reaches the client. */
   hasDisplayLink: boolean;
@@ -362,6 +365,11 @@ function DisplaySettings({
 }) {
   const [scrim, setScrim] = useState<number>(board.scrimOpacityOverride ?? suggestedScrim ?? 0.4);
   const [strength, setStrength] = useState(board.weatherMoodStrength);
+  // Local buffers, saved on blur — the slider pattern above: a fully
+  // controlled time input PATCHes on every complete intermediate value and
+  // the refresh rewrites the field mid-keystroke (audit).
+  const [nightFrom, setNightFrom] = useState(board.nightFrom);
+  const [nightTo, setNightTo] = useState(board.nightTo);
   const label = "block text-xs font-semibold uppercase tracking-wide";
   return (
     <div className="space-y-4">
@@ -565,6 +573,37 @@ function DisplaySettings({
             <button type="button" onClick={() => onSave({ nflTeam: null })} className="mt-2 rounded-lg border px-2 py-1 text-[11px]" style={field}>
               No team — turn game day off
             </button>
+          </>
+        ) : null}
+      </section>
+
+      <section>
+        <span className={label} style={{ color: "var(--hearth-text-muted)" }}>Night light</span>
+        <label className="mt-1 flex items-center gap-2">
+          <input type="checkbox" checked={board.nightMode} onChange={(e) => onSave({ nightMode: e.target.checked })} />
+          Overnight, show only the wallpaper
+        </label>
+        <p className="mt-1 text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
+          Inside these hours the widgets sleep and the photo has the room to itself — a nightlight. The board wakes on its own
+          within a few minutes of each edge.
+        </p>
+        {board.nightMode ? (
+          <>
+            <div className="mt-2 grid grid-cols-2 gap-2">
+              <label className="text-xs">
+                From
+                <input type="time" value={nightFrom} onChange={(e) => setNightFrom(e.target.value)} onBlur={() => nightFrom && onSave({ nightFrom })} className="mt-1 w-full rounded-lg border px-2 py-1" style={field} />
+              </label>
+              <label className="text-xs">
+                Until
+                <input type="time" value={nightTo} onChange={(e) => setNightTo(e.target.value)} onBlur={() => nightTo && onSave({ nightTo })} className="mt-1 w-full rounded-lg border px-2 py-1" style={field} />
+              </label>
+            </div>
+            {nightFrom && nightFrom === nightTo ? (
+              <p className="mt-1 text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
+                Start and end match — the night never begins. Give them an hour apart.
+              </p>
+            ) : null}
           </>
         ) : null}
       </section>
