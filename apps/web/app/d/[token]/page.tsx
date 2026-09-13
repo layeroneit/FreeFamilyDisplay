@@ -58,7 +58,7 @@ export default async function DisplayPage({
         <BoardCanvas vars={vars} width={size.w} height={size.h} className="h-full">
           <BoardBackdrop wallpaper={scene.wallpaper} scrimOpacity={scene.scrimOpacity} mood={scene.mood} canvasW={size.w} effects={!lowFx} rightsNote={scene.rightsNote} />
           {scene.gameDay && !lowFx ? <GameDaySky team={scene.gameDay.teamAbbr} canvasW={size.w} canvasH={size.h} /> : null}
-          {scene.gameDay ? <GameDayBadge nickname={scene.gameDay.nickname} accent={scene.gameDay.accent} canvasW={size.w} artUrl={scene.gameDay.artUrl} /> : null}
+          {scene.gameDay ? <GameDayBadge nickname={scene.gameDay.nickname} accent={scene.gameDay.accent} canvasW={size.w} canvasH={size.h} artUrl={scene.gameDay.artUrl} /> : null}
           {board.widgets.map((w) => (
             <WidgetFrame
               key={w.id}

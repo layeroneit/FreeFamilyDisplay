@@ -190,6 +190,16 @@ body {
 .bday-pop-2 { animation-delay: 0.28s; }
 .bday-pop-3 { animation-delay: 0.55s; }
 
+/* While a celebration owns the stage (gameday-celebration sets the flag on
+ * <html>), every ambient animation pauses: rain, snow, fog, the Ken Burns
+ * photo drift, the seasonal fall and the game-day football sky. A Pi's
+ * compositor can run the party OR the weather smoothly, not both — and a
+ * held frame under a full-screen overlay is invisible anyway. !important
+ * because the photo drift sets its animation as an inline shorthand. */
+html[data-celebrating] :is(.season-descend, .season-flutter, .season-firefly, .mood-drop, .mood-flake, .mood-fog-band, .mood-lightning, [data-part="photos"] img) {
+  animation-play-state: paused !important;
+}
+
 /* Scores widget (components/board/scores-view): the LIVE dot's heartbeat. */
 @keyframes scores-live-pulse {
   0%, 100% { opacity: 1; }

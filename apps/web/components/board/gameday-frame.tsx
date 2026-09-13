@@ -121,17 +121,25 @@ export function GameDaySky({
  * household's own team art above both when they've added one (an operator-
  * placed file in the media volume; never repo content).
  */
-export function GameDayBadge({ nickname, accent, canvasW, artUrl }: { nickname: string; accent: string; canvasW: number; artUrl?: string | null }) {
+export function GameDayBadge({ nickname, accent, canvasW, canvasH, artUrl }: { nickname: string; accent: string; canvasW: number; canvasH?: number; artUrl?: string | null }) {
   const word = nickname.toUpperCase();
-  const unit = canvasW / 1920;
+  // Scaled by the TIGHTER canvas axis: width alone inflated the badge 33%
+  // taller on ultrawide (2560 wide, same 1080 tall) than on landscape,
+  // burying the corner widget under it (audit).
+  const unit = Math.min(canvasW / 1920, (canvasH ?? 1080) / 1080);
+  // A portrait wall's bottom-right corner is shared with the quote card and
+  // the wallpaper credit, and at full size the badge leaned on both
+  // (operator's screenshot, 2026-09-13). Smaller, and lifted clear.
+  const portrait = (canvasH ?? 0) > canvasW;
+  const k = portrait ? 0.72 : 1;
   // Long nicknames (BUCCANEERS, COMMANDERS) shrink instead of colliding with
   // whatever widget lives along the bottom edge.
-  const size = Math.min(150 * unit, (canvasW * 0.34) / (word.length * 0.52));
+  const size = Math.min(150 * unit, (canvasW * 0.34) / (word.length * 0.52)) * k;
   return (
     <div
       data-part="gameday-badge"
       aria-hidden
-      style={{ position: "absolute", right: 44 * unit, bottom: 30 * unit, zIndex: 870, textAlign: "right", pointerEvents: "none" }}
+      style={{ position: "absolute", right: 44 * unit, bottom: (portrait ? 64 : 30) * unit, zIndex: 870, textAlign: "right", pointerEvents: "none" }}
     >
       {artUrl ? (
         // The household's own logo IS the wordmark — rendering both doubled
@@ -142,8 +150,8 @@ export function GameDayBadge({ nickname, accent, canvasW, artUrl }: { nickname: 
           alt={word}
           draggable={false}
           style={{
-            height: Math.round(170 * unit),
-            maxWidth: Math.round(340 * unit),
+            height: Math.round(170 * unit * k),
+            maxWidth: Math.round(340 * unit * k),
             objectFit: "contain",
             filter: "drop-shadow(0 4px 18px rgb(0 0 0 / 0.5))",
           }}

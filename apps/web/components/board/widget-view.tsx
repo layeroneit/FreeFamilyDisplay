@@ -35,6 +35,9 @@ export type BoardData = {
    *  temperature) — a team accent PRE-CHECKED for contrast against the actual
    *  surface, or null when no accent reads honestly (or it isn't game day). */
   festiveInk: string | null;
+  /** True when the team plays today and hype is on — distinct from festiveInk,
+   *  which can be null on a game day whose accents fail contrast. */
+  gameDayActive: boolean;
 };
 
 function greetingFor(hour: number): string {
@@ -104,7 +107,11 @@ export function WidgetView({ widget, data }: { widget: BoardWidgetRow; data: Boa
           // contents.
           <WeekView now={data.now} days={c.days} feed={feed} w={widget.w} h={widget.h} fontScale={c.fontScale} festive={data.festiveInk ?? undefined} />
         );
-      if (!data.seasonalDecor) return body;
+      // On game day the football sky owns the ambient layer — leaves falling
+      // beside footballs read as clutter (the operator's wall, 2026-09-13),
+      // and every paused layer is compositor budget handed to the Pi. The
+      // season resumes tomorrow.
+      if (!data.seasonalDecor || data.gameDayActive) return body;
       // The card's interior in the widget's own (zoomed) units, which is the
       // space the decor has to lay itself out in.
       const cardScale = textScale("calendar", widget.w, widget.h, c.fontScale);

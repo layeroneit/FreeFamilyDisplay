@@ -123,19 +123,23 @@ export async function loadBoardData(board: BoardFull, viewerName: string): Promi
     if (safeWidgetConfig("calendar", w.config).icsSecret) calendars[id] ??= { events: [], syncedAt: null, error: null };
   }
 
+  const now = new Date();
   return {
     viewerName,
     photoSrcs: loginPhotoSet().map(largestSrc),
     weather,
     calendars,
     linkPhotos,
-    now: new Date(),
+    now,
     seasonalDecor: board.style.seasonalDecor !== false,
     nfl,
     nflTeam: board.style.nflTeam ?? null,
     // Provisional: the real value needs the wallpaper, which only the scene
     // loader resolves — it fills this in (see loadBoardScene).
     festiveInk: null,
+    // Same gate and same `now` as the scene's takeover, so they can't disagree.
+    gameDayActive:
+      board.style.gameDayHype !== false && gameDayFor(nfl?.games ?? [], board.style.nflTeam ?? null, now) !== null,
   };
 }
 

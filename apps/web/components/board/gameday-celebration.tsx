@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { isCelebrationHour } from "@/lib/board/birthdays";
+import { useCelebrationStage } from "./celebration-stage";
 import { hypeForSlot, isKickoffSlot, type HypeLine } from "@/lib/board/nfl";
 
 /**
@@ -24,16 +25,21 @@ import { hypeForSlot, isKickoffSlot, type HypeLine } from "@/lib/board/nfl";
  */
 
 /**
- * 60, down from the birthday's 110, and slower (see the durations below):
- * on the wall the dense fast confetti stuttered while the dozen lazy
- * footballs sailed ("glitchy, not smooth" — operator, 2026-09-13). Fewer
- * pieces is less paint per frame, and slow motion hides the frames a Pi
- * drops; the birthday keeps its 20-second downpour, but a three-minute
- * dwell wants weather, not a blizzard.
+ * 40, down from the birthday's 110 in two steps: on the wall the dense fast
+ * confetti stuttered while the dozen lazy footballs sailed ("glitchy, not
+ * smooth" — operator, 2026-09-13). Fewer pieces is less paint per frame,
+ * slow motion hides the frames a Pi drops, and at 1080p the eye cannot
+ * count the difference between 60 flakes and 40; the birthday keeps its
+ * 20-second downpour, but a three-minute dwell wants weather, not a
+ * blizzard. The second lever is below: while the party plays, the REST of
+ * the board's animations pause, handing the whole compositor budget to the
+ * celebration — which is how the ambient layers earn their smoothness.
  */
-const PIECES = 60;
-/** The ?effects=low kiosk path: same party, a fraction of the paint. */
-const PIECES_LOW = 32;
+const PIECES = 40;
+/** The ?effects=low kiosk path: same party, a fraction of the paint. (16
+ *  against the default's 40 — the audit noted 32 vs 40 had stopped being a
+ *  meaningful saving on the hardware that needs it.) */
+const PIECES_LOW = 16;
 
 type Flake = { x: number; w: number; h: number; color: string; dur: number; delay: number; drift: number; tumble: number; round: boolean };
 
@@ -175,6 +181,9 @@ export function GameDayCelebration({
       clearTimeout(end);
     };
   }, []);
+
+  // The board yields the stage while the party plays (see celebration-stage).
+  useCelebrationStage(show !== null);
 
   // Team confetti: the two team colors and white. Deterministic, so the pour
   // is identical every play and hydration never has anything to reconcile.

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { birthdayGreeting, isCelebrationHour } from "@/lib/board/birthdays";
+import { useCelebrationStage } from "./celebration-stage";
 
 /** Party colours. Fixed, not the theme accents — a birthday looks the same on
  *  every board, and one-colour confetti doesn't read as confetti. */
@@ -79,6 +80,11 @@ export function BirthdayCelebration({
       clearTimeout(end);
     };
   }, [durationSec]);
+
+  // The board yields the stage while the party plays (see celebration-stage) —
+  // the game-day work diagnosed the Pi's celebration jank as ambient layers
+  // competing with the overlay, and at 110 pieces this is the heavier show.
+  useCelebrationStage(phase !== "idle");
 
   // Deterministic, so the confetti is identical every play and there is no
   // hydration mismatch to reconcile.
