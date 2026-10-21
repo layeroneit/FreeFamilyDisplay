@@ -13,7 +13,7 @@
     "@ffd/log": "*",
     "bcryptjs": "^3.0.3",
     "lucide-react": "^1.8.0",
-    "next": "^16.2.3",
+    "next": "^16.3.8",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "server-only": "^0.0.1",
