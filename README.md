@@ -435,6 +435,8 @@ npm run dev          # Next dev server on :3010 (needs a database)
 Free Family Display &copy; 2026 **Layer One IT Consultants**
 (<https://layeroneconsultants.com/>). Developed by Layer One IT Consultants and given away free of charge.
 
+Created by **Joseph J. Henderson** · Layer One IT Consultants
+
 You may run it, modify it, and redistribute it, including commercially. If you redistribute it you must keep the copyright notice and the `NOTICE` file, and state what you changed. The licence includes an explicit patent grant.
 
 ### No warranty, and nobody is operating this for you
