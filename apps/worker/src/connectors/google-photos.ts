@@ -15,7 +15,7 @@
  */
 
 import { createHash } from "node:crypto";
-import { mkdir, readdir, rm } from "node:fs/promises";
+import { mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
 import { safeFetch, UnsafeUrlError } from "../net/ssrf.js";
@@ -160,6 +160,34 @@ async function isRealPhoto(file: string): Promise<boolean> {
 }
 
 /**
+ * isRealPhoto decodes the whole image and computes per-channel statistics, so
+ * running it on every cached photo on every 15-minute sync kept the worker busy
+ * for minutes per album (300 photos x 2048px). The verdict only changes when the
+ * file does, so it is remembered per file (name + size + mtime) in a hidden
+ * sidecar next to the photos and recomputed only for new or changed files.
+ */
+const VERDICTS_FILE = ".verdicts.json";
+type Verdict = { size: number; mtimeMs: number; ok: boolean };
+
+async function loadVerdicts(dir: string): Promise<Record<string, Verdict>> {
+  try {
+    const parsed: unknown = JSON.parse(await readFile(path.join(dir, VERDICTS_FILE), "utf8"));
+    return parsed && typeof parsed === "object" ? (parsed as Record<string, Verdict>) : {};
+  } catch {
+    return {};
+  }
+}
+
+async function cachedIsRealPhoto(abs: string, name: string, verdicts: Record<string, Verdict>): Promise<boolean> {
+  const st = await stat(abs);
+  const v = verdicts[name];
+  if (v && v.size === st.size && v.mtimeMs === st.mtimeMs) return v.ok;
+  const ok = await isRealPhoto(abs);
+  verdicts[name] = { size: st.size, mtimeMs: st.mtimeMs, ok };
+  return ok;
+}
+
+/**
  * Syncs one photo widget's link into the local cache. Returns the cached
  * file names in display order. Throws with an actionable message.
  */
@@ -172,11 +200,12 @@ export async function syncPhotoLink(link: string, widgetId: string, mediaDir: st
   await mkdir(dir, { recursive: true });
   const keep = new Set<string>();
   const files: string[] = [];
+  const existing = new Set(await readdir(dir).catch(() => [] as string[]));
+  const verdicts = await loadVerdicts(dir);
   for (const u of urls.slice(0, MAX_PHOTOS)) {
     const name = `${createHash("sha256").update(u.split("?")[0]!).digest("hex").slice(0, 24)}.jpg`;
     const abs = path.join(dir, name);
-    const existing = await readdir(dir).catch(() => [] as string[]);
-    const cached = existing.includes(name);
+    const cached = existing.has(name);
     try {
       if (!cached) {
         const img = await safeFetch(u, { accept: "image/*", maxBytes: MAX_IMAGE_BYTES });
@@ -197,8 +226,9 @@ export async function syncPhotoLink(link: string, widgetId: string, mediaDir: st
       }
       // Re-checked on every sync, not just on download: an image cached before
       // this rule existed has to be able to fall out of the set.
-      if (!(await isRealPhoto(abs))) {
+      if (!(await cachedIsRealPhoto(abs, name, verdicts))) {
         await rm(abs, { force: true });
+        delete verdicts[name];
         continue;
       }
       keep.add(name);
@@ -210,7 +240,10 @@ export async function syncPhotoLink(link: string, widgetId: string, mediaDir: st
   }
   // Drop cached files no longer in the album.
   for (const f of await readdir(dir).catch(() => [] as string[])) {
+    if (f === VERDICTS_FILE) continue;
     if (!keep.has(f)) await rm(path.join(dir, f), { force: true });
   }
+  for (const n of Object.keys(verdicts)) if (!keep.has(n)) delete verdicts[n];
+  await writeFile(path.join(dir, VERDICTS_FILE), JSON.stringify(verdicts)).catch(() => undefined);
   return files;
 }
