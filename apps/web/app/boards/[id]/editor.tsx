@@ -879,7 +879,7 @@ function AddOwnCollection({ onCreated }: { onCreated: (id: string) => void }) {
         </>
       ) : (
         <>
-          <input type="url" placeholder="https://photos.app.goo.gl/… or a Drive folder link" value={link} onChange={(e) => setLink(e.target.value)} maxLength={2048} className="w-full rounded-lg border px-3 py-1.5 text-sm" style={input} autoComplete="off" spellCheck={false} />
+          <input type="url" placeholder="https://photos.app.goo.gl/… or a Drive folder link" value={link} onChange={(e) => setLink(e.target.value)} maxLength={1400} className="w-full rounded-lg border px-3 py-1.5 text-sm" style={input} autoComplete="off" spellCheck={false} />
           <p className="text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
             Images need 1920px+ on the long edge. Only you can see this collection. The link is stored encrypted and never shown again.
           </p>
