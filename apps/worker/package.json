@@ -16,7 +16,7 @@
     "ioredis": "^5.9.0",
     "zod": "^3.24.0",
     "@ffd/crypto": "*",
-    "undici": "^7.10.0",
+    "undici": "^7.30.1",
     "sharp": "^0.34.5"
   },
   "devDependencies": {
