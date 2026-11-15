@@ -59,12 +59,33 @@ export async function listDropFolders(): Promise<Array<{ name: string; images: n
   return out.sort((a, b) => a.name.localeCompare(b.name));
 }
 
+/**
+ * The drop root is one directory for the whole instance and nothing ties a
+ * sub-folder to a household, so only the operator (who fills it) may build a
+ * collection from it. Web enforces the same rule on create; this is the
+ * worker's half, for rows created before that check existed.
+ */
+export function mayUseDropFolders(role: string | null | undefined): boolean {
+  return role === "OPERATOR";
+}
+
 export async function syncFolderCollections(mediaDir: string): Promise<void> {
   const cols = await prisma.wallpaperCollection.findMany({
     where: { isBuiltin: false, sourceFolder: { not: null } },
-    select: { id: true, sourceFolder: true, name: true },
+    select: { id: true, sourceFolder: true, name: true, ownerId: true },
   });
+  const ownerIds = [...new Set(cols.map((c) => c.ownerId).filter((id): id is string => id !== null))];
+  const roles = new Map(
+    (await prisma.user.findMany({ where: { id: { in: ownerIds } }, select: { id: true, role: true } })).map((u) => [u.id, u.role as string]),
+  );
   for (const c of cols) {
+    if (!mayUseDropFolders(c.ownerId ? roles.get(c.ownerId) : null)) {
+      await prisma.wallpaperCollection
+        .update({ where: { id: c.id }, data: { lastError: "Server folders are for the operator's collections only." } })
+        .catch(() => undefined);
+      log.warn("folder collection skipped: owner is not the operator", { collectionId: c.id });
+      continue;
+    }
     try {
       const src = resolveDropFolder(dropRoot(), c.sourceFolder!);
       if (!src) throw new Error("That folder name isn't allowed — use a plain name like demon-slayer.");

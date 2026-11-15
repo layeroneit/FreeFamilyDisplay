@@ -121,6 +121,9 @@ export async function POST(req: NextRequest) {
   }
 
   if (parsed.data.folder) {
+    // Operator only: the drop root is shared by the whole instance, so a
+    // member could otherwise pull another household's folder onto their board.
+    if (user.role !== "OPERATOR") return NextResponse.json({ error: "Server folders are for the operator only." }, { status: 403 });
     // A folder on the server the operator already filled — nothing to fetch,
     // nothing secret, so it is stored and shown in the clear.
     const created = await prisma.wallpaperCollection.create({
