@@ -11,7 +11,13 @@ import { ScoresWidget } from "./scores-view";
 import type { NflGame } from "@/lib/board/nfl";
 
 export type CalendarEvent = { uid: string; title: string; location: string | null; start: string; end: string; allDay: boolean };
-export type CalendarFeed = { events: CalendarEvent[]; syncedAt: Date | null; error: string | null };
+export type CalendarFeed = {
+  events: CalendarEvent[];
+  syncedAt: Date | null;
+  error: string | null;
+  /** The last sync worked but skipped some events (feed too large, unreadable rule). */
+  notice?: string | null;
+};
 
 /** Data the render path resolved from Postgres for this board. */
 export type BoardData = {
