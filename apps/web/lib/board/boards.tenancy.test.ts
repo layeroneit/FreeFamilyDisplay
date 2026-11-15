@@ -14,7 +14,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { prisma } from "@ffd/db";
-import { addWidget, createBoard, deleteBoard, getBoard, listBoards, removeWidget, updateBoard, updateWidget } from "./boards";
+import { addWidget, createBoard, deleteBoard, getBoard, listBoards, patchBoardStyle, removeWidget, updateBoard, updateWidget } from "./boards";
 
 async function dbReachable(): Promise<boolean> {
   try {
@@ -63,6 +63,28 @@ test("cross-tenant isolation: boards and widgets", async (t) => {
     assert.deepEqual(after.widgets.map((w) => w.id).sort(), mine.widgets.map((w) => w.id).sort());
   } finally {
     // Cascade removes boards and widgets.
+    await prisma.user.deleteMany({ where: { id: { in: [a.id, b.id] } } });
+    await prisma.$disconnect();
+  }
+});
+
+test("patchBoardStyle merges in place and stays scoped to the owner (audit L6)", async (t) => {
+  if (!process.env.DATABASE_URL || !(await dbReachable())) {
+    t.skip("no reachable DATABASE_URL — runs in CI against Postgres");
+    return;
+  }
+  const stamp = Date.now();
+  const a = await prisma.user.create({ data: { email: `style-a-${stamp}@test.local`, displayName: "A" } });
+  const b = await prisma.user.create({ data: { email: `style-b-${stamp}@test.local`, displayName: "B" } });
+  try {
+    const boardId = await createBoard(a.id, { name: "A's hall", theme: "midnight", widgets: ["clock"] });
+    // The worker's rotation state, written after the web side last read the board.
+    await prisma.board.update({ where: { id: boardId }, data: { style: { wallpaperShown: ["w1", "w2"] } } });
+    assert.equal(await patchBoardStyle(a.id, boardId, { nflTeam: "CHI" }), true);
+    assert.equal(await patchBoardStyle(b.id, boardId, { nflTeam: "GB" }), false, "B cannot patch A's board");
+    const row = await prisma.board.findUnique({ where: { id: boardId }, select: { style: true } });
+    assert.deepEqual(row?.style, { wallpaperShown: ["w1", "w2"], nflTeam: "CHI" });
+  } finally {
     await prisma.user.deleteMany({ where: { id: { in: [a.id, b.id] } } });
     await prisma.$disconnect();
   }

@@ -197,6 +197,18 @@ export function pickNext(
 }
 
 /** Advances one board now (rotation tick, or the operator's "next"/"skip"). */
+/**
+ * Writes only the rotation keys into the board's style JSON, merged in SQL.
+ * Writing back the whole style read at the start of the tick could revert a
+ * setting (nflTeam, nightMode) the user saved in between.
+ */
+function mergeStyle(boardId: string, patch: Record<string, unknown>) {
+  return prisma.$executeRaw`
+    UPDATE "Board"
+    SET "style" = (CASE WHEN jsonb_typeof("style") = 'object' THEN "style" ELSE '{}'::jsonb END) || ${JSON.stringify(patch)}::jsonb
+    WHERE "id" = ${boardId}`;
+}
+
 export async function advanceBoard(boardId: string, opts: { force?: boolean } = {}): Promise<boolean> {
   const board = await prisma.board.findUnique({
     where: { id: boardId },
@@ -227,10 +239,10 @@ export async function advanceBoard(boardId: string, opts: { force?: boolean } = 
     select: { id: true, sortOrder: true },
   });
   const next = pickNext(candidates, board.currentWallpaperId, board.wallpaperOrder, shown);
-  await prisma.board.update({
-    where: { id: board.id },
-    data: { currentWallpaperId: next.id, lastRotatedAt: new Date(), style: { ...style, wallpaperShown: next.shown } },
-  });
+  await prisma.$transaction([
+    prisma.board.update({ where: { id: board.id }, data: { currentWallpaperId: next.id, lastRotatedAt: new Date() } }),
+    mergeStyle(board.id, { wallpaperShown: next.shown }),
+  ]);
   return true;
 }
 
@@ -275,19 +287,21 @@ export async function advanceCollection(boardId: string, opts: { force?: boolean
   );
   if (!next.id || next.id === board.wallpaperCollectionId) return false;
 
-  await prisma.board.update({
-    where: { id: board.id },
-    data: {
-      wallpaperCollectionId: next.id,
-      lastCollectionRotatedAt: new Date(),
-      // The image-level state all referred to the OLD collection. A pin in
-      // particular points at an image this board can no longer show, and
-      // leaving it set would freeze the new theme on its fallback image.
-      currentWallpaperId: null,
-      lastRotatedAt: null,
-      style: { ...style, collectionsShown: next.shown, wallpaperShown: [], wallpaperPinned: null },
-    },
-  });
+  await prisma.$transaction([
+    prisma.board.update({
+      where: { id: board.id },
+      data: {
+        wallpaperCollectionId: next.id,
+        lastCollectionRotatedAt: new Date(),
+        // The image-level state all referred to the OLD collection. A pin in
+        // particular points at an image this board can no longer show, and
+        // leaving it set would freeze the new theme on its fallback image.
+        currentWallpaperId: null,
+        lastRotatedAt: null,
+      },
+    }),
+    mergeStyle(board.id, { collectionsShown: next.shown, wallpaperShown: [], wallpaperPinned: null }),
+  ]);
   return true;
 }
 
