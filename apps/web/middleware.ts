@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-
-export const DISPLAY_COOKIE = "ffd_display";
+import { displayCookieName } from "@/lib/board/display-cookie";
 
 /**
  * A wall screen reaches /d/<token> with no session. The page renders fine,
@@ -13,12 +12,15 @@ export const DISPLAY_COOKIE = "ffd_display";
  *
  * The cookie is the same bearer secret already in the URL, so it grants
  * nothing extra; it is httpOnly so page scripts cannot read it back out.
+ * Each token gets its own cookie (lib/board/display-cookie.ts), so opening a
+ * second board, or a stale link, adds a cookie instead of replacing the one
+ * the first board depends on.
  */
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
   const token = req.nextUrl.pathname.split("/")[2] ?? "";
   if (/^[A-Za-z0-9_-]{43}$/.test(token)) {
-    res.cookies.set(DISPLAY_COOKIE, token, {
+    res.cookies.set(await displayCookieName(token), token, {
       httpOnly: true,
       secure: (process.env.APP_URL ?? "").startsWith("https://"),
       sameSite: "lax",

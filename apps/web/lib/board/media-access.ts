@@ -7,7 +7,7 @@ export const MEDIA_DIR = process.env.MEDIA_DIR ?? "/app/media";
 import { prisma } from "@ffd/db";
 import { getSessionUser } from "@/lib/auth/sessions";
 import { hashDisplayToken } from "./display-links";
-import { DISPLAY_COOKIE } from "@/middleware";
+import { displayTokensFrom } from "./display-cookie";
 
 /**
  * Media files have two legitimate readers: the signed-in owner, and a wall
@@ -19,11 +19,12 @@ import { DISPLAY_COOKIE } from "@/middleware";
  * widget on a different board — even though both belong to the same account.
  */
 
-export async function displayBoardId(): Promise<string | null> {
-  const token = (await cookies()).get(DISPLAY_COOKIE)?.value;
-  if (!token || !/^[A-Za-z0-9_-]{43}$/.test(token)) return null;
-  const b = await prisma.board.findUnique({ where: { displayTokenHash: hashDisplayToken(token) }, select: { id: true } });
-  return b?.id ?? null;
+/** Boards whose display tokens this browser holds (one cookie per board). */
+export async function displayBoardIds(): Promise<string[]> {
+  const tokens = displayTokensFrom((await cookies()).getAll());
+  if (tokens.length === 0) return [];
+  const boards = await prisma.board.findMany({ where: { displayTokenHash: { in: tokens.map(hashDisplayToken) } }, select: { id: true } });
+  return boards.map((b) => b.id);
 }
 
 /** May the caller read the cached photos of this widget? */
@@ -33,9 +34,9 @@ export async function mayReadWidgetMedia(widgetId: string): Promise<boolean> {
     const owned = await prisma.boardWidget.findFirst({ where: { id: widgetId, board: { userId: user.id } }, select: { id: true } });
     if (owned) return true;
   }
-  const boardId = await displayBoardId();
-  if (!boardId) return false;
-  const onBoard = await prisma.boardWidget.findFirst({ where: { id: widgetId, boardId }, select: { id: true } });
+  const boardIds = await displayBoardIds();
+  if (boardIds.length === 0) return false;
+  const onBoard = await prisma.boardWidget.findFirst({ where: { id: widgetId, boardId: { in: boardIds } }, select: { id: true } });
   return onBoard !== null;
 }
 
@@ -49,10 +50,10 @@ export async function mayReadWidgetMedia(widgetId: string): Promise<boolean> {
 export async function mayReadGameDayArt(team: string): Promise<boolean> {
   const user = await getSessionUser();
   if (user) return true;
-  const boardId = await displayBoardId();
-  if (!boardId) return false;
-  const b = await prisma.board.findUnique({ where: { id: boardId }, select: { style: true } });
-  return (b?.style as { nflTeam?: unknown } | null)?.nflTeam === team;
+  const boardIds = await displayBoardIds();
+  if (boardIds.length === 0) return false;
+  const boards = await prisma.board.findMany({ where: { id: { in: boardIds } }, select: { style: true } });
+  return boards.some((b) => (b.style as { nflTeam?: unknown } | null)?.nflTeam === team);
 }
 
 /** May the caller read the renditions of this wallpaper collection? */
@@ -65,9 +66,9 @@ export async function mayReadCollectionMedia(collectionId: string): Promise<bool
     });
     if (usable) return true;
   }
-  const boardId = await displayBoardId();
-  if (!boardId) return false;
+  const boardIds = await displayBoardIds();
+  if (boardIds.length === 0) return false;
   // Only the collection the board is actually showing.
-  const board = await prisma.board.findFirst({ where: { id: boardId, wallpaperCollectionId: collectionId }, select: { id: true } });
+  const board = await prisma.board.findFirst({ where: { id: { in: boardIds }, wallpaperCollectionId: collectionId }, select: { id: true } });
   return board !== null;
 }
