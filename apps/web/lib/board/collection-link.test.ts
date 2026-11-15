@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { randomBytes } from "node:crypto";
 import test from "node:test";
 import { encryptSecret } from "@ffd/crypto";
-import { MAX_COLLECTION_LINK, SOURCE_SECRET_COLUMN } from "./collection-link.ts";
+import { MAX_COLLECTION_LINK, SOURCE_SECRET_COLUMN } from "./collection-link";
 
 process.env.MASTER_KEY = randomBytes(32).toString("base64");
 

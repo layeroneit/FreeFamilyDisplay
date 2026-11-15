@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { DISPLAY_COOKIE, displayCookieName, displayTokensFrom } from "./display-cookie.ts";
+import { DISPLAY_COOKIE, displayCookieName, displayTokensFrom } from "./display-cookie";
 
 const A = "A".repeat(43);
 const B = "B".repeat(43);
