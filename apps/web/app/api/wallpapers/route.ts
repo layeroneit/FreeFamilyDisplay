@@ -7,6 +7,7 @@ import { termsCurrent } from "@/lib/terms";
 import { listCollections } from "@/lib/board/wallpapers";
 import { pokeWorkerConnectors } from "@/lib/board/worker-poke";
 import { audit } from "@/lib/audit";
+import { MAX_COLLECTION_LINK } from "@/lib/board/collection-link";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +16,7 @@ const MAX_CUSTOM_COLLECTIONS = 10;
 const CreateInput = z
   .object({
     name: z.string().trim().min(1, "Give the collection a name.").max(80),
-    link: z.string().trim().max(2048).optional(),
+    link: z.string().trim().max(MAX_COLLECTION_LINK, "That link is too long. Use the album's short share link.").optional(),
     /** A directory name under the server's drop folder — never a path. */
     folder: z
       .string()
@@ -121,6 +122,9 @@ export async function POST(req: NextRequest) {
   }
 
   if (parsed.data.folder) {
+    // Operator only: the drop root is shared by the whole instance, so a
+    // member could otherwise pull another household's folder onto their board.
+    if (user.role !== "OPERATOR") return NextResponse.json({ error: "Server folders are for the operator only." }, { status: 403 });
     // A folder on the server the operator already filled — nothing to fetch,
     // nothing secret, so it is stored and shown in the clear.
     const created = await prisma.wallpaperCollection.create({
@@ -139,12 +143,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: err instanceof Error ? err.message : "Invalid link." }, { status: 400 });
   }
 
-  // Two-step so the ciphertext is bound to the row id.
-  const created = await prisma.wallpaperCollection.create({
-    data: { slug, ownerId: user.id, name: parsed.data.name, isBuiltin: false, sourceMask: maskUrl(link), rightsNote },
-    select: { id: true },
+  // Two-step so the ciphertext is bound to the row id, in one transaction so
+  // a failed second write cannot leave a collection with no secret behind.
+  const created = await prisma.$transaction(async (tx) => {
+    const row = await tx.wallpaperCollection.create({
+      data: { slug, ownerId: user.id, name: parsed.data.name, isBuiltin: false, sourceMask: maskUrl(link), rightsNote },
+      select: { id: true },
+    });
+    await tx.wallpaperCollection.update({ where: { id: row.id }, data: { sourceSecret: encryptSecret(link, `collection:${row.id}`) } });
+    return row;
   });
-  await prisma.wallpaperCollection.update({ where: { id: created.id }, data: { sourceSecret: encryptSecret(link, `collection:${created.id}`) } });
   await audit({ actorId: user.id, action: "wallpapers.collection.created", targetType: "WallpaperCollection", targetId: created.id });
   pokeWorkerConnectors();
   return NextResponse.json({ id: created.id }, { status: 201 });

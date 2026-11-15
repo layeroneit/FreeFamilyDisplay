@@ -11,11 +11,12 @@ import { decryptSecret } from "@ffd/crypto";
 import { prisma } from "@ffd/db";
 import { createLogger } from "@ffd/log";
 import { safeFetch, UnsafeUrlError } from "../net/ssrf.js";
-import { parseIcs } from "./ics.js";
+import { parseIcsFeed } from "./ics.js";
 import { syncPhotoLink } from "./google-photos.js";
 import { syncCustomCollections } from "./custom-collections.js";
 import { syncFolderCollections } from "./folder-collections.js";
 import { syncTagCollections } from "./anime-booru.js";
+import { coalescingRunner } from "./cycle.js";
 
 const log = createLogger("worker.connectors");
 const MEDIA_DIR = process.env.MEDIA_DIR ?? "/app/media";
@@ -109,19 +110,19 @@ async function syncCalendars(): Promise<void> {
       const to = new Date(from);
       to.setDate(to.getDate() + 31);
       from.setDate(1);
-      let events = parseIcs(text, from, to);
-      // parseIcs caps its output in FILE order; on a busy feed that can keep
-      // last month's events and drop this week's. Keep the ones nearest to
-      // now instead - the wall cares about the week ahead far more than the
-      // month behind.
-      if (events.length >= 400) {
-        const nowMs = Date.now();
-        events = [...events]
-          .sort((a, b) => Math.abs(new Date(a.start).getTime() - nowMs) - Math.abs(new Date(b.start).getTime() - nowMs))
-          .slice(0, 400)
-          .sort((a, b) => a.start.localeCompare(b.start));
-      }
-      await record("ics", r.id, { events, syncedAt: new Date().toISOString() }, null);
+      // parseIcsFeed applies its 400-event cap by distance from now, so a busy
+      // feed keeps the week ahead rather than the month behind.
+      const parsed = parseIcsFeed(text, from, to, new Date());
+      const events = parsed.events;
+      // Not a failure - the events shown are right - but the owner should know
+      // some are missing and why, rather than see a silently thin calendar.
+      const notice = parsed.truncated
+        ? "Feed too large - some events were skipped"
+        : parsed.skippedSeries > 0
+          ? `${parsed.skippedSeries} repeating event(s) use a rule this display can't read`
+          : null;
+      await record("ics", r.id, { events, syncedAt: new Date().toISOString(), ...(notice ? { notice } : {}) }, null);
+      if (notice) log.warn("calendar partly synced", { widgetId: r.id, truncated: parsed.truncated, skippedSeries: parsed.skippedSeries });
       log.info("calendar synced", { widgetId: r.id, events: events.length });
     } catch (err) {
       const text = failureText(err);
@@ -149,21 +150,12 @@ async function syncPhotos(): Promise<void> {
   }
 }
 
-let inFlight: Promise<void> | null = null;
-
-export function runConnectorCycle(): Promise<void> {
-  if (!inFlight) {
-    inFlight = (async () => {
-      await syncCalendars();
-      await syncPhotos();
-      await syncCustomCollections(MEDIA_DIR);
-      await syncFolderCollections(MEDIA_DIR);
-      await syncTagCollections(MEDIA_DIR);
-    })()
-      .catch((err: unknown) => log.error("connector cycle crashed", { error: err instanceof Error ? err.message : "unknown" }))
-      .finally(() => {
-        inFlight = null;
-      });
-  }
-  return inFlight;
-}
+export const runConnectorCycle = coalescingRunner(() =>
+  (async () => {
+    await syncCalendars();
+    await syncPhotos();
+    await syncCustomCollections(MEDIA_DIR);
+    await syncFolderCollections(MEDIA_DIR);
+    await syncTagCollections(MEDIA_DIR);
+  })().catch((err: unknown) => log.error("connector cycle crashed", { error: err instanceof Error ? err.message : "unknown" })),
+);

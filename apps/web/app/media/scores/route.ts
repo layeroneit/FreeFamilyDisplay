@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@ffd/db";
 import { getSessionUser } from "@/lib/auth/sessions";
-import { displayBoardId } from "@/lib/board/media-access";
+import { displayBoardIds } from "@/lib/board/media-access";
 import { NFL_CACHE_KEY, NFL_CACHE_KIND, readNflRow } from "@/lib/board/nfl";
 
 export const dynamic = "force-dynamic";
@@ -22,7 +22,7 @@ export const dynamic = "force-dynamic";
  */
 export async function GET() {
   const user = await getSessionUser();
-  if (!user && !(await displayBoardId())) return new NextResponse(null, { status: 404 });
+  if (!user && (await displayBoardIds()).length === 0) return new NextResponse(null, { status: 404 });
 
   const row = await prisma.cachedPayload.findUnique({
     where: { kind_key: { kind: NFL_CACHE_KIND, key: NFL_CACHE_KEY } },

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import path from "node:path";
 import test from "node:test";
-import { resolveDropFolder } from "./folder-collections.ts";
+import { mayUseDropFolders, resolveDropFolder } from "./folder-collections.ts";
 
 const ROOT = path.resolve("/app/drop");
 
@@ -30,4 +30,13 @@ test("nothing escapes the drop root", () => {
   ]) {
     assert.equal(resolveDropFolder(ROOT, bad), null, `expected null for ${JSON.stringify(bad)}`);
   }
+});
+
+test("only the operator's collections may read the shared drop folder (M6)", () => {
+  // The drop root is one directory for the whole instance; nothing ties a
+  // sub-folder to a household, so a member must not be able to pull one in.
+  assert.equal(mayUseDropFolders("OPERATOR"), true);
+  assert.equal(mayUseDropFolders("MEMBER"), false);
+  assert.equal(mayUseDropFolders("ADMIN"), false);
+  assert.equal(mayUseDropFolders(undefined), false);
 });

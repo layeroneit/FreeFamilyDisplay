@@ -16,7 +16,7 @@ import path from "node:path";
 import { decryptSecret } from "@ffd/crypto";
 import { prisma } from "@ffd/db";
 import { createLogger } from "@ffd/log";
-import { safeFetch, UnsafeUrlError } from "../net/ssrf.js";
+import { isFatalFetchError, safeFetch } from "../net/ssrf.js";
 import { ingestWallpaper } from "../wallpaper-ingest.js";
 import { classifyLink, driveFolderId, extractAlbumImageUrls, MAX_COLLECTION_PHOTOS } from "./google-photos.js";
 
@@ -87,8 +87,10 @@ export async function syncCustomCollections(mediaDir: string): Promise<void> {
           });
           added++;
         } catch (err) {
-          if (err instanceof UnsafeUrlError) throw err;
-          rejected++; // undersized or unreadable image; keep going
+          // Only a real guard verdict stops the sync; one oversized photo is
+          // skipped like any other unusable file.
+          if (isFatalFetchError(err)) throw err;
+          rejected++; // undersized, oversized or unreadable image; keep going
         }
       }
       // Remove wallpapers (rows + files) no longer in the album.
@@ -105,7 +107,7 @@ export async function syncCustomCollections(mediaDir: string): Promise<void> {
       const total = await prisma.wallpaper.count({ where: { collectionId: c.id } });
       await prisma.wallpaperCollection.update({
         where: { id: c.id },
-        data: { lastSyncedAt: new Date(), lastError: total === 0 ? "No usable images — wallpapers need at least 1920px on the long edge." : rejected > 0 ? `${rejected} image(s) skipped (too small or unreadable)` : null },
+        data: { lastSyncedAt: new Date(), lastError: total === 0 ? "No usable images — wallpapers need at least 1920px on the long edge." : rejected > 0 ? `${rejected} image(s) skipped (too small, too large or unreadable)` : null },
       });
       log.info("custom collection synced", { collectionId: c.id, added, rejected, total });
     } catch (err) {

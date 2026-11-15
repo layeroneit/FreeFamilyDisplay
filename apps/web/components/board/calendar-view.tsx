@@ -3,7 +3,7 @@ import { textScale } from "@/lib/board/widgets";
 import { COL_EVENT_SIZE, COL_LINE_CLAMP, FURNITURE_H, ROW_EVENT_SIZE, columnCapacity, planWeekRows, shownOn } from "@/lib/board/week-plan";
 
 export type CalEvent = { uid: string; title: string; location: string | null; start: string; end: string; allDay: boolean };
-export type CalendarFeed = { events: CalEvent[]; syncedAt: Date | null; error: string | null } | undefined;
+export type CalendarFeed = { events: CalEvent[]; syncedAt: Date | null; error: string | null; notice?: string | null } | undefined;
 export type CalendarMode = "day" | "week" | "month";
 
 const DAY = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -54,7 +54,7 @@ function Footer({ feed, count, note }: { feed: CalendarFeed; count: number; note
         : feed.error && count === 0
           ? `Calendar: ${feed.error}`
           : feed.syncedAt
-            ? `${count} event${count === 1 ? "" : "s"} · updated ${feed.syncedAt.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}${feed.error ? " · last refresh failed, showing what we have" : ""}`
+            ? `${count} event${count === 1 ? "" : "s"} · updated ${feed.syncedAt.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}${feed.error ? " · last refresh failed, showing what we have" : feed.notice ? ` · ${feed.notice}` : ""}`
             : "Reading your calendar… first sync lands within a minute."}
     </div>
   );

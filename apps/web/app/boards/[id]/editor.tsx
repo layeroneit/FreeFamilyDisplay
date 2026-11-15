@@ -741,6 +741,7 @@ function AddOwnCollection({ onCreated }: { onCreated: (id: string) => void }) {
   const [folder, setFolder] = useState("");
   const [tags, setTags] = useState("");
   const [folders, setFolders] = useState<Array<{ name: string; images: number }> | null>(null);
+  const [foldersDenied, setFoldersDenied] = useState(false);
   const [rightsNote, setRightsNote] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -751,7 +752,10 @@ function AddOwnCollection({ onCreated }: { onCreated: (id: string) => void }) {
     if (mode !== "folder" || folders !== null) return;
     let live = true;
     void fetch("/api/wallpapers/folders")
-      .then((r) => (r.ok ? r.json() : { folders: [] }))
+      .then((r) => {
+        if (r.status === 403 && live) setFoldersDenied(true);
+        return r.ok ? r.json() : { folders: [] };
+      })
       .then((b: { folders?: Array<{ name: string; images: number }> }) => {
         if (live) setFolders(b.folders ?? []);
       })
@@ -825,6 +829,10 @@ function AddOwnCollection({ onCreated }: { onCreated: (id: string) => void }) {
         <>
           {folders === null ? (
             <p className="text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>Reading the drop folder…</p>
+          ) : foldersDenied ? (
+            <p className="text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
+              Server folders are for the operator only. Use a Google Photos album link instead.
+            </p>
           ) : folders.length === 0 ? (
             <p className="text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
               No folders yet. On the server, make one under <code>wallpaper-drop/</code> — for example <code>wallpaper-drop/demon-slayer/</code> — drop your images in, then reopen this.
@@ -871,7 +879,7 @@ function AddOwnCollection({ onCreated }: { onCreated: (id: string) => void }) {
         </>
       ) : (
         <>
-          <input type="url" placeholder="https://photos.app.goo.gl/… or a Drive folder link" value={link} onChange={(e) => setLink(e.target.value)} maxLength={2048} className="w-full rounded-lg border px-3 py-1.5 text-sm" style={input} autoComplete="off" spellCheck={false} />
+          <input type="url" placeholder="https://photos.app.goo.gl/… or a Drive folder link" value={link} onChange={(e) => setLink(e.target.value)} maxLength={1400} className="w-full rounded-lg border px-3 py-1.5 text-sm" style={input} autoComplete="off" spellCheck={false} />
           <p className="text-[11px]" style={{ color: "var(--hearth-text-muted)" }}>
             Images need 1920px+ on the long edge. Only you can see this collection. The link is stored encrypted and never shown again.
           </p>

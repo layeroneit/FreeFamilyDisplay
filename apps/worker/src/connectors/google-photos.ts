@@ -18,7 +18,7 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
-import { safeFetch, UnsafeUrlError } from "../net/ssrf.js";
+import { isFatalFetchError, safeFetch, TooLargeError } from "../net/ssrf.js";
 
 /**
  * Ceiling for a photo WIDGET. Raised from 40 after the operator pointed a
@@ -178,6 +178,30 @@ async function loadVerdicts(dir: string): Promise<Record<string, Verdict>> {
   }
 }
 
+/**
+ * A rejected image has no file, so without a marker the next sync would see it
+ * as new and download and decode it again, every 15 minutes, forever. The
+ * marker (size -1) is a negative verdict that lives as long as the image stays
+ * in the album.
+ */
+export function rememberRejected(verdicts: Record<string, Verdict>, name: string): void {
+  verdicts[name] = { size: -1, mtimeMs: -1, ok: false };
+}
+
+export function isKnownRejected(verdicts: Record<string, Verdict>, name: string): boolean {
+  const v = verdicts[name];
+  return v !== undefined && !v.ok && v.size === -1;
+}
+
+/** Drops verdicts for files no longer kept, except negatives for images still listed. */
+export function pruneVerdicts(verdicts: Record<string, Verdict>, keep: Set<string>, listed: Set<string>): void {
+  for (const n of Object.keys(verdicts)) {
+    if (keep.has(n)) continue;
+    if (listed.has(n) && isKnownRejected(verdicts, n)) continue;
+    delete verdicts[n];
+  }
+}
+
 async function cachedIsRealPhoto(abs: string, name: string, verdicts: Record<string, Verdict>): Promise<boolean> {
   const st = await stat(abs);
   const v = verdicts[name];
@@ -199,6 +223,7 @@ export async function syncPhotoLink(link: string, widgetId: string, mediaDir: st
   const dir = path.join(mediaDir, "photos", widgetId);
   await mkdir(dir, { recursive: true });
   const keep = new Set<string>();
+  const listed = new Set<string>();
   const files: string[] = [];
   const existing = new Set(await readdir(dir).catch(() => [] as string[]));
   const verdicts = await loadVerdicts(dir);
@@ -206,6 +231,8 @@ export async function syncPhotoLink(link: string, widgetId: string, mediaDir: st
     const name = `${createHash("sha256").update(u.split("?")[0]!).digest("hex").slice(0, 24)}.jpg`;
     const abs = path.join(dir, name);
     const cached = existing.has(name);
+    listed.add(name);
+    if (!cached && isKnownRejected(verdicts, name)) continue;
     try {
       if (!cached) {
         const img = await safeFetch(u, { accept: "image/*", maxBytes: MAX_IMAGE_BYTES });
@@ -228,14 +255,16 @@ export async function syncPhotoLink(link: string, widgetId: string, mediaDir: st
       // this rule existed has to be able to fall out of the set.
       if (!(await cachedIsRealPhoto(abs, name, verdicts))) {
         await rm(abs, { force: true });
-        delete verdicts[name];
+        rememberRejected(verdicts, name);
         continue;
       }
       keep.add(name);
       files.push(name);
     } catch (err) {
-      if (err instanceof UnsafeUrlError) throw err;
-      // One bad image shouldn't sink the album.
+      if (isFatalFetchError(err)) throw err;
+      // One bad image shouldn't sink the album. An oversized one won't shrink
+      // by itself, so don't fetch it again either.
+      if (err instanceof TooLargeError) rememberRejected(verdicts, name);
     }
   }
   // Drop cached files no longer in the album.
@@ -243,7 +272,7 @@ export async function syncPhotoLink(link: string, widgetId: string, mediaDir: st
     if (f === VERDICTS_FILE) continue;
     if (!keep.has(f)) await rm(path.join(dir, f), { force: true });
   }
-  for (const n of Object.keys(verdicts)) if (!keep.has(n)) delete verdicts[n];
+  pruneVerdicts(verdicts, keep, listed);
   await writeFile(path.join(dir, VERDICTS_FILE), JSON.stringify(verdicts)).catch(() => undefined);
   return files;
 }

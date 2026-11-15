@@ -105,9 +105,10 @@ export async function loadBoardData(board: BoardFull, viewerName: string): Promi
       const parsed = WeatherPayloadSchema.safeParse(r.payload);
       if (parsed.success) weather[r.key] = parsed.data;
     } else if (r.kind === "ics") {
-      const p = r.payload as { events?: unknown };
+      const p = r.payload as { events?: unknown; notice?: unknown };
       const events = Array.isArray(p?.events) ? (p.events as CalendarFeed["events"]) : [];
-      calendars[r.key] = { events, syncedAt: r.fetchedAt.getTime() > 0 ? r.fetchedAt : null, error: r.lastError };
+      const notice = typeof p?.notice === "string" ? p.notice.slice(0, 120) : null;
+      calendars[r.key] = { events, syncedAt: r.fetchedAt.getTime() > 0 ? r.fetchedAt : null, error: r.lastError, notice };
     } else if (r.kind === "photos") {
       const p = r.payload as { files?: unknown };
       const files = Array.isArray(p?.files) ? (p.files as string[]) : [];

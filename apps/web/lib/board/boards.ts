@@ -276,10 +276,17 @@ export async function removeWidget(userId: string, boardId: string, widgetId: st
 }
 
 /** Merges keys into the board's style JSON (owner only). */
+/**
+ * Merges `patch` into the board's style in ONE statement (JSONB `||`). The
+ * worker also writes rotation state into this JSON; a read-modify-write here
+ * or there let whichever wrote second put back the other's stale copy, so a
+ * user's nflTeam / nightMode change could silently revert.
+ */
 export async function patchBoardStyle(userId: string, boardId: string, patch: Partial<BoardStyle>): Promise<boolean> {
-  const b = await prisma.board.findFirst({ where: { id: boardId, userId }, select: { style: true } });
-  if (!b) return false;
-  const current = (b.style && typeof b.style === "object" ? b.style : {}) as Record<string, unknown>;
-  await prisma.board.update({ where: { id: boardId }, data: { style: { ...current, ...patch } } });
-  return true;
+  const changed = await prisma.$executeRaw`
+    UPDATE "Board"
+    SET "style" = (CASE WHEN jsonb_typeof("style") = 'object' THEN "style" ELSE '{}'::jsonb END) || ${JSON.stringify(patch)}::jsonb,
+        "updatedAt" = now()
+    WHERE "id" = ${boardId} AND "userId" = ${userId}`;
+  return changed > 0;
 }
