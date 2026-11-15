@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { classifyLink, driveFolderId, extractAlbumImageUrls } from "./google-photos.ts";
+import { classifyLink, driveFolderId, extractAlbumImageUrls, isKnownRejected, pruneVerdicts, rememberRejected } from "./google-photos.ts";
 
 test("classifies Google links and rejects everything else", () => {
   assert.equal(classifyLink("https://photos.app.goo.gl/AbCdEf123"), "google-photos");
@@ -25,4 +25,18 @@ test("extracts deduplicated image base URLs from album HTML and ignores avatars"
 test("drive folder id", () => {
   assert.equal(driveFolderId("https://drive.google.com/drive/folders/1AbC_dEf-123?usp=sharing"), "1AbC_dEf-123");
   assert.equal(driveFolderId("https://drive.google.com/drive/my-drive"), null);
+});
+
+test("a rejected image is remembered (without its file) so it is not downloaded again", () => {
+  const verdicts: Parameters<typeof pruneVerdicts>[0] = { "good.jpg": { size: 10, mtimeMs: 1, ok: true } };
+  rememberRejected(verdicts, "tiny.jpg");
+  assert.equal(isKnownRejected(verdicts, "tiny.jpg"), true);
+  assert.equal(isKnownRejected(verdicts, "good.jpg"), false);
+  assert.equal(isKnownRejected(verdicts, "new.jpg"), false);
+  // Next sync: both still in the album, only good.jpg is kept on disk.
+  pruneVerdicts(verdicts, new Set(["good.jpg"]), new Set(["good.jpg", "tiny.jpg"]));
+  assert.equal(isKnownRejected(verdicts, "tiny.jpg"), true, "negative verdict survives while the image is still listed");
+  // The image leaves the album: its verdict goes too.
+  pruneVerdicts(verdicts, new Set(["good.jpg"]), new Set(["good.jpg"]));
+  assert.equal("tiny.jpg" in verdicts, false);
 });

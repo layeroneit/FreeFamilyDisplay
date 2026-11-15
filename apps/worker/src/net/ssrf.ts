@@ -28,6 +28,23 @@ export class UnsafeUrlError extends Error {
   }
 }
 
+/**
+ * The response was over the size ceiling. Still an UnsafeUrlError (the guard
+ * refused it), but not a verdict about the link: an album sync should skip
+ * that one file, not abort.
+ */
+export class TooLargeError extends UnsafeUrlError {
+  constructor() {
+    super("That file is too large.");
+    this.name = "TooLargeError";
+  }
+}
+
+/** True for guard verdicts that should stop a whole sync, not just skip one file. */
+export function isFatalFetchError(err: unknown): boolean {
+  return err instanceof UnsafeUrlError && !(err instanceof TooLargeError);
+}
+
 /** Parses dotted IPv4 into a number; null if not 4 in-range octets. */
 function ipv4ToInt(ip: string): number | null {
   const parts = ip.split(".");
@@ -187,7 +204,7 @@ export async function safeFetch(rawUrl: string, opts: { accept?: string; maxByte
     const declared = Number(res.headers["content-length"] ?? 0);
     if (declared > maxBytes) {
       await res.body.dump();
-      throw new UnsafeUrlError("That file is too large.");
+      throw new TooLargeError();
     }
     const chunks: Buffer[] = [];
     let total = 0;
@@ -196,7 +213,7 @@ export async function safeFetch(rawUrl: string, opts: { accept?: string; maxByte
       total += buf.length;
       if (total > maxBytes) {
         res.body.destroy();
-        throw new UnsafeUrlError("That file is too large.");
+        throw new TooLargeError();
       }
       chunks.push(buf);
     }

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { isPublicAddress, normalizeUserUrl, safeFetch, UnsafeUrlError } from "./ssrf.ts";
+import { isFatalFetchError, isPublicAddress, normalizeUserUrl, safeFetch, TooLargeError, UnsafeUrlError } from "./ssrf.ts";
 
 // The payload list from CLAUDE.md, plus the usual suspects.
 const BLOCKED = [
@@ -80,4 +80,12 @@ test("safeFetch refuses hostnames that resolve to internal addresses", async () 
   await assert.rejects(safeFetch("https://localhost/x.ics"), UnsafeUrlError);
   await assert.rejects(safeFetch("https://127.0.0.1/x.ics"), UnsafeUrlError);
   await assert.rejects(safeFetch("http://example.com/x.ics"), UnsafeUrlError);
+});
+
+test("an oversized file is its own error: still caught as UnsafeUrlError, but not fatal to an album sync", () => {
+  const big = new TooLargeError();
+  assert.ok(big instanceof UnsafeUrlError, "callers that catch UnsafeUrlError keep working");
+  assert.equal(isFatalFetchError(big), false, "one large photo must not abort the whole album");
+  assert.equal(isFatalFetchError(new UnsafeUrlError("That address points inside a private network.")), true);
+  assert.equal(isFatalFetchError(new Error("socket hang up")), false);
 });
