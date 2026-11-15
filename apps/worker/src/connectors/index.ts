@@ -16,6 +16,7 @@ import { syncPhotoLink } from "./google-photos.js";
 import { syncCustomCollections } from "./custom-collections.js";
 import { syncFolderCollections } from "./folder-collections.js";
 import { syncTagCollections } from "./anime-booru.js";
+import { coalescingRunner } from "./cycle.js";
 
 const log = createLogger("worker.connectors");
 const MEDIA_DIR = process.env.MEDIA_DIR ?? "/app/media";
@@ -149,21 +150,12 @@ async function syncPhotos(): Promise<void> {
   }
 }
 
-let inFlight: Promise<void> | null = null;
-
-export function runConnectorCycle(): Promise<void> {
-  if (!inFlight) {
-    inFlight = (async () => {
-      await syncCalendars();
-      await syncPhotos();
-      await syncCustomCollections(MEDIA_DIR);
-      await syncFolderCollections(MEDIA_DIR);
-      await syncTagCollections(MEDIA_DIR);
-    })()
-      .catch((err: unknown) => log.error("connector cycle crashed", { error: err instanceof Error ? err.message : "unknown" }))
-      .finally(() => {
-        inFlight = null;
-      });
-  }
-  return inFlight;
-}
+export const runConnectorCycle = coalescingRunner(() =>
+  (async () => {
+    await syncCalendars();
+    await syncPhotos();
+    await syncCustomCollections(MEDIA_DIR);
+    await syncFolderCollections(MEDIA_DIR);
+    await syncTagCollections(MEDIA_DIR);
+  })().catch((err: unknown) => log.error("connector cycle crashed", { error: err instanceof Error ? err.message : "unknown" })),
+);
